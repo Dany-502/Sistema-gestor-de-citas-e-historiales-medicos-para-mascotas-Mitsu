@@ -53,13 +53,36 @@ export default function RegistroLogin({ cambiarALogin }) {
         setEstaCargando(true);
         
         try {
-            console.log("Datos de registro enviados:", { nombre, apPaterno, apMaterno, direccion, telefono, correoElectronico, contrasena });
-            
-            // Simulación de API
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            
-            // Simular un error de registro para demostración
-            throw new Error('El correo ya está registrado en el sistema');
+            const respuesta = await fetch('http://localhost:8080/api/auth/registro', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    nombre,
+                    apPaterno,
+                    apMaterno,
+                    direccion,
+                    telefono,
+                    correoElectronico,
+                    contrasena
+                })
+            });
+
+            const textoRespuesta = await respuesta.text();
+
+            if (!respuesta.ok) {
+                try {
+                    const errorJson = JSON.parse(textoRespuesta);
+                    throw new Error(errorJson.error || errorJson.message || 'Error al registrar el usuario');
+                } catch (e) {
+                    throw new Error(textoRespuesta || 'Error al conectar con el servidor');
+                }
+            }
+
+            // Si el registro fue exitoso:
+            alert('¡Registro exitoso! Ya puedes iniciar sesión.');
+            cambiarALogin();
             
         } catch (error) {
             setErrorRed(error.message || 'Hubo un error al registrar el usuario');

@@ -5,7 +5,7 @@ import './AuthEstilos.css';
 
 import imagenFondo from '../../assets/imagenes/fondo-login.png';
 
-export default function ContenedorPadre() {
+export default function ContenedorPadre({ alIniciarSesion }) {
     const [pestanaActiva, setPestanaActiva] = useState('iniciarSesion'); // 'iniciarSesion' | 'registrarse'
 
     return (
@@ -22,7 +22,10 @@ export default function ContenedorPadre() {
                 {/* Renderizado del componente correspondiente */}
                 <div className="cuerpoAutenticacion">
                     {pestanaActiva === 'iniciarSesion' ? (
-                        <FormularioLogin cambiarARegistro={() => setPestanaActiva('registrarse')} />
+                        <FormularioLogin 
+                            cambiarARegistro={() => setPestanaActiva('registrarse')} 
+                            alIniciarSesion={alIniciarSesion}
+                        />
                     ) : (
                         <RegistroLogin cambiarALogin={() => setPestanaActiva('iniciarSesion')} />
                     )}
