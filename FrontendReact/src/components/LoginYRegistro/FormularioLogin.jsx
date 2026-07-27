@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ojo from '../../assets/iconos/ojo.png'
 import ojoCruzado from '../../assets/iconos/ojos-cruzados.png'
 
-export default function FormularioLogin({ cambiarARegistro }) {
+export default function FormularioLogin({ cambiarARegistro, alIniciarSesion }) {
     const [correoElectronico, setCorreoElectronico] = useState('');
     const [contrasena, setContrasena] = useState('');
     const [mostrarContrasena, setMostrarContrasena] = useState(false);
@@ -49,20 +49,36 @@ export default function FormularioLogin({ cambiarARegistro }) {
         setEstaCargando(true);
 
         try {
-            console.log("Enviando datos al backend...", { correoElectronico, contrasena });
+            const respuesta = await fetch('http://localhost:8080/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    correoElectronico,
+                    contrasena
+                })
+            });
 
-            // Simulación de llamada a la API (Axios o Fetch iría aquí)
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            const datos = await respuesta.json();
 
-            // Aquí simulo un error de credenciales para propósitos de demostración
-            // Puedes quitar el throw new Error para probar un login exitoso
-            throw new Error('Credenciales incorrectas');
+            if (!respuesta.ok) {
+                throw new Error(datos.error || datos.message || 'Credenciales incorrectas');
+            }
+
+            // Guardar el token JWT en localStorage
+            if (datos.token) {
+                localStorage.setItem('token', datos.token);
+            }
+
+            alert('¡Inicio de sesión exitoso!');
+            if (alIniciarSesion) {
+                alIniciarSesion();
+            }
 
         } catch (error) {
-            // Manejo de error de red (evitando alert())
             setErrorRed(error.message || 'Error de conexión con el servidor');
         } finally {
-            // Desactivamos estado de carga, pase lo que pase
             setEstaCargando(false);
         }
     };
