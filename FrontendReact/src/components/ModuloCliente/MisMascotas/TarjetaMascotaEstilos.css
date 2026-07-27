@@ -1,0 +1,153 @@
+.tarjetaMascotaCompleta {
+  background-color: #ffffff;
+  border: 1px solid #c9d3db;
+  border-radius: 16px;
+  padding: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cabeceraTarjeta {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatarMascota {
+  width: 65px;
+  height: 65px;
+  background-color: #e0e6ed;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconoAvatar {
+  width: 35px;
+  height: 35px;
+  opacity: 0.5;
+  /* Para que se vea como marca de agua en el fondo gris */
+}
+
+.infoBasicaMascota {
+  flex: 1;
+}
+
+.nombreMascota {
+  font-size: 18px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0 0 4px 0;
+}
+
+.idMascota {
+  font-weight: 400;
+  font-size: 15px;
+  color: #333333;
+}
+
+.razaMascota {
+  font-size: 14px;
+  color: #5c6c75;
+  margin: 0;
+}
+
+.botonOpciones {
+  background: none;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  color: #000000;
+  cursor: pointer;
+  padding: 5px;
+  margin-top: -25px;
+}
+
+.menuOpciones {
+  position: absolute;
+  top: 45px;
+  right: 20px;
+  background-color: #ffffff;
+  border: 1px solid #e0e6ed;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 5px 0;
+  z-index: 10;
+}
+
+.botonEliminar,
+.botonEditar {
+  background: none;
+  border: none;
+  padding: 4px 10px;
+  width: 100%;
+  text-align: left;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.botonEditar {
+  color: #4a5568;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.botonEditar:hover {
+  background-color: #f7fafc;
+}
+
+.botonEliminar {
+  color: #e74c3c;
+}
+
+.botonEliminar:hover {
+  background-color: #fdf0f0;
+}
+
+.datosSecundarios {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #333333;
+}
+
+.datoSecundarioItem strong {
+  font-weight: 700;
+  color: #000000;
+}
+
+.etiquetaAlergias {
+  background-color: #ffebd6;
+  /* Naranja muy claro */
+  color: #cc5200;
+  /* Naranja oscuro */
+  padding: 10px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.etiquetaAlergias strong {
+  font-weight: 700;
+}
+
+.botonVerCarnet {
+  background-color: #ff8b6a;
+  color: #ffffff;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 25px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background-color 0.2s ease;
+}
+
+.botonVerCarnet:hover {
+  background-color: #ff7650;
+}

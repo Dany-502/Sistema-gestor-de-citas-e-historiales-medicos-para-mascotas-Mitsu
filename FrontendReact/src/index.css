@@ -55,15 +55,10 @@ body {
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
 
 h1,
@@ -108,4 +103,29 @@ code {
   line-height: 135%;
   padding: 4px 8px;
   background: var(--code-bg);
+}
+
+/* Modificación global para SweetAlert2 */
+.swal2-container {
+  z-index: 9999 !important;
+}
+
+/* Scrollbar global blanco/claro */
+::-webkit-scrollbar {
+  width: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8fafc; 
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 3px solid #f8fafc;
+  box-shadow: inset 0 0 0 1px #e2e8f0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #f1f5f9;
 }

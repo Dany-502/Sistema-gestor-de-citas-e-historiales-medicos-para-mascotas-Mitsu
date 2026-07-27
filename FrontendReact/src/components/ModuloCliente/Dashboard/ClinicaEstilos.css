@@ -1,0 +1,56 @@
+/* SECCION: INFO CLINICA */
+.contenedorClinica {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detallesClinica {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.filaInfoClinica {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+.iconoInfo {
+  width: 22px;
+  height: 22px;
+  color: #1a1a1a; /* Color negro de los iconos en la imagen */
+}
+
+.botonContacto {
+  background-color: #ff8b6a;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 25px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.botonContacto:hover {
+  background-color: #ff7650;
+  transform: translateY(-1px);
+}
+
+.botonContacto:active {
+  transform: translateY(1px);
+}
+
+.iconoContacto {
+  width: 22px;
+  height: 22px;
+}

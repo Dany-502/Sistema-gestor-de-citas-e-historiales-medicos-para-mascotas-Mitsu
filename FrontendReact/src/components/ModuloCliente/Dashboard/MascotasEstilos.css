@@ -1,0 +1,96 @@
+/* SECCION: TUS MASCOTAS */
+.contenedorMascotas {
+  margin-bottom: 20px;
+}
+
+.listaMascotas {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 15px; /* Más espacio para la nueva barra de scroll */
+}
+
+/* Scrollbar personalizada para que se vea premium y el usuario pueda arrastrarla */
+.listaMascotas::-webkit-scrollbar {
+  height: 8px; /* Altura de la barra horizontal */
+}
+
+.listaMascotas::-webkit-scrollbar-track {
+  background: #f3f4f6; /* Fondo gris claro */
+  border-radius: 10px;
+}
+
+.listaMascotas::-webkit-scrollbar-thumb {
+  background: #d1d5db; /* Color neutro para el scroll */
+  border-radius: 10px;
+}
+
+.listaMascotas::-webkit-scrollbar-thumb:hover {
+  background: #ff8b6a; /* Se vuelve naranja al pasar el cursor */
+}
+
+.tarjetaMascotaIndividual {
+  min-width: 280px; 
+  scroll-snap-align: start; 
+  border: 2px solid #1a1a1a;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.infoPrincipalMascota {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.avatarGrande {
+  width: 85px;
+  height: 85px;
+}
+
+.datosMascota {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.datosMascota h4 {
+  margin: 0 0 2px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.datoSecundario {
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.estadoMascota {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.filaEstado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.indentada {
+  padding-left: 20px; 
+}
+
+.puntoGris {
+  width: 10px;
+  height: 10px;
+  background-color: #d1d5db;
+  border-radius: 50%;
+}
