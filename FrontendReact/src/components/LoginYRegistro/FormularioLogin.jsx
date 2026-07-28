@@ -51,7 +51,7 @@ export default function FormularioLogin({ cambiarARegistro, alIniciarSesion }) {
         setEstaCargando(true);
 
         try {
-            const respuesta = await fetch('http://localhost:8080/api/auth/login', {
+            const respuesta = await fetch('http://66.179.80.246:8089/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

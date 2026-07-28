@@ -7,6 +7,10 @@ import ListaMascotas from './components/ModuloCliente/MisMascotas/ListaMascotas'
 import ListaMedicos from './components/ModuloCliente/DirectorioMedicos/ListaMedicos';
 import MisCitas from './components/ModuloCliente/MisCitas/MisCitas';
 
+// Modulo Veterinario
+import VeterinarioLayout from './components/ModuloVeterinario/Layout/VeterinarioLayout';
+import DashboardVeterinario from './components/ModuloVeterinario/DashboardCliente/DashboardVeterinario';
+
 function App() {
   const [sesionIniciada, setSesionIniciada] = useState(() => {
     return !!localStorage.getItem('token');
@@ -58,6 +62,15 @@ function App() {
           <Route path="medicos" element={<ListaMedicos />} />
           <Route path="citas" element={<MisCitas />} />
           {/* Aquí irán citas, etc. */}
+        </Route>
+
+        {/* Rutas del Módulo Veterinario */}
+        <Route 
+          path="/veterinario" 
+          element={<VeterinarioLayout />}
+        >
+          <Route path="dashboard" element={<DashboardVeterinario />} />
+          {/* Aquí irán agenda, expedientes, etc. */}
         </Route>
       </Routes>
     </BrowserRouter>
