@@ -29,6 +29,7 @@ public class MascotaService {
         String adultoResponsable = cliente.getNombre() + " " + cliente.getApPaterno();
 
         return mascotaRepository.findByClienteCorreoElectronico(correoCliente).stream()
+                .filter(mascota -> !"Inactivo".equalsIgnoreCase(mascota.getEstado()))
                 .map(mascota -> convertirADTO(mascota, adultoResponsable))
                 .collect(Collectors.toList());
     }
@@ -75,7 +76,8 @@ public class MascotaService {
         Mascota mascota = mascotaRepository.findByIdMascotaAndClienteCorreoElectronico(idMascota, correoCliente)
                 .orElseThrow(() -> new RuntimeException("Mascota no encontrada o no pertenece al cliente logueado"));
 
-        mascotaRepository.delete(mascota);
+        mascota.setEstado("Inactivo");
+        mascotaRepository.save(mascota);
     }
 
     private void copiarDatosDTOAEntidad(MascotaDTO dto, Mascota mascota) {
