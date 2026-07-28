@@ -160,8 +160,8 @@ const CarnetMascotaModal = ({ mascotaDto, onEditar, onClose }) => {
                     </div>
                     
                     <div className="carnetFotoContainer">
-                        {fotoUrl ? (
-                            <img src={fotoUrl} alt={nombreMascota} />
+                        {(fotoUrl || mascotaDto?.imagen) ? (
+                            <img src={fotoUrl || mascotaDto?.imagen} alt={nombreMascota} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />
                         ) : (
                             // Placeholder si no hay foto real
                             <img src={iconPata} alt="Pata placeholder" style={{opacity: 0.1, padding: '30px'}} />

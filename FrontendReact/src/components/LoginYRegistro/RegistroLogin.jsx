@@ -80,8 +80,7 @@ export default function RegistroLogin({ cambiarALogin }) {
                 }
             }
 
-            // Si el registro fue exitoso:
-            alert('¡Registro exitoso! Ya puedes iniciar sesión.');
+            // Si el registro fue exitoso, cambiar a la vista de login
             cambiarALogin();
             
         } catch (error) {

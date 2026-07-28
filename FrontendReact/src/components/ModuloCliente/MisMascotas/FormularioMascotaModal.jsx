@@ -3,20 +3,22 @@ import './FormularioMascotaModalEstilos.css';
 import Swal from 'sweetalert2';
 
 const FormularioMascotaModal = ({ mascotaAEditar, onGuardar, onClose }) => {
-    const [fotoPrevia, setFotoPrevia] = useState(null);
+    const [fotoPrevia, setFotoPrevia] = useState(
+        mascotaAEditar ? (mascotaAEditar.fotoUrl || mascotaAEditar.imagen || null) : null
+    );
     const fileInputRef = useRef(null);
     const esEdicion = !!mascotaAEditar;
 
     const [formData, setFormData] = useState({
-        nombre: mascotaAEditar ? mascotaAEditar.NombreMascota : '',
-        especie: mascotaAEditar ? mascotaAEditar.Especie : '',
-        raza: mascotaAEditar ? mascotaAEditar.Raza : '',
-        fechaNacimiento: mascotaAEditar ? mascotaAEditar.FechaNacimiento : '',
-        sexo: mascotaAEditar ? mascotaAEditar.Sexo : '',
-        color: mascotaAEditar ? mascotaAEditar.Color || '' : '',
-        peso: mascotaAEditar ? mascotaAEditar.Peso : '',
-        alergias: mascotaAEditar ? mascotaAEditar.Alergias : '',
-        informacionAdicional: mascotaAEditar ? mascotaAEditar.informacionAdicional || '' : ''
+        nombre: mascotaAEditar ? (mascotaAEditar.NombreMascota || mascotaAEditar.nombreMascota || '') : '',
+        especie: mascotaAEditar ? (mascotaAEditar.Especie || mascotaAEditar.especie || '') : '',
+        raza: mascotaAEditar ? (mascotaAEditar.Raza || mascotaAEditar.raza || '') : '',
+        fechaNacimiento: mascotaAEditar ? (mascotaAEditar.FechaNacimiento || mascotaAEditar.fechaNacimiento || '') : '',
+        sexo: mascotaAEditar ? (mascotaAEditar.Sexo || mascotaAEditar.sexo || '') : '',
+        color: mascotaAEditar ? (mascotaAEditar.Color || mascotaAEditar.color || '') : '',
+        peso: mascotaAEditar ? (mascotaAEditar.Peso !== undefined ? mascotaAEditar.Peso : mascotaAEditar.peso || '') : '',
+        alergias: mascotaAEditar ? (mascotaAEditar.Alergias || mascotaAEditar.alergias || '') : '',
+        informacionAdicional: mascotaAEditar ? (mascotaAEditar.informacionAdicional || mascotaAEditar.descripcion || '') : ''
     });
 
     const handleFileChange = (e) => {
@@ -41,28 +43,22 @@ const FormularioMascotaModal = ({ mascotaAEditar, onGuardar, onClose }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         
-        let tituloSwal = esEdicion ? '¡Datos Actualizados!' : '¡Mascota Registrada!';
-        let textoSwal = esEdicion ? 'La información se guardó correctamente.' : 'Tu mascota ha sido añadida con éxito.';
-
-        if (esEdicion) {
-            console.log("Actualizando mascota:", formData);
-        } else {
-            console.log("Datos a enviar para registrar:", formData);
-        }
-        
-        // Simular un pequeño delay de la base de datos y luego mostrar el modal
-        setTimeout(() => {
-            Swal.fire({
-                title: tituloSwal,
-                text: textoSwal,
-                icon: 'success',
-                confirmButtonColor: '#00bcd4',
-                timer: 2500, // Se cierra solo tras 2.5 segundos
-                timerProgressBar: true
+        // Enviar datos al padre (ListaMascotas) que llamará al backend real
+        if (onGuardar) {
+            onGuardar({
+                nombreMascota: formData.nombre,
+                especie: formData.especie,
+                raza: formData.raza,
+                fechaNacimiento: formData.fechaNacimiento || null,
+                sexo: formData.sexo,
+                color: formData.color,
+                peso: formData.peso ? parseFloat(formData.peso) : null,
+                alergias: formData.alergias,
+                descripcion: formData.informacionAdicional,
+                informacionAdicional: formData.informacionAdicional,
+                fotoUrl: fotoPrevia
             });
-            if (onGuardar) onGuardar(formData);
-            onClose(); // Cierra el modal
-        }, 300);
+        }
     };
 
     return (

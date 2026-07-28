@@ -39,7 +39,7 @@ function App() {
           path="/cliente" 
           element={
             sesionIniciada ? (
-              <ClienteLayout />
+              <ClienteLayout alCerrarSesion={manejarCerrarSesion} />
             ) : (
               <Navigate to="/" replace />
             )

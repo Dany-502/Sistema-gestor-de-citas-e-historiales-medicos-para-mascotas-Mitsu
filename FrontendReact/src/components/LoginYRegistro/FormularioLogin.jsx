@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ojo from '../../assets/iconos/ojo.png'
 import ojoCruzado from '../../assets/iconos/ojos-cruzados.png'
 
 export default function FormularioLogin({ cambiarARegistro, alIniciarSesion }) {
+    const navigate = useNavigate();
     const [correoElectronico, setCorreoElectronico] = useState('');
     const [contrasena, setContrasena] = useState('');
     const [mostrarContrasena, setMostrarContrasena] = useState(false);
@@ -71,10 +73,11 @@ export default function FormularioLogin({ cambiarARegistro, alIniciarSesion }) {
                 localStorage.setItem('token', datos.token);
             }
 
-            alert('¡Inicio de sesión exitoso!');
+            // Redirección e inicio de sesión
             if (alIniciarSesion) {
                 alIniciarSesion();
             }
+            navigate('/cliente/dashboard');
 
         } catch (error) {
             setErrorRed(error.message || 'Error de conexión con el servidor');

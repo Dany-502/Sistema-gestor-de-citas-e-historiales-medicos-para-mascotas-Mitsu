@@ -4,12 +4,12 @@ import Sidebar from '../Navegacion/Sidebar';
 import { Outlet } from 'react-router-dom';
 import '../Navegacion/NavegacionEstilos.css';
 
-const ClienteLayout = () => {
+const ClienteLayout = ({ alCerrarSesion }) => {
   return (
     <div className="layout-cliente">
       <Sidebar />
       <div className="contenido-principal">
-        <Navbar />
+        <Navbar alCerrarSesion={alCerrarSesion} />
         {/* El Outlet renderizará el componente hijo que corresponda a la ruta (ej. Dashboard) */}
         <main>
           <Outlet /> 

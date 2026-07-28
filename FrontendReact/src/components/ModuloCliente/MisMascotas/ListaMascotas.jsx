@@ -4,43 +4,62 @@ import TarjetaMascota from './TarjetaMascota';
 import FormularioMascotaModal from './FormularioMascotaModal';
 import CarnetMascotaModal from './CarnetMascotaModal';
 import Swal from 'sweetalert2';
+import { mascotaService, clienteService } from '../../../services/api';
 
 const ListaMascotas = () => {
     const [cargando, setCargando] = useState(true);
     const [busqueda, setBusqueda] = useState('');
     const [paginaActual, setPaginaActual] = useState(1);
-    const [tamanoPagina, setTamanoPagina] = useState(5); // Por defecto 5 para pruebas
+    const [tamanoPagina, setTamanoPagina] = useState(5);
     const [modalAbierto, setModalAbierto] = useState(false);
     const [mascotaCarnetSeleccionada, setMascotaCarnetSeleccionada] = useState(null);
     const [mascotaAEditar, setMascotaAEditar] = useState(null);
 
-    // Mock temporal del usuario que inició sesión (luego vendrá del Auth Context o backend)
-    const [usuarioSesion] = useState({
-        nombre: "Miguel Alberto",
-        telefono: "+52 55 1234 5678"
+    const [usuarioSesion, setUsuarioSesion] = useState({
+        nombre: "Cliente Mitsu",
+        telefono: ""
     });
 
-    // Simulando base de datos con los atributos del esquema
-    const [mascotas, setMascotas] = useState([
-        { id_Mascota: '#SM1200', NombreMascota: 'Simitrio', Especie: 'Perro', Raza: 'Maltes', Peso: 4.0, FechaNacimiento: '2025-01-01', Sexo: 'Macho', Alergias: 'No' },
-        { id_Mascota: '#QT2058', NombreMascota: 'Coquito', Especie: 'Perro', Raza: 'Snauser', Peso: 5.5, FechaNacimiento: '2023-05-10', Sexo: 'Macho', Alergias: 'Pollo' },
-        { id_Mascota: '#FRL2003', NombreMascota: 'Firulais', Especie: 'Perro', Raza: 'Labrador', Peso: 25.0, FechaNacimiento: '2024-02-15', Sexo: 'Macho', Alergias: 'Ninguna' },
-        { id_Mascota: '#LN1029', NombreMascota: 'Luna', Especie: 'Gato', Raza: 'Siames', Peso: 3.2, FechaNacimiento: '2024-11-20', Sexo: 'Hembra', Alergias: 'Ninguna' },
-        { id_Mascota: '#RC9081', NombreMascota: 'Rocco', Especie: 'Perro', Raza: 'Bulldog', Peso: 18.0, FechaNacimiento: '2022-08-05', Sexo: 'Macho', Alergias: 'No' },
-        { id_Mascota: '#MX4052', NombreMascota: 'Max', Especie: 'Perro', Raza: 'Golden Retriever', Peso: 30.0, FechaNacimiento: '2021-04-12', Sexo: 'Macho', Alergias: 'No' }
-    ]);
+    const [mascotas, setMascotas] = useState([]);
 
-    // Simulador de carga del backend
-    useEffect(() => {
-        const timer = setTimeout(() => {
+    // Cargar perfil de usuario y lista de mascotas desde el backend
+    const cargarDatos = async () => {
+        setCargando(true);
+        try {
+            const perfil = await clienteService.obtenerPerfil();
+            if (perfil) {
+                setUsuarioSesion({
+                    nombre: perfil.nombreCompleto || perfil.nombre,
+                    telefono: perfil.telefono
+                });
+            }
+
+            const listaMascotas = await mascotaService.obtenerMascotas();
+            setMascotas(listaMascotas || []);
+        } catch (error) {
+            console.error("Error al cargar datos de mascotas/perfil:", error);
+            // Si el token falló o no hay sesión
+            Swal.fire({
+                title: 'Error de Conexión',
+                text: error.message || 'No se pudieron obtener las mascotas del servidor.',
+                icon: 'error',
+                confirmButtonColor: '#e74c3c'
+            });
+        } finally {
             setCargando(false);
-        }, 1200); // 1.2 segundos de simulación
-        return () => clearTimeout(timer);
+        }
+    };
+
+    useEffect(() => {
+        cargarDatos();
     }, []);
 
     const handleEliminarMascota = (mascota) => {
+        const idMascota = mascota.id_Mascota || mascota.idMascota;
+        const nombreMascota = mascota.NombreMascota || mascota.nombreMascota;
+
         Swal.fire({
-            title: `¿Estás seguro de eliminar a ${mascota.NombreMascota}?`,
+            title: `¿Estás seguro de eliminar a ${nombreMascota}?`,
             text: "Esta acción no se puede revertir y borrará todo su historial.",
             icon: 'warning',
             showCancelButton: true,
@@ -49,17 +68,26 @@ const ListaMascotas = () => {
             confirmButtonText: 'Sí, eliminar',
             cancelButtonText: 'Cancelar',
             reverseButtons: true
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                // En una app real, esto haría una llamada DELETE a la API.
-                setMascotas(mascotas.filter(m => m.id_Mascota !== mascota.id_Mascota));
-                
-                Swal.fire({
-                    title: '¡Eliminada!',
-                    text: 'La mascota ha sido eliminada correctamente.',
-                    icon: 'success',
-                    confirmButtonColor: '#00bcd4'
-                });
+                try {
+                    await mascotaService.eliminarMascota(idMascota);
+                    setMascotas(prev => prev.filter(m => (m.id_Mascota || m.idMascota) !== idMascota));
+
+                    Swal.fire({
+                        title: '¡Eliminada!',
+                        text: 'La mascota ha sido eliminada correctamente de la base de datos.',
+                        icon: 'success',
+                        confirmButtonColor: '#00bcd4'
+                    });
+                } catch (err) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: err.message || 'No se pudo eliminar la mascota.',
+                        icon: 'error',
+                        confirmButtonColor: '#e74c3c'
+                    });
+                }
             }
         });
     };
@@ -74,11 +102,56 @@ const ListaMascotas = () => {
         setModalAbierto(true);
     };
 
-    const mascotasFiltradas = mascotas.filter(m => 
-        m.NombreMascota.toLowerCase().includes(busqueda.toLowerCase())
-    );
+    const handleGuardarMascotaExitoso = async (datosForm, isEdicion) => {
+        try {
+            if (isEdicion && mascotaAEditar) {
+                const idMascota = mascotaAEditar.id_Mascota || mascotaAEditar.idMascota;
+                const actualizada = await mascotaService.actualizarMascota(idMascota, datosForm);
+                
+                setMascotas(prev => prev.map(m => (m.id_Mascota || m.idMascota) === idMascota ? actualizada : m));
 
-    // Lógica temporal de paginación en cliente (simulando la del servidor)
+                if (mascotaCarnetSeleccionada && (mascotaCarnetSeleccionada.id_Mascota || mascotaCarnetSeleccionada.idMascota) === idMascota) {
+                    setMascotaCarnetSeleccionada(actualizada);
+                }
+
+                Swal.fire({
+                    title: '¡Datos Actualizados!',
+                    text: 'La información se guardó correctamente en el servidor.',
+                    icon: 'success',
+                    confirmButtonColor: '#00bcd4',
+                    timer: 2500,
+                    timerProgressBar: true
+                });
+            } else {
+                const nuevaMascota = await mascotaService.registrarMascota(datosForm);
+                setMascotas(prev => [nuevaMascota, ...prev]);
+
+                Swal.fire({
+                    title: '¡Mascota Registrada!',
+                    text: 'Tu mascota ha sido añadida con éxito a tu cuenta.',
+                    icon: 'success',
+                    confirmButtonColor: '#00bcd4',
+                    timer: 2500,
+                    timerProgressBar: true
+                });
+            }
+            setModalAbierto(false);
+        } catch (error) {
+            Swal.fire({
+                title: 'Error al Guardar',
+                text: error.message || 'Hubo un fallo al comunicar con la base de datos.',
+                icon: 'error',
+                confirmButtonColor: '#e74c3c'
+            });
+        }
+    };
+
+    const mascotasFiltradas = mascotas.filter(m => {
+        const nombre = m.NombreMascota || m.nombreMascota || '';
+        return nombre.toLowerCase().includes(busqueda.toLowerCase());
+    });
+
+    // Lógica de paginación
     const totalPaginas = Math.ceil(mascotasFiltradas.length / tamanoPagina);
     const indiceUltimo = paginaActual * tamanoPagina;
     const indicePrimero = indiceUltimo - tamanoPagina;
@@ -120,7 +193,7 @@ const ListaMascotas = () => {
                             value={tamanoPagina} 
                             onChange={(e) => {
                                 setTamanoPagina(Number(e.target.value));
-                                setPaginaActual(1); // Reiniciar a pag 1
+                                setPaginaActual(1);
                             }}
                         >
                             <option value={5}>5</option>
@@ -142,7 +215,7 @@ const ListaMascotas = () => {
                         <button 
                             className="botonPaginacion" 
                             onClick={irPaginaSiguiente} 
-                            disabled={paginaActual >= totalPaginas}
+                            disabled={paginaActual >= totalPaginas || totalPaginas === 0}
                         >
                             Siguiente
                         </button>
@@ -165,63 +238,27 @@ const ListaMascotas = () => {
                     <p>No se encontraron mascotas con ese nombre.</p>
                 </div>
             ) : (
-                <>
-                    <div className="gridMascotas">
-                        {mascotasPaginadas.map((mascota) => (
-                            <TarjetaMascota 
-                                key={mascota.id_Mascota} 
-                                mascota={mascota} 
-                                onEliminar={handleEliminarMascota}
-                                onEditar={handleEditarMascota}
-                                onVerCarnet={(m) => {
-                                    console.log("Abriendo modal para:", m);
-                                    setMascotaCarnetSeleccionada(m);
-                                }}
-                            />
-                        ))}
-                    </div>
-
-                </>
+                <div className="gridMascotas">
+                    {mascotasPaginadas.map((mascota) => (
+                        <TarjetaMascota 
+                            key={mascota.id_Mascota || mascota.idMascota} 
+                            mascota={mascota} 
+                            onEliminar={handleEliminarMascota}
+                            onEditar={handleEditarMascota}
+                            onVerCarnet={(m) => {
+                                setMascotaCarnetSeleccionada(m);
+                            }}
+                        />
+                    ))}
+                </div>
             )}
 
-            {/* Modal de Registro de Mascota */}
+            {/* Modal de Registro/Edición de Mascota */}
             {modalAbierto && (
                 <FormularioMascotaModal 
                     mascotaAEditar={mascotaAEditar}
                     onClose={() => setModalAbierto(false)} 
-                    onGuardar={(datosModificados) => {
-                        if (mascotaAEditar) {
-                            const mascotasActualizadas = mascotas.map(m => 
-                                m.id_Mascota === mascotaAEditar.id_Mascota ? {
-                                    ...m,
-                                    NombreMascota: datosModificados.nombre,
-                                    Especie: datosModificados.especie,
-                                    Raza: datosModificados.raza,
-                                    Peso: datosModificados.peso,
-                                    FechaNacimiento: datosModificados.fechaNacimiento,
-                                    Sexo: datosModificados.sexo,
-                                    Color: datosModificados.color,
-                                    Alergias: datosModificados.alergias
-                                } : m
-                            );
-                            setMascotas(mascotasActualizadas);
-
-                            // Actualizar carnet si está abierto para esta misma mascota
-                            if (mascotaCarnetSeleccionada && mascotaCarnetSeleccionada.id_Mascota === mascotaAEditar.id_Mascota) {
-                                setMascotaCarnetSeleccionada({
-                                    ...mascotaCarnetSeleccionada,
-                                    NombreMascota: datosModificados.nombre,
-                                    Especie: datosModificados.especie,
-                                    Raza: datosModificados.raza,
-                                    Peso: datosModificados.peso,
-                                    FechaNacimiento: datosModificados.fechaNacimiento,
-                                    Sexo: datosModificados.sexo,
-                                    Color: datosModificados.color,
-                                    Alergias: datosModificados.alergias
-                                });
-                            }
-                        }
-                    }}
+                    onGuardar={(datosForm) => handleGuardarMascotaExitoso(datosForm, !!mascotaAEditar)}
                 />
             )}
 
@@ -229,28 +266,22 @@ const ListaMascotas = () => {
             {mascotaCarnetSeleccionada && (
                 <CarnetMascotaModal 
                     mascotaDto={{
-                        idMascota: mascotaCarnetSeleccionada.id_Mascota,
-                        nombreMascota: mascotaCarnetSeleccionada.NombreMascota,
+                        idMascota: mascotaCarnetSeleccionada.id_Mascota || mascotaCarnetSeleccionada.idMascota,
+                        nombreMascota: mascotaCarnetSeleccionada.NombreMascota || mascotaCarnetSeleccionada.nombreMascota,
                         estado: 'Paciente Activo',
-                        especie: mascotaCarnetSeleccionada.Especie,
-                        raza: mascotaCarnetSeleccionada.Raza,
-                        sexo: mascotaCarnetSeleccionada.Sexo,
-                        fechaNacimiento: mascotaCarnetSeleccionada.FechaNacimiento,
-                        peso: `${mascotaCarnetSeleccionada.Peso} KG`,
-                        color: 'No especificado', // Mock
+                        especie: mascotaCarnetSeleccionada.Especie || mascotaCarnetSeleccionada.especie,
+                        raza: mascotaCarnetSeleccionada.Raza || mascotaCarnetSeleccionada.raza,
+                        sexo: mascotaCarnetSeleccionada.Sexo || mascotaCarnetSeleccionada.sexo,
+                        fechaNacimiento: mascotaCarnetSeleccionada.FechaNacimiento || mascotaCarnetSeleccionada.fechaNacimiento,
+                        peso: mascotaCarnetSeleccionada.Peso ? `${mascotaCarnetSeleccionada.Peso} KG` : 'No registrado',
+                        color: mascotaCarnetSeleccionada.Color || mascotaCarnetSeleccionada.color || 'No especificado',
                         adultoResponsable: {
                             nombreCliente: usuarioSesion.nombre,
                             telefonoContacto: usuarioSesion.telefono
                         },
-                        fotoUrl: null,
-                        historialVacunas: [
-                            { id: 1, vacuna: 'Antirrábica', fecha: '2023-10-05', proxima: '2024-10-05', peso: '24.5 kg' },
-                            { id: 2, vacuna: 'Séxtuple', fecha: '2023-12-10', proxima: '2024-12-10', peso: '25.0 kg' }
-                        ],
-                        historialCitas: [
-                            { id: 1, fecha: '2024-01-15 10:00', servicio: 'Consulta General', veterinario: 'Dra. Ana López', estado: 'Completada', descripcion: 'Revisión de rutina' },
-                            { id: 2, fecha: '2024-06-20 16:30', servicio: 'Vacunación', veterinario: 'Dr. Mario Gómez', estado: 'Pendiente', descripcion: 'Refuerzo anual' }
-                        ]
+                        fotoUrl: mascotaCarnetSeleccionada.fotoUrl || null,
+                        historialVacunas: [],
+                        historialCitas: []
                     }}
                     onEditar={() => {
                         handleEditarMascota(mascotaCarnetSeleccionada);
