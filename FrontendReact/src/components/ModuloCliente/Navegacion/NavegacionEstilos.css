@@ -204,4 +204,5 @@ main {
   /* Reducción ligera del padding central */
   flex: 1;
   overflow-y: auto; /* AQUI ES DONDE SUCEDE LA MAGIA DEL SCROLL INTERNO */
+  min-width: 0; /* Evita que main expanda el layout horizontalmente */
 }

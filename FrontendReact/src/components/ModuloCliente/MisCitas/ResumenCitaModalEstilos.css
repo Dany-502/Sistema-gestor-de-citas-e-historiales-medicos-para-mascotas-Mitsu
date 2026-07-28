@@ -1,0 +1,252 @@
+.modalOverlayResumen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.6); /* Fondo más oscuro y moderno */
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  animation: fadeInResumen 0.2s ease-out;
+}
+
+@keyframes fadeInResumen {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modalContentResumen {
+  background-color: #ffffff;
+  width: 90%;
+  max-width: 700px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: slideUpResumen 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes slideUpResumen {
+  from {
+    transform: translateY(30px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.cabeceraResumenCita {
+  background: linear-gradient(135deg, #1abc9c, #16a085);
+  padding: 30px 20px 20px;
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.circuloIconoCabecera {
+  width: 70px;
+  height: 70px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-top: -10px;
+}
+
+.circuloIconoCabecera img {
+  width: 35px;
+  height: 35px;
+  object-fit: contain;
+}
+
+.cabeceraResumenCita h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.botonCerrarResumen {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 20px;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.botonCerrarResumen:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.cuerpoResumenCita {
+  padding: 25px 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 25px;
+}
+
+.filaInfoResumen {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.iconoInfoResumen {
+  width: 36px;
+  height: 36px;
+  background-color: #f1f5f9;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.iconoInfoResumen img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  opacity: 0.7;
+}
+
+.datosInfoResumen {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 2px;
+}
+
+.labelInfoResumen {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.valorInfoResumen {
+  font-size: 15px;
+  color: #1e293b;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.textoGris {
+  color: #475569;
+  font-style: italic;
+  font-size: 14px;
+}
+
+.notasResumen {
+  background-color: #f8fafc;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px dashed #cbd5e1;
+  grid-column: 1 / -1;
+}
+
+.contenedorEstadoResumen {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+  grid-column: 1 / -1;
+}
+
+.badgeEstado {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-confirmada {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.badge-pendiente {
+  background-color: #fef9c3;
+  color: #854d0e;
+}
+
+.badge-realizada {
+  background-color: #e0e7ff;
+  color: #3730a3;
+}
+
+.badge-cancelada {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.pieResumenCita {
+  padding: 0 30px 25px;
+  display: flex;
+  justify-content: stretch;
+  gap: 15px;
+}
+
+.btnCerrarPrimario {
+  width: 100%;
+  background-color: #1abc9c;
+  color: #ffffff;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.1s, background-color 0.2s;
+  box-shadow: 0 4px 12px rgba(26, 188, 156, 0.3);
+}
+
+.btnCerrarPrimario:hover {
+  background-color: #16a085;
+  transform: translateY(-1px);
+}
+
+.btnCancelarSecundario {
+  width: 100%;
+  background-color: #ff3b30;
+  color: #ffffff;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btnCancelarSecundario:hover {
+  background-color: #d32f2f;
+  transform: translateY(-1px);
+}
