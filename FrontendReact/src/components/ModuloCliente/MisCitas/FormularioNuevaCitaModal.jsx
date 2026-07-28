@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './FormularioNuevaCitaModalEstilos.css';
 import Swal from 'sweetalert2';
 import iconoPortapapeles from '../../../assets/iconos/portapapeles.png';
+import { mascotaService, veterinarioService, servicioService, citaService } from '../../../services/api';
 
 const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = [] }) => {
     const [fechaHoraInicio, setFechaHoraInicio] = useState('');
@@ -12,16 +13,9 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
     const [tipoVacuna, setTipoVacuna] = useState('');
     const [descripcion, setDescripcion] = useState('');
 
-    const mascotasDisponibles = [
-        { idMascota: '#MX4052', nombre: 'Max', especie: 'Perro', raza: 'Golden Retriever', color: 'Dorado' },
-        { idMascota: '#CH1108', nombre: 'Chloe', especie: 'Gato', raza: 'Siamés', color: 'Crema' }
-    ];
-
-    const veterinariosDisponibles = [
-        { idVeterinario: 1, nombre: 'Dr. Juan Pérez', especialidad: 'Cirugía' },
-        { idVeterinario: 2, nombre: 'Dra. María López', especialidad: 'Medicina General' },
-        { idVeterinario: 3, nombre: 'Dr. Carlos Ruiz', especialidad: 'Odontología' }
-    ];
+    const [mascotasDisponibles, setMascotasDisponibles] = useState([]);
+    const [veterinariosDisponibles, setVeterinariosDisponibles] = useState([]);
+    const [serviciosDisponibles, setServiciosDisponibles] = useState([]);
 
     const tiposVacunas = [
         'Antirrábica',
@@ -31,21 +25,47 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
         'Triple Felina'
     ];
 
-    const serviciosDisponibles = [
-        { idServicio: 1, nombreServicio: 'Consulta General', duracion: 60 },
-        { idServicio: 2, nombreServicio: 'Vacunación', duracion: 30 },
-        { idServicio: 3, nombreServicio: 'Cirugía', duracion: 120 },
-        { idServicio: 4, nombreServicio: 'Limpieza Dental', duracion: 90 }
-    ];
+    useEffect(() => {
+        if (isOpen) {
+            const cargarOpciones = async () => {
+                try {
+                    const [mascotasData, vetsData, servsData] = await Promise.all([
+                        mascotaService.obtenerMascotas().catch(() => []),
+                        veterinarioService.obtenerVeterinarios().catch(() => []),
+                        servicioService.obtenerServicios().catch(() => [])
+                    ]);
+                    setMascotasDisponibles(mascotasData.map(m => ({
+                        idMascota: m.idMascota,
+                        nombre: m.nombreMascota || m.nombre,
+                        especie: m.especie,
+                        raza: m.raza,
+                        color: m.color
+                    })));
+                    setVeterinariosDisponibles(vetsData.map(v => ({
+                        idVeterinario: v.idVeterinario,
+                        nombre: `${v.nombre} ${v.apPaterno}`,
+                        especialidad: v.especialidad || 'General'
+                    })));
+                    setServiciosDisponibles(servsData.map(s => ({
+                        idServicio: s.idServicio,
+                        nombreServicio: s.nombreServicio,
+                        duracion: s.duracionTiempo || 30
+                    })));
+                } catch (err) {
+                    console.error("Error al cargar datos del modal:", err);
+                }
+            };
+            cargarOpciones();
+        }
+    }, [isOpen]);
 
     useEffect(() => {
         if (fechaHoraInicio && servicio) {
             const servObj = serviciosDisponibles.find(s => s.idServicio === Number(servicio));
             if (servObj) {
                 const start = new Date(fechaHoraInicio);
-                const end = new Date(start.getTime() + servObj.duracion * 60000);
+                const end = new Date(start.getTime() + (servObj.duracion || 30) * 60000);
                 
-                // Formatear a datetime-local string (YYYY-MM-DDTHH:mm) respetando zona horaria local
                 const tzOffset = end.getTimezoneOffset() * 60000;
                 const localISOTime = (new Date(end.getTime() - tzOffset)).toISOString().slice(0, 16);
                 setFechaHoraFin(localISOTime);
@@ -53,27 +73,19 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
         } else {
             setFechaHoraFin('');
         }
-    }, [fechaHoraInicio, servicio]);
+    }, [fechaHoraInicio, servicio, serviciosDisponibles]);
 
-    // Calcular fecha actual para bloquear días pasados
     const tzOffsetNow = new Date().getTimezoneOffset() * 60000;
     const fechaActual = (new Date(Date.now() - tzOffsetNow)).toISOString().slice(0, 16);
 
-    // Filtrar médicos según el servicio
-    const medicosFiltrados = veterinariosDisponibles.filter(v => {
-        if (!servicio) return true;
-        if (servicio === '1' || servicio === '2') return v.especialidad === 'Medicina General';
-        if (servicio === '3') return v.especialidad === 'Cirugía';
-        if (servicio === '4') return v.especialidad === 'Odontología';
-        return true;
-    });
+    const medicosFiltrados = veterinariosDisponibles;
 
     if (!isOpen) return null;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         
-        if (!fechaHoraInicio || !fechaHoraFin || !mascota || !servicio || !veterinario) {
+        if (!fechaHoraInicio || !mascota || !servicio || !veterinario) {
             Swal.fire({
                 title: 'Campos incompletos',
                 text: 'Por favor, llena todos los campos obligatorios (*).',
@@ -83,81 +95,49 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
             return;
         }
 
-        const mascotaObj = mascotasDisponibles.find(m => m.idMascota === mascota);
-        const vetObj = veterinariosDisponibles.find(v => v.idVeterinario === Number(veterinario));
-        const servObj = serviciosDisponibles.find(s => s.idServicio === Number(servicio));
-
-        const fechaSeleccionadaInicio = new Date(fechaHoraInicio);
-        const fechaSeleccionadaFin = new Date(fechaHoraFin);
-        const horaInicio = fechaSeleccionadaInicio.getHours();
-
-        // 1. Validación de Horario Laboral (9:00 AM a 6:00 PM)
-        if (horaInicio < 9 || horaInicio >= 18) {
-            Swal.fire({
-                title: 'Fuera de Horario',
-                text: 'La clínica solo opera de 9:00 AM a 6:00 PM.',
-                icon: 'error',
-                confirmButtonColor: '#ff8b6a'
-            });
-            return;
-        }
-
-        // 2. Validación de Cruce de Horarios (Double Booking)
-        const medicoOcupado = citasProgramadas.some(cita => {
-            if (cita.nombreVeterinario !== vetObj.nombre) return false;
-            // Un choque ocurre si el inicio nuevo es antes del fin de la cita, y el fin nuevo es después del inicio
-            const citaInicio = new Date(cita.start);
-            const citaFin = new Date(cita.end);
-            return fechaSeleccionadaInicio < citaFin && fechaSeleccionadaFin > citaInicio;
-        });
-
-        if (medicoOcupado) {
-            Swal.fire({
-                title: 'Médico No Disponible',
-                text: `El ${vetObj.nombre} ya tiene una cita reservada en ese lapso de tiempo.`,
-                icon: 'error',
-                confirmButtonColor: '#ff8b6a'
-            });
-            return;
-        }
-
         let descripcionFinal = descripcion;
-        if (Number(servicio) === 2 && tipoVacuna) {
+        if (tipoVacuna) {
             descripcionFinal = `Vacuna solicitada: ${tipoVacuna}.\n${descripcion}`;
         }
 
-        const nuevaCita = {
-            idCita: Date.now(),
-            mascotaId: mascota,
-            nombreMascota: mascotaObj.nombre,
-            nombreVeterinario: vetObj.nombre,
-            nombreServicio: servObj.nombreServicio,
-            start: new Date(fechaHoraInicio),
-            end: new Date(fechaHoraFin),
-            descripcion: descripcionFinal,
-            estado: 'Pendiente'
-        };
+        try {
+            await citaService.crearCita({
+                mascotaId: mascota,
+                veterinarioId: Number(veterinario),
+                servicioId: Number(servicio),
+                fechaHoraInicio: fechaHoraInicio,
+                descripcion: descripcionFinal
+            });
 
-        onSave(nuevaCita);
+            if (onSave) {
+                await onSave();
+            }
 
-        Swal.fire({
-            title: '¡Cita Programada!',
-            text: 'Tu cita ha sido agendada. Pendiente de aprobación por la veterinaria.',
-            icon: 'success',
-            confirmButtonColor: '#17c3b2',
-            timer: 2500
-        });
+            Swal.fire({
+                title: '¡Cita Programada!',
+                text: 'Tu cita ha sido agendada con éxito.',
+                icon: 'success',
+                confirmButtonColor: '#17c3b2',
+                timer: 2500
+            });
 
-        // Limpiar form
-        setFechaHoraInicio('');
-        setFechaHoraFin('');
-        setMascota('');
-        setServicio('');
-        setVeterinario('');
-        setTipoVacuna('');
-        setDescripcion('');
+            setFechaHoraInicio('');
+            setFechaHoraFin('');
+            setMascota('');
+            setServicio('');
+            setVeterinario('');
+            setTipoVacuna('');
+            setDescripcion('');
 
-        onClose();
+            onClose();
+        } catch (error) {
+            Swal.fire({
+                title: 'Error al agendar',
+                text: error.message || 'No se pudo reservar la cita.',
+                icon: 'error',
+                confirmButtonColor: '#ff8b6a'
+            });
+        }
     };
 
     return (

@@ -1,63 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import './ListaMedicosEstilos.css';
 import TarjetaMedico from './TarjetaMedico';
+import { veterinarioService } from '../../../services/api';
 
 const ListaMedicos = () => {
     const [cargando, setCargando] = useState(true);
     const [busqueda, setBusqueda] = useState('');
     const [paginaActual, setPaginaActual] = useState(1);
     const [tamanoPagina, setTamanoPagina] = useState(5);
+    const [medicos, setMedicos] = useState([]);
+    const [error, setError] = useState('');
 
-    // Datos simulados iniciales (para luego reemplazar con fetch de Backend)
-    const [medicos, setMedicos] = useState([
-        {
-            idVeterinario: 1,
-            nombre: 'Juan',
-            apPaterno: 'Pérez',
-            apMaterno: 'Gómez',
-            especialidad: 'Cirugía Veterinaria',
-            cedula: 'CED-9876543',
-            telefono: '555-123-4567',
-            correoElectronico: 'juan.perez@mitsu.com',
-            horarios: [
-                { idHorario: 1, diaSemana: 'Lunes a Viernes', horaInicio: '08:00', horaFin: '16:00' },
-                { idHorario: 2, diaSemana: 'Sábado', horaInicio: '09:00', horaFin: '14:00' }
-            ]
-        },
-        {
-            idVeterinario: 2,
-            nombre: 'María',
-            apPaterno: 'López',
-            apMaterno: 'Martínez',
-            especialidad: 'Medicina General y Felinos',
-            cedula: 'CED-1234567',
-            telefono: '555-987-6543',
-            correoElectronico: 'maria.lopez@mitsu.com',
-            horarios: [
-                { idHorario: 3, diaSemana: 'Lunes a Viernes', horaInicio: '10:00', horaFin: '18:00' }
-            ]
-        },
-        {
-            idVeterinario: 3,
-            nombre: 'Carlos',
-            apPaterno: 'Ruiz',
-            apMaterno: 'Silva',
-            especialidad: 'Odontología Veterinaria',
-            cedula: 'CED-5556667',
-            telefono: '555-456-7890',
-            correoElectronico: 'carlos.ruiz@mitsu.com',
-            horarios: [
-                { idHorario: 4, diaSemana: 'Martes a Sábado', horaInicio: '09:00', horaFin: '17:00' }
-            ]
-        }
-    ]);
-
-    // Simulador de carga del backend
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setCargando(false);
-        }, 1200); 
-        return () => clearTimeout(timer);
+        const cargarMedicos = async () => {
+            try {
+                setCargando(true);
+                const datos = await veterinarioService.obtenerVeterinarios();
+                setMedicos(datos);
+            } catch (err) {
+                console.error("Error al cargar veterinarios:", err);
+                setError(err.message || "No se pudo cargar la lista de médicos");
+            } finally {
+                setCargando(false);
+            }
+        };
+
+        cargarMedicos();
     }, []);
 
     const medicosFiltrados = medicos.filter(medico => {

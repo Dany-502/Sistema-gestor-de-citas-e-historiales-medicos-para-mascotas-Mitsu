@@ -63,3 +63,25 @@ export const mascotaService = {
         method: 'DELETE',
     }),
 };
+
+// Servicios de Veterinarios
+export const veterinarioService = {
+    obtenerVeterinarios: () => fetchConAuth('/veterinarios'),
+};
+
+// Servicios de Tipo de Servicio / Servicios Médicos
+export const servicioService = {
+    obtenerServicios: () => fetchConAuth('/servicios'),
+};
+
+// Servicios de Citas
+export const citaService = {
+    obtenerMisCitas: () => fetchConAuth('/citas/mis-citas'),
+    crearCita: (datosCita) => fetchConAuth('/citas', {
+        method: 'POST',
+        body: JSON.stringify(datosCita),
+    }),
+    cancelarCita: (idCita) => fetchConAuth(`/citas/${idCita}`, {
+        method: 'DELETE',
+    }),
+};

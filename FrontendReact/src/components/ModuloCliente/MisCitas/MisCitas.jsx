@@ -7,6 +7,7 @@ import './MisCitasEstilos.css';
 import FormularioNuevaCitaModal from './FormularioNuevaCitaModal';
 import ResumenCitaModal from './ResumenCitaModal';
 import Swal from 'sweetalert2';
+import { citaService } from '../../../services/api';
 
 moment.locale('es');
 const localizer = momentLocalizer(moment);
@@ -23,51 +24,33 @@ const MisCitas = () => {
     const [vistaCalendario, setVistaCalendario] = useState('month');
     const [fechaCalendario, setFechaCalendario] = useState(new Date());
 
-    // Citas simuladas iniciales
-    const [citas, setCitas] = useState(() => {
-        const hoy = new Date();
-        return [
-            {
-                idCita: 1,
-                mascotaId: '#MX4052',
-                nombreMascota: 'Max',
-                nombreVeterinario: 'Dr. Juan Pérez',
-                nombreServicio: 'Consulta General',
-                start: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + 1, 10, 0), // Mañana 10:00 AM
-                end: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + 1, 11, 0), // Mañana 11:00 AM
-                descripcion: 'Revisión mensual de control de peso.',
-                estado: 'Confirmada'
-            },
-            {
-                idCita: 2,
-                mascotaId: '#CH1108',
-                nombreMascota: 'Chloe',
-                nombreVeterinario: 'Dra. María López',
-                nombreServicio: 'Vacunación',
-                start: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + 3, 15, 0), // En 3 días 3:00 PM
-                end: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + 3, 15, 30), // En 3 días 3:30 PM
-                descripcion: 'Vacuna anual contra la rabia.',
-                estado: 'Pendiente'
-            },
-            {
-                idCita: 3,
-                mascotaId: '#MX4052',
-                nombreMascota: 'Max',
-                nombreVeterinario: 'Dr. Carlos Ruiz',
-                nombreServicio: 'Limpieza Dental',
-                start: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - 1, 12, 0), // Ayer 12:00 PM
-                end: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - 1, 13, 30), // Ayer 1:30 PM
-                descripcion: 'Limpieza dental y remoción de sarro.',
-                estado: 'Confirmada'
-            }
-        ];
-    });
+    const [citas, setCitas] = useState([]);
+
+    const cargarCitas = async () => {
+        try {
+            setCargando(true);
+            const datos = await citaService.obtenerMisCitas();
+            const citasMapeadas = datos.map(c => ({
+                idCita: c.idCita,
+                mascotaId: c.mascotaId,
+                nombreMascota: c.nombreMascota,
+                nombreVeterinario: c.nombreVeterinario,
+                nombreServicio: c.nombreServicio,
+                start: new Date(c.fechaHoraInicio),
+                end: new Date(c.fechaHoraFin),
+                descripcion: c.descripcion || '',
+                estado: c.estado || 'Pendiente'
+            }));
+            setCitas(citasMapeadas);
+        } catch (err) {
+            console.error("Error al cargar citas:", err);
+        } finally {
+            setCargando(false);
+        }
+    };
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setCargando(false);
-        }, 1200);
-        return () => clearTimeout(timer);
+        cargarCitas();
     }, []);
 
     // Formatear los mensajes a español
@@ -116,12 +99,25 @@ const MisCitas = () => {
     };
 
     // Al cancelar una cita desde el modal de resumen
-    const handleCancelarCita = (idCita) => {
-        // Aquí iría la petición HTTP al Backend: PUT /api/citas/{id}/cancelar
-        setCitas(citas.map(c => 
-            c.idCita === idCita ? { ...c, estado: 'Cancelada' } : c
-        ));
-        setModalResumenAbierto(false);
+    const handleCancelarCita = async (idCita) => {
+        try {
+            await citaService.cancelarCita(idCita);
+            await cargarCitas();
+            setModalResumenAbierto(false);
+            Swal.fire({
+                icon: 'success',
+                title: 'Cita cancelada',
+                text: 'La cita ha sido cancelada exitosamente.',
+                confirmColor: '#0284c7'
+            });
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'No se pudo cancelar la cita.',
+                confirmColor: '#0284c7'
+            });
+        }
     };
 
     // Lógica de filtrado de citas
@@ -253,7 +249,7 @@ const MisCitas = () => {
             <FormularioNuevaCitaModal
                 isOpen={modalAbierto}
                 onClose={() => setModalAbierto(false)}
-                onSave={(nueva) => setCitas([...citas, nueva])}
+                onSave={cargarCitas}
                 citasProgramadas={citas}
             />
 
