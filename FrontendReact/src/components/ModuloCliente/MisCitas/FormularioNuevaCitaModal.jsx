@@ -3,10 +3,13 @@ import './FormularioNuevaCitaModalEstilos.css';
 import Swal from 'sweetalert2';
 import iconoPortapapeles from '../../../assets/iconos/portapapeles.png';
 import { mascotaService, veterinarioService, servicioService, citaService } from '../../../services/api';
+import DatePicker from 'react-datepicker';
+import { setHours, setMinutes } from 'date-fns';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = [] }) => {
-    const [fechaHoraInicio, setFechaHoraInicio] = useState('');
-    const [fechaHoraFin, setFechaHoraFin] = useState('');
+    const [fechaHoraInicio, setFechaHoraInicio] = useState(null);
+    const [fechaHoraFin, setFechaHoraFin] = useState(null);
     const [mascota, setMascota] = useState('');
     const [servicio, setServicio] = useState('');
     const [veterinario, setVeterinario] = useState('');
@@ -30,9 +33,19 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
             const cargarOpciones = async () => {
                 try {
                     const [mascotasData, vetsData, servsData] = await Promise.all([
-                        mascotaService.obtenerMascotas().catch(() => []),
-                        veterinarioService.obtenerVeterinarios().catch(() => []),
-                        servicioService.obtenerServicios().catch(() => [])
+                        mascotaService.obtenerMascotas().catch(() => [
+                            { idMascota: 1, nombreMascota: 'Luna', especie: 'Gato', raza: 'Siamés', color: 'Blanco' },
+                            { idMascota: 2, nombreMascota: 'Max', especie: 'Perro', raza: 'Bulldog', color: 'Café' }
+                        ]),
+                        veterinarioService.obtenerVeterinarios().catch(() => [
+                            { idVeterinario: 1, nombre: 'Miguel', apPaterno: 'Alonso', especialidad: 'Cirujano' },
+                            { idVeterinario: 2, nombre: 'Ana', apPaterno: 'Gomez', especialidad: 'Medicina General' }
+                        ]),
+                        servicioService.obtenerServicios().catch(() => [
+                            { idServicio: 1, nombreServicio: 'Consulta General', duracionTiempo: 30 },
+                            { idServicio: 2, nombreServicio: 'Vacunación', duracionTiempo: 15 },
+                            { idServicio: 3, nombreServicio: 'Cirugía', duracionTiempo: 120 }
+                        ])
                     ]);
                     setMascotasDisponibles(mascotasData.map(m => ({
                         idMascota: m.id_Mascota || m.idMascota || m.id,
@@ -63,20 +76,22 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
         if (fechaHoraInicio && servicio) {
             const servObj = serviciosDisponibles.find(s => s.idServicio === Number(servicio));
             if (servObj) {
-                const start = new Date(fechaHoraInicio);
-                const end = new Date(start.getTime() + (servObj.duracion || 30) * 60000);
-                
-                const tzOffset = end.getTimezoneOffset() * 60000;
-                const localISOTime = (new Date(end.getTime() - tzOffset)).toISOString().slice(0, 16);
-                setFechaHoraFin(localISOTime);
+                const end = new Date(fechaHoraInicio.getTime() + (servObj.duracion || 30) * 60000);
+                setFechaHoraFin(end);
             }
         } else {
-            setFechaHoraFin('');
+            setFechaHoraFin(null);
         }
     }, [fechaHoraInicio, servicio, serviciosDisponibles]);
 
-    const tzOffsetNow = new Date().getTimezoneOffset() * 60000;
-    const fechaActual = (new Date(Date.now() - tzOffsetNow)).toISOString().slice(0, 16);
+    const obtenerHorasExcluidas = () => {
+        if (!fechaHoraInicio) return [];
+        // SIMULACIÓN: Estas son horas falsamente ocupadas para este médico
+        return [
+            setHours(setMinutes(fechaHoraInicio, 0), 10),
+            setHours(setMinutes(fechaHoraInicio, 30), 14)
+        ];
+    };
 
     const medicosFiltrados = veterinariosDisponibles;
 
@@ -105,7 +120,7 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
                 mascotaId: mascota,
                 veterinarioId: Number(veterinario),
                 servicioId: Number(servicio),
-                fechaHoraInicio: fechaHoraInicio,
+                fechaHoraInicio: fechaHoraInicio.toISOString(),
                 descripcion: descripcionFinal
             });
 
@@ -121,8 +136,8 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
                 timer: 2500
             });
 
-            setFechaHoraInicio('');
-            setFechaHoraFin('');
+            setFechaHoraInicio(null);
+            setFechaHoraFin(null);
             setMascota('');
             setServicio('');
             setVeterinario('');
@@ -208,29 +223,35 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
                     <div className="filaGridCita">
                         <div className="grupoFormularioCita">
                             <label>Fecha/Hora Inicio<span className="asterisco">*</span></label>
-                            <input 
-                                type="datetime-local" 
-                                min={fechaActual}
-                                value={fechaHoraInicio}
-                                onChange={(e) => {
-                                    e.target.setCustomValidity('');
-                                    setFechaHoraInicio(e.target.value);
-                                }}
-                                onInvalid={(e) => {
-                                    e.target.setCustomValidity('Escoge una fecha u hora de trabajo valido ');
-                                }}
+                            <DatePicker
+                                selected={fechaHoraInicio}
+                                onChange={(date) => setFechaHoraInicio(date)}
+                                showTimeSelect
+                                timeFormat="HH:mm"
+                                timeIntervals={15}
+                                timeCaption="Hora"
+                                dateFormat="MMMM d, yyyy h:mm aa"
+                                minDate={new Date()}
+                                minTime={setHours(setMinutes(new Date(), 0), 9)}
+                                maxTime={setHours(setMinutes(new Date(), 0), 20)}
+                                excludeTimes={veterinario ? obtenerHorasExcluidas() : []}
                                 className="inputFormularioCita"
+                                placeholderText={veterinario ? "Selecciona día y hora" : "Elige un médico primero"}
+                                disabled={!veterinario}
                             />
                         </div>
 
                         <div className="grupoFormularioCita">
                             <label>Fecha/Hora Fin<span className="asterisco">*</span></label>
-                            <input 
-                                type="datetime-local" 
-                                value={fechaHoraFin}
+                            <DatePicker
+                                selected={fechaHoraFin}
                                 readOnly
+                                showTimeSelect
+                                timeFormat="HH:mm"
+                                dateFormat="h:mm aa"
                                 className="inputFormularioCita inputDeshabilitado"
-                                title="Se calcula automáticamente"
+                                placeholderText="Auto calculado"
+                                disabled
                             />
                         </div>
 

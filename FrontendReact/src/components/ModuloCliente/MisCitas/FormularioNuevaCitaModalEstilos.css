@@ -160,8 +160,20 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   transition: background-color 0.2s ease;
 }
 .btnGuardarCitaColor:hover {
-  background-color: #14a395;
+  background-color: #139f91;
 }
+<<<<<<< HEAD
+=======
+
+/* Ajustes para react-datepicker */
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker__input-container input {
+  width: 100%;
+}
+>>>>>>> 545be72 (Entrega del diseño de la agenda del veterinario y el diseño del catalogo de clientes vinculados por el)
 @media (max-width: 768px) {
   .filaGridCita {
     grid-template-columns: 1fr;

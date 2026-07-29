@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1200;
+  z-index: 1050;
   animation: fadeInResumen 0.2s ease-out;
 }
 @keyframes fadeInResumen {

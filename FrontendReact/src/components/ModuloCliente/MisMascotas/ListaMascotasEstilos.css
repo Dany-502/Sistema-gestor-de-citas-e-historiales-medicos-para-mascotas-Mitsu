@@ -16,9 +16,9 @@
   gap: 5px;
 }
 .tituloMascotas {
+  color: #0f172a;
   font-size: 28px;
-  font-weight: 800;
-  color: #002244;
+  font-weight: 700;
   margin: 0;
 }
 .subtituloMascotas {

@@ -2,14 +2,14 @@ import React from 'react';
 import moment from 'moment';
 import Swal from 'sweetalert2';
 import './ResumenCitaModalEstilos.css';
-import iconoMascotas from '../../../assets/iconos/mascotas.png';
+import iconoCabecera from '../../../assets/iconos/corazon-de-pata.png';
 import iconoMedico from '../../../assets/iconos/medico.png';
 import iconoCalendario from '../../../assets/iconos/calendario2.png';
 import iconoPata from '../../../assets/iconos/pata.png';
 import iconoEstetoscopio from '../../../assets/iconos/estetoscopio.png';
 import iconoPortapapeles from '../../../assets/iconos/portapapeles.png';
 
-const ResumenCitaModal = ({ isOpen, onClose, cita, onCancel }) => {
+const ResumenCitaModal = ({ isOpen, onClose, cita, onCancel, esVeterinario = false, onIrExpediente, onCompletarCita, onConfirmarCita }) => {
     if (!isOpen || !cita) return null;
 
     const handleCancelarClick = () => {
@@ -35,6 +35,53 @@ const ResumenCitaModal = ({ isOpen, onClose, cita, onCancel }) => {
         });
     };
 
+    const handleCompletarClick = () => {
+        Swal.fire({
+            title: '¿Marcar como Realizada?',
+            text: '¿Deseas marcar esta cita como completada/realizada?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#17c3b2',
+            cancelButtonColor: '#94a3b8',
+            confirmButtonText: 'Sí, completada',
+            cancelButtonText: 'Volver'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (onCompletarCita) onCompletarCita(cita.idCita);
+                Swal.fire({
+                    title: '¡Realizada!',
+                    text: 'La cita ha sido marcada como realizada.',
+                    icon: 'success',
+                    confirmButtonColor: '#17c3b2'
+                });
+            }
+        });
+    };
+
+    const handleConfirmarClick = () => {
+        Swal.fire({
+            title: '¿Confirmar Cita?',
+            text: '¿Deseas confirmar esta cita y notificar al cliente?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#17c3b2',
+            cancelButtonColor: '#94a3b8',
+            confirmButtonText: 'Sí, confirmar',
+            cancelButtonText: 'Volver'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (onConfirmarCita) onConfirmarCita(cita);
+                Swal.fire({
+                    title: '¡Confirmada!',
+                    text: 'La cita ha sido confirmada.',
+                    icon: 'success',
+                    confirmButtonColor: '#17c3b2'
+                });
+                onClose();
+            }
+        });
+    };
+
     // Determinar la clase del badge según el estado
     let claseEstado = 'badge-pendiente';
     if (cita.estado === 'Confirmada') claseEstado = 'badge-confirmada';
@@ -47,7 +94,7 @@ const ResumenCitaModal = ({ isOpen, onClose, cita, onCancel }) => {
                 
                 <div className="cabeceraResumenCita">
                     <div className="circuloIconoCabecera">
-                        <img src={iconoMascotas} alt="Mascota" />
+                        <img src={iconoCabecera} alt="Mascota" />
                     </div>
                     <h3>Detalle de la Cita</h3>
                     <button className="botonCerrarResumen" onClick={onClose}>&times;</button>
@@ -112,13 +159,31 @@ const ResumenCitaModal = ({ isOpen, onClose, cita, onCancel }) => {
 
                 </div>
 
-                <div className="pieResumenCita">
+                <div className="pieResumenCita" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
+                    
+                    {/* Botones exclusivos para el veterinario */}
+                    {esVeterinario && cita.estado === 'Pendiente' && (
+                        <button className="btnAccionPrimario" onClick={handleConfirmarClick} style={{ backgroundColor: '#f59e0b', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', flex: 1 }}>
+                            Confirmar Cita
+                        </button>
+                    )}
+                    {esVeterinario && cita.estado === 'Confirmada' && (
+                        <button className="btnAccionPrimario" onClick={handleCompletarClick} style={{ backgroundColor: '#0077cc', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', flex: 1 }}>
+                            Marcar como Realizada
+                        </button>
+                    )}
+                    {esVeterinario && (
+                        <button className="btnAccionPrimario" onClick={() => { if(onIrExpediente) onIrExpediente(cita) }} style={{ backgroundColor: '#4a5568', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', flex: 1 }}>
+                            Ir al Expediente
+                        </button>
+                    )}
+
                     {(cita.estado === 'Pendiente' || cita.estado === 'Confirmada') && (
-                        <button className="btnCancelarSecundario" onClick={handleCancelarClick}>
+                        <button className="btnCancelarSecundario" onClick={handleCancelarClick} style={{ flex: 1 }}>
                             Cancelar Cita
                         </button>
                     )}
-                    <button className="btnCerrarPrimario" onClick={onClose}>Aceptar</button>
+                    <button className="btnCerrarPrimario" onClick={onClose} style={{ flex: 1 }}>Cerrar</button>
                 </div>
 
             </div>

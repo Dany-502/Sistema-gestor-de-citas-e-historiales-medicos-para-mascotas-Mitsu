@@ -3,22 +3,17 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'moment/dist/locale/es';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import './MisCitasEstilos.css';
-import FormularioNuevaCitaModal from './FormularioNuevaCitaModal';
-import ResumenCitaModal from './ResumenCitaModal';
+import './AgendaEstilos.css';
+import ResumenCitaModal from '../../ModuloCliente/MisCitas/ResumenCitaModal';
 import Swal from 'sweetalert2';
-import { citaService } from '../../../services/api';
 
 moment.locale('es');
 const localizer = momentLocalizer(moment);
 
-const MisCitas = () => {
+const AgendaVeterinario = () => {
     const [cargando, setCargando] = useState(true);
     const [busqueda, setBusqueda] = useState('');
     const [filtroEstado, setFiltroEstado] = useState('');
-    const [filtroMascota, setFiltroMascota] = useState('');
-    const [filtroServicio, setFiltroServicio] = useState('');
-    const [modalAbierto, setModalAbierto] = useState(false);
     const [modalResumenAbierto, setModalResumenAbierto] = useState(false);
     const [citaSeleccionada, setCitaSeleccionada] = useState(null);
     const [vistaCalendario, setVistaCalendario] = useState('month');
@@ -26,27 +21,40 @@ const MisCitas = () => {
 
     const [citas, setCitas] = useState([]);
 
-    const cargarCitas = async () => {
-        try {
-            setCargando(true);
-            const datos = await citaService.obtenerMisCitas();
-            const citasMapeadas = datos.map(c => ({
-                idCita: c.idCita,
-                mascotaId: c.mascotaId,
-                nombreMascota: c.nombreMascota,
-                nombreVeterinario: c.nombreVeterinario,
-                nombreServicio: c.nombreServicio,
-                start: new Date(c.fechaHoraInicio),
-                end: new Date(c.fechaHoraFin),
-                descripcion: c.descripcion || '',
-                estado: c.estado || 'Pendiente'
-            }));
-            setCitas(citasMapeadas);
-        } catch (err) {
-            console.error("Error al cargar citas:", err);
-        } finally {
+    const cargarCitas = () => {
+        setCargando(true);
+        // SIMULACIÓN: Cargar citas asignadas al veterinario actual
+        setTimeout(() => {
+            const hoy = new Date();
+            const mañana = new Date(hoy);
+            mañana.setDate(hoy.getDate() + 1);
+            
+            const citasMock = [
+                {
+                    idCita: 1,
+                    nombreMascota: 'Luna (Gato, Siamés)',
+                    nombreVeterinario: 'Miguel Alonso', // El veterinario de sesión
+                    nombreServicio: 'Consulta general',
+                    start: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 10, 0),
+                    end: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 11, 0),
+                    descripcion: 'Dueño: María Fernández. Revisión de rutina.',
+                    estado: 'Pendiente'
+                },
+                {
+                    idCita: 2,
+                    nombreMascota: 'Max (Perro, Bulldog)',
+                    nombreVeterinario: 'Miguel Alonso',
+                    nombreServicio: 'Revisión de piel',
+                    start: new Date(mañana.getFullYear(), mañana.getMonth(), mañana.getDate(), 14, 30),
+                    end: new Date(mañana.getFullYear(), mañana.getMonth(), mañana.getDate(), 15, 30),
+                    descripcion: 'Dueño: Carlos Romero. Problemas de alergia.',
+                    estado: 'Confirmada'
+                }
+            ];
+            
+            setCitas(citasMock);
             setCargando(false);
-        }
+        }, 1000);
     };
 
     useEffect(() => {
@@ -69,7 +77,7 @@ const MisCitas = () => {
         noEventsInRange: 'No hay citas en este rango.'
     };
 
-    // Agregar colores específicos a los eventos de manera dinámica
+    // Agregar colores específicos a los eventos
     const eventStyleGetter = (event) => {
         let claseEstado = 'evento-pendiente';
         if (event.estado === 'Confirmada') claseEstado = 'evento-confirmada';
@@ -81,7 +89,6 @@ const MisCitas = () => {
         };
     };
 
-    // Pintar las celdas de horarios no laborales (antes de las 9am, después de las 6pm)
     const slotStyleGetter = (date) => {
         const hora = date.getHours();
         if (hora < 9 || hora >= 20) {
@@ -92,61 +99,54 @@ const MisCitas = () => {
         return {};
     };
 
-    // Al hacer clic en un evento
     const handleSelectEvent = (event) => {
         setCitaSeleccionada(event);
         setModalResumenAbierto(true);
     };
 
-    // Al cancelar una cita desde el modal de resumen
-    const handleCancelarCita = async (idCita) => {
-        try {
-            await citaService.cancelarCita(idCita);
-            await cargarCitas();
-            setModalResumenAbierto(false);
-            Swal.fire({
-                icon: 'success',
-                title: 'Cita cancelada',
-                text: 'La cita ha sido cancelada exitosamente.',
-                confirmColor: '#0284c7'
-            });
-        } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: error.message || 'No se pudo cancelar la cita.',
-                confirmColor: '#0284c7'
-            });
-        }
+    const handleCancelarCita = (idCita) => {
+        // SIMULACIÓN: Cancelar cita en el backend
+        setModalResumenAbierto(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'Cita cancelada',
+            text: 'La cita ha sido cancelada exitosamente.',
+            confirmColor: '#0284c7'
+        });
+        // Simulamos la eliminación local
+        setCitas(prev => prev.filter(c => c.idCita !== idCita));
     };
 
-    // Lógica de filtrado de citas
+    const handleCompletarCita = (idCita) => {
+        setModalResumenAbierto(false);
+        // Simulamos el cambio de estado local
+        setCitas(prev => prev.map(c => 
+            c.idCita === idCita ? { ...c, estado: 'Realizada' } : c
+        ));
+    };
+
+    const handleIrExpediente = (cita) => {
+        setModalResumenAbierto(false);
+        Swal.fire({
+            icon: 'info',
+            title: 'Redirigiendo...',
+            text: `Aquí se redirigiría al expediente de ${cita.nombreMascota}.`,
+            confirmColor: '#0284c7'
+        });
+        // En el futuro: navigate('/veterinario/expedientes', { state: { mascotaId: cita.mascotaId } })
+    };
+
+    // Filtros
     const citasFiltradas = citas.filter((cita) => {
         const coincideBusqueda =
             cita.nombreMascota.toLowerCase().includes(busqueda.toLowerCase()) ||
-            cita.nombreVeterinario.toLowerCase().includes(busqueda.toLowerCase()) ||
             cita.nombreServicio.toLowerCase().includes(busqueda.toLowerCase());
 
         const coincideEstado = filtroEstado ? cita.estado === filtroEstado : true;
-        const coincideMascota = filtroMascota ? cita.mascotaId === filtroMascota : true;
-        const coincideServicio = filtroServicio ? cita.nombreServicio === filtroServicio : true;
-
-        return coincideBusqueda && coincideEstado && coincideMascota && coincideServicio;
+        return coincideBusqueda && coincideEstado;
     });
 
-    // Mapear campos para react-big-calendar y ocultar canceladas si hay otra cita a la misma hora
-    const eventosMapeados = citasFiltradas.filter(c => {
-        if (c.estado === 'Cancelada') {
-            const time = new Date(c.start).getTime();
-            // Buscar si hay otra cita NO cancelada exactamente a la misma hora
-            const tieneCitaValida = citasFiltradas.some(otra => 
-                otra.estado !== 'Cancelada' && 
-                new Date(otra.start).getTime() === time
-            );
-            return !tieneCitaValida; // Si existe otra, se oculta la cancelada
-        }
-        return true;
-    }).map(c => ({
+    const eventosMapeados = citasFiltradas.map(c => ({
         ...c,
         title: `${c.nombreMascota} - ${c.nombreServicio}`
     }));
@@ -155,23 +155,28 @@ const MisCitas = () => {
         <div className="contenedorMisCitas">
             <div className="cabeceraCitas">
                 <div className="textosCabecera">
-                    <h2 className="tituloCitas">Mis Citas</h2>
-                    <p className="subtituloCitas">Visualiza y agenda las visitas al veterinario.</p>
+                    <h2 className="tituloCitas" style={{color: '#0f172a'}}>Mi Agenda</h2>
+                    <p className="subtituloCitas">Revisa las citas y pacientes que tienes programados.</p>
                 </div>
-                <button className="botonAgendarCita" onClick={() => setModalAbierto(true)}>
-                    Agendar Nueva Cita
-                </button>
             </div>
 
             {/* KPIs */}
             <div className="panelKpiCitas">
                 <div className="kpiCardCitas">
-                    <span className="kpiLabel">Citas programadas</span>
-                    <span className="kpiValue">{citas.filter(c => c.estado === 'Confirmada' || c.estado === 'Pendiente').length}</span>
+                    <span className="kpiLabel">Citas hoy</span>
+                    <span className="kpiValue">{citas.filter(c => c.start.getDate() === new Date().getDate() && (c.estado === 'Confirmada' || c.estado === 'Pendiente')).length}</span>
                 </div>
                 <div className="kpiCardCitas">
-                    <span className="kpiLabel">Pendientes de confirmación</span>
-                    <span className="kpiValue">{citas.filter(c => c.estado === 'Pendiente').length}</span>
+                    <span className="kpiLabel">Por confirmar</span>
+                    <span className="kpiValue" style={{ color: '#ffb84d' }}>{citas.filter(c => c.estado === 'Pendiente').length}</span>
+                </div>
+                <div className="kpiCardCitas">
+                    <span className="kpiLabel">Pacientes atendidos</span>
+                    <span className="kpiValue" style={{ color: '#007aff' }}>{citas.filter(c => c.estado === 'Realizada').length}</span>
+                </div>
+                <div className="kpiCardCitas">
+                    <span className="kpiLabel">Total programadas</span>
+                    <span className="kpiValue">{citas.filter(c => c.estado === 'Confirmada' || c.estado === 'Pendiente').length}</span>
                 </div>
             </div>
 
@@ -179,7 +184,7 @@ const MisCitas = () => {
             <div className="barraHerramientasCitas">
                 <input
                     type="text"
-                    placeholder="Buscar por mascota, médico o servicio..."
+                    placeholder="Buscar paciente o servicio..."
                     value={busqueda}
                     onChange={(e) => setBusqueda(e.target.value)}
                     className="buscadorCitas"
@@ -197,25 +202,13 @@ const MisCitas = () => {
                         <option value="Realizada">Realizada</option>
                         <option value="Cancelada">Cancelada</option>
                     </select>
-
-                    <select
-                        value={filtroServicio}
-                        onChange={(e) => setFiltroServicio(e.target.value)}
-                        className="selectFiltroCitas"
-                    >
-                        <option value="">Todos los Servicios</option>
-                        <option value="Consulta General">Consulta General</option>
-                        <option value="Vacunación">Vacunación</option>
-                        <option value="Cirugía">Cirugía</option>
-                        <option value="Limpieza Dental">Limpieza Dental</option>
-                    </select>
                 </div>
             </div>
 
             {cargando ? (
                 <div className="estadoCargandoMedicos">
                     <div className="spinnerMedicos"></div>
-                    <p>Obteniendo citas del servidor...</p>
+                    <p>Obteniendo tu agenda...</p>
                 </div>
             ) : (
                 <div className="calendarioContenedor">
@@ -257,21 +250,17 @@ const MisCitas = () => {
                 </div>
             </div>
 
-            <FormularioNuevaCitaModal
-                isOpen={modalAbierto}
-                onClose={() => setModalAbierto(false)}
-                onSave={cargarCitas}
-                citasProgramadas={citas}
-            />
-
             <ResumenCitaModal
                 isOpen={modalResumenAbierto}
                 onClose={() => setModalResumenAbierto(false)}
                 cita={citaSeleccionada}
                 onCancel={handleCancelarCita}
+                esVeterinario={true}
+                onCompletarCita={handleCompletarCita}
+                onIrExpediente={handleIrExpediente}
             />
         </div>
     );
 };
 
-export default MisCitas;
+export default AgendaVeterinario;
