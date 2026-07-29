@@ -46,7 +46,7 @@ function App() {
         {/* Rutas del Módulo Cliente */}
         <Route 
           path="/cliente" 
-          element={<ClienteLayout />}
+          element={<ClienteLayout alCerrarSesion={manejarCerrarSesion} />}
           /* --- SISTEMA PROTEGIDO (Comentado temporalmente para pruebas) ---
           element={
             sesionIniciada ? (

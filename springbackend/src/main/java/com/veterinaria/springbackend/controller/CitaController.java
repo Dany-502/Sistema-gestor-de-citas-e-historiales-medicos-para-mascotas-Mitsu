@@ -19,6 +19,7 @@ import java.util.List;
 public class CitaController {
 
     private final CitaService citaService;
+    private final com.veterinaria.springbackend.service.RecordatorioCitasTask recordatorioCitasTask;
 
     @GetMapping("/mis-citas")
     public ResponseEntity<List<CitaDTO>> obtenerMisCitas(Authentication authentication) {
@@ -37,5 +38,11 @@ public class CitaController {
         String correo = authentication.getName();
         citaService.cancelarCita(idCita, correo);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/probar-recordatorios")
+    public ResponseEntity<String> probarRecordatorios() {
+        int total = recordatorioCitasTask.ejecutarProcesoRecordatorios();
+        return ResponseEntity.ok("Proceso de recordatorio 24h ejecutado. Citas procesadas: " + total);
     }
 }

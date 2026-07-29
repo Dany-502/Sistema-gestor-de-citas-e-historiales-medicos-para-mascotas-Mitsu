@@ -24,6 +24,14 @@ const Navbar = ({ alCerrarSesion }) => {
     return () => { cancelado = true; };
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    if (alCerrarSesion) {
+      alCerrarSesion();
+    }
+    window.location.href = '/';
+  };
+
   return (
     <nav className="navbar-cliente">
       <div className="navbar-spacer"></div>
@@ -44,8 +52,7 @@ const Navbar = ({ alCerrarSesion }) => {
 
         {menuOpen && (
           <div className="dropdown-menu">
-            <button className="dropdown-item">Perfil</button>
-            <button className="dropdown-item" onClick={alCerrarSesion}>Cerrar Sesión</button>
+            <button className="dropdown-item" onClick={handleLogout}>Cerrar Sesión</button>
           </div>
         )}
       </div>

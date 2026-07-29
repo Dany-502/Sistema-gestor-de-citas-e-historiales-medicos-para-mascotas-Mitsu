@@ -23,8 +23,7 @@ public class ServicioService {
                         s.getNombreServicio(),
                         s.getDuracionTiempo(),
                         s.getPrecio(),
-                        s.getActivo()
-                ))
+                        s.getActivo()))
                 .collect(Collectors.toList());
     }
 }

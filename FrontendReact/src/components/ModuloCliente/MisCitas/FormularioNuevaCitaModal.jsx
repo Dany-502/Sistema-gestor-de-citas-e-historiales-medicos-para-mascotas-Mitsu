@@ -35,11 +35,11 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
                         servicioService.obtenerServicios().catch(() => [])
                     ]);
                     setMascotasDisponibles(mascotasData.map(m => ({
-                        idMascota: m.idMascota,
-                        nombre: m.nombreMascota || m.nombre,
-                        especie: m.especie,
-                        raza: m.raza,
-                        color: m.color
+                        idMascota: m.id_Mascota || m.idMascota || m.id,
+                        nombre: m.NombreMascota || m.nombreMascota || m.nombre,
+                        especie: m.Especie || m.especie,
+                        raza: m.Raza || m.raza,
+                        color: m.Color || m.color
                     })));
                     setVeterinariosDisponibles(vetsData.map(v => ({
                         idVeterinario: v.idVeterinario,
@@ -180,14 +180,11 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
                                 className="selectFormularioCita"
                             >
                                 <option value="">Seleccionar</option>
-                                <optgroup label="Servicios Médicos">
-                                    <option value="1">Consulta General</option>
-                                    <option value="2">Vacunación</option>
-                                    <option value="3">Cirugía</option>
-                                </optgroup>
-                                <optgroup label="Estética">
-                                    <option value="4">Limpieza Dental</option>
-                                </optgroup>
+                                {serviciosDisponibles.map(s => (
+                                    <option key={s.idServicio} value={s.idServicio}>
+                                        {s.nombreServicio} ({s.duracion} min)
+                                    </option>
+                                ))}
                             </select>
                         </div>
 

@@ -20,6 +20,8 @@ public class CitaService {
     private final VeterinarioRepository veterinarioRepository;
     private final ServicioRepository servicioRepository;
     private final ClienteRepository clienteRepository;
+    private final WhatsAppService whatsAppService;
+    private final EmailService emailService;
 
     public List<CitaDTO> obtenerMisCitas(String correoCliente) {
         Cliente cliente = clienteRepository.findByCorreoElectronico(correoCliente)
@@ -61,6 +63,11 @@ public class CitaService {
         cita.setEstado("Pendiente");
 
         Cita guardada = citaRepository.save(cita);
+
+        // Notificación por WhatsApp y por Correo Electrónico
+        whatsAppService.enviarNotificacionNuevaCita(guardada, cliente);
+        emailService.enviarConfirmacionCita(guardada, cliente);
+
         return convertirADTO(guardada);
     }
 
@@ -76,7 +83,10 @@ public class CitaService {
         }
 
         cita.setEstado("Cancelada");
-        citaRepository.save(cita);
+        Cita cancelada = citaRepository.save(cita);
+
+        // Notificación de cancelación de WhatsApp por Twilio
+        whatsAppService.enviarNotificacionCancelacion(cancelada, cliente);
     }
 
     private CitaDTO convertirADTO(Cita c) {
