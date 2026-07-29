@@ -68,7 +68,7 @@ function App() {
         {/* Rutas del Módulo Veterinario */}
         <Route 
           path="/veterinario" 
-          element={<VeterinarioLayout />}
+          element={<VeterinarioLayout alCerrarSesion={manejarCerrarSesion} />}
         >
           <Route path="dashboard" element={<DashboardVeterinario />} />
           <Route path="expedientes" element={<ExpedientesVeterinario />} />

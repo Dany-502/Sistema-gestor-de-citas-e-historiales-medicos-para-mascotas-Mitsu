@@ -1,3 +1,6 @@
+/* ==========================================================================
+   TarjetaMedicoEstilos.css - Estilos de Tarjeta Individual de Médico
+   ========================================================================== */
 .tarjetaMedico {
   background-color: #f8fafc;
   border-radius: 12px;
@@ -9,12 +12,10 @@
   position: relative;
   border: 1px solid #edf2f7;
 }
-
 .tarjetaMedico:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
 }
-
 .cabeceraTarjetaMedico {
   display: flex;
   align-items: center;
@@ -22,25 +23,21 @@
   background-color: #ffffff;
   border-bottom: 1px solid #edf2f7;
 }
-
 .iconoAvatarMedico {
   width: 45px;
   height: 45px;
   opacity: 0.6;
 }
-
 .infoBasicaMedico {
   margin-left: 15px;
   flex-grow: 1;
 }
-
 .infoBasicaMedico h3 {
   margin: 0;
   font-size: 18px;
   color: #1a202c;
   font-weight: 700;
 }
-
 .etiquetaEspecialidad {
   display: inline-block;
   background-color: #e6f6ff;
@@ -51,25 +48,21 @@
   font-weight: 600;
   margin-top: 5px;
 }
-
 .cuerpoTarjetaMedico {
   padding: 20px;
   flex-grow: 1;
   background-color: #ffffff;
 }
-
 .gridInfoMedico {
   display: grid;
   grid-template-columns: 1fr;
   gap: 15px;
   margin-bottom: 20px;
 }
-
 .itemInfoMedico {
   display: flex;
   flex-direction: column;
 }
-
 .labelInfo {
   font-size: 12px;
   color: #718096;
@@ -78,23 +71,19 @@
   margin-bottom: 3px;
   font-weight: 600;
 }
-
 .valorInfo {
   font-size: 14px;
   color: #2d3748;
   font-weight: 500;
 }
-
 .valorInfo.contacto {
   color: #4a5568;
 }
-
 .seccionHorarios {
   margin-top: 15px;
   padding-top: 15px;
   border-top: 1px dashed #e2e8f0;
 }
-
 .tituloHorarios {
   font-size: 13px;
   color: #4a5568;
@@ -104,13 +93,11 @@
   align-items: center;
   gap: 5px;
 }
-
 .listaHorarios {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-
 .itemHorario {
   font-size: 13px;
   color: #4a5568;
@@ -118,11 +105,9 @@
   display: flex;
   justify-content: space-between;
 }
-
 .diaHorario {
   font-weight: 600;
 }
-
 .pieTarjetaMedico {
   padding: 15px 20px;
   background-color: #f8fafc;
@@ -130,7 +115,6 @@
   display: flex;
   justify-content: center;
 }
-
 .botonAgendar {
   width: 100%;
   background-color: #ff8b6a;
@@ -143,7 +127,6 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
-
 .botonAgendar:hover {
   background-color: #ff7650;
 }

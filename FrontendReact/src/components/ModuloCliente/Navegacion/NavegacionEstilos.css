@@ -1,105 +1,81 @@
-/* RESET & BASE LAYOUT */
+/* ==========================================================================
+   NavegacionEstilos.css - Estilos de Navegación (Navbar y Sidebar)
+   ========================================================================== */
 * {
   box-sizing: border-box;
 }
-
 .layout-cliente {
   display: flex;
-  height: 100vh; /* Fijado a la altura de la pantalla */
-  overflow: hidden; /* Evita scroll en todo el cuerpo de la página */
+  height: 100vh; 
+  overflow: hidden; 
   font-family: 'Inter', 'Roboto', sans-serif;
 }
-
-/* SIDEBAR */
 .sidebar-cliente {
   width: 240px;
-  /* Ancho ajustado para ser más delgado/corto */
   flex-shrink: 0;
-  /* EVITA QUE SE ENCOJA SI EL CONTENIDO ES MUY ANCHO */
   height: 100%;
-  overflow-y: auto; /* Scroll independiente por si el menú crece mucho */
+  overflow-y: auto; 
   background-color: #26b5b7;
   display: flex;
   flex-direction: column;
   padding: 0;
 }
-
 .sidebar-logo {
   padding: 25px 15px 25px;
-  /* Reducido el espacio alrededor del logo */
   text-align: center;
 }
-
 .sidebar-logo img {
   max-width: 140px;
   height: auto;
 }
-
 .sidebar-menu {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  /* Botones más juntos */
   padding: 0 15px;
 }
-
 .menu-link {
   display: flex;
   align-items: center;
   padding: 10px 15px;
-  /* Botón más delgado/compacto */
   text-decoration: none;
   border-radius: 25px;
   color: #333;
   font-size: 14px;
-  /* Tamaño de letra más pequeño */
   font-weight: 600;
   white-space: nowrap;
-  /* Evita que el texto salte a otra línea */
   transition: all 0.2s ease;
 }
-
 .menu-icon {
   width: 20px;
-  /* Iconos más pequeños */
   height: 20px;
   margin-right: 12px;
   filter: none;
   image-rendering: -webkit-optimize-contrast;
-  /* Mejora un poco la nitidez del PNG */
   image-rendering: crisp-edges;
   transition: all 0.2s ease;
 }
-
-/* ESTADO HOVER Y ACTIVO */
 .menu-link:hover,
 .menu-link.active {
   background-color: #ff8b6a;
   color: #ffffff;
 }
-
 .menu-link:hover .menu-icon,
 .menu-link.active .menu-icon {
   filter: invert(1) brightness(2);
 }
-
-/* CONTENIDO PRINCIPAL */
 .contenido-principal {
   flex: 1;
   display: flex;
   flex-direction: column;
   background-color: #f7f9fc;
   min-width: 0;
-  /* Soluciona el problema de flexbox que expande la pantalla */
   height: 100%;
   overflow: hidden;
 }
-
-/* NAVBAR */
 .navbar-cliente {
   height: 65px;
-  /* Navbar más delgado */
-  flex-shrink: 0; /* Evita que el contenido principal lo aplaste verticalmente */
+  flex-shrink: 0; 
   background-color: #ffffff;
   border-bottom: 1px solid #eef2f5;
   display: flex;
@@ -107,15 +83,12 @@
   padding: 0 35px;
   justify-content: space-between;
 }
-
 .navbar-spacer {
   flex: 1;
 }
-
 .navbar-user-section {
   position: relative;
 }
-
 .user-pill {
   display: flex;
   align-items: center;
@@ -123,19 +96,15 @@
   border: 1px solid #c9d3db;
   border-radius: 30px;
   padding: 4px 12px 4px 4px;
-  /* Píldora más compacta */
   cursor: pointer;
   gap: 10px;
   transition: all 0.2s ease;
 }
-
 .user-pill:hover {
   background-color: #f4f6f8;
 }
-
 .avatar-placeholder {
   width: 32px;
-  /* Avatar más pequeño */
   height: 32px;
   border-radius: 50%;
   background-color: #e0e6ed;
@@ -144,29 +113,23 @@
   justify-content: center;
   color: #5c6c75;
 }
-
 .avatar-placeholder svg {
   width: 16px;
   height: 16px;
 }
-
 .user-name {
   font-weight: 600;
   color: #1a2b3c;
   font-size: 13px;
-  /* Letra de usuario más pequeña */
 }
-
 .dropdown-icon {
   width: 10px;
   height: 10px;
   transition: transform 0.3s ease;
 }
-
 .dropdown-icon.open {
   transform: rotate(180deg);
 }
-
 .dropdown-menu {
   position: absolute;
   top: 120%;
@@ -181,7 +144,6 @@
   flex-direction: column;
   z-index: 100;
 }
-
 .dropdown-item {
   padding: 10px 15px;
   border: none;
@@ -193,16 +155,13 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
-
 .dropdown-item:hover {
   background-color: #f5f7fa;
   color: #26b5b7;
 }
-
 main {
   padding: 25px 35px;
-  /* Reducción ligera del padding central */
   flex: 1;
-  overflow-y: auto; /* AQUI ES DONDE SUCEDE LA MAGIA DEL SCROLL INTERNO */
-  min-width: 0; /* Evita que main expanda el layout horizontalmente */
+  overflow-y: auto; 
+  min-width: 0; 
 }

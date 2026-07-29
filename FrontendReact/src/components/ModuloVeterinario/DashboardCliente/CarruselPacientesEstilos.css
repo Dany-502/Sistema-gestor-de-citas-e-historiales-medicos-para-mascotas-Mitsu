@@ -1,14 +1,15 @@
+/* ==========================================================================
+   CarruselPacientesEstilos.css - Estilos del Carrusel de Próximos Pacientes
+   ========================================================================== */
 .panel-proximo-paciente {
   flex: 1;
 }
-
 .carrusel-pacientes-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 15px;
 }
-
 .btn-carrusel-nav {
   background: transparent;
   border: none;
@@ -19,18 +20,15 @@
   transition: transform 0.2s, color 0.2s;
   border-radius: 50%;
 }
-
 .btn-carrusel-nav:hover:not(:disabled) {
   color: #e06d50;
   transform: scale(1.1);
   background-color: #fff1ed;
 }
-
 .btn-carrusel-nav:disabled {
   color: #cbd5e1;
   cursor: not-allowed;
 }
-
 .paciente-card.actual {
   flex: 1;
   background-color: white;
@@ -39,13 +37,11 @@
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
   border-left: 5px solid #17c3b2;
 }
-
 .paciente-info-container {
   display: flex;
   align-items: flex-start;
   gap: 20px;
 }
-
 .paciente-avatar {
   width: 90px;
   height: 90px;
@@ -59,38 +55,32 @@
   font-weight: 700;
   color: #64748b;
 }
-
 .paciente-detalles {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-
 .paciente-nombre {
   color: #0f172a;
   font-size: 16px;
   font-weight: 700;
   margin: 0;
 }
-
 .paciente-raza {
   font-size: 14px;
   color: #64748b;
   font-weight: 400;
 }
-
 .paciente-dato {
   color: #475569;
   font-size: 14px;
   margin: 0;
 }
-
 .paciente-acciones {
   display: flex;
   gap: 10px;
   margin-top: 10px;
 }
-
 .btn-cancelar {
   background-color: #ff8b6a;
   color: white;
@@ -102,11 +92,9 @@
   font-size: 14px;
   transition: background-color 0.2s;
 }
-
 .btn-cancelar:hover {
   background-color: #e06d50;
 }
-
 .btn-detalles {
   background-color: #ff8b6a;
   color: white;
@@ -118,21 +106,17 @@
   font-size: 14px;
   transition: background-color 0.2s;
 }
-
 .btn-detalles:hover {
   background-color: #e06d50;
 }
-
 .estado-vacio {
   display: flex;
   justify-content: center;
   align-items: center;
   color: #64748b;
   min-height: 150px;
-  border-left: 1px solid #e2e8f0; /* Quitamos el acento si esta vacio */
+  border-left: 1px solid #e2e8f0; 
 }
-
-/* Animacion esqueleto */
 .esqueleto-paciente {
   background-color: #ffffff;
   border-radius: 12px;
@@ -142,7 +126,6 @@
   flex-direction: column;
   gap: 15px;
 }
-
 .esqueleto-avatar {
   width: 90px;
   height: 90px;
@@ -151,7 +134,6 @@
   background-size: 200% 100%;
   animation: loading-kpi 1.5s infinite;
 }
-
 .esqueleto-linea {
   height: 20px;
   background: linear-gradient(90deg, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%);
@@ -159,7 +141,6 @@
   animation: loading-kpi 1.5s infinite;
   border-radius: 4px;
 }
-
 .esqueleto-linea.corto {
   width: 50%;
 }

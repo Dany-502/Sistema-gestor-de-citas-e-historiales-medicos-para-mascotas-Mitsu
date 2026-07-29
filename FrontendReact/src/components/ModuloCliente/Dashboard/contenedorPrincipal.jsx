@@ -21,10 +21,10 @@ const ContenedorPrincipal = () => {
         if (!fechaNacimiento) return 'Desconocida';
         const fecha = new Date(fechaNacimiento);
         const hoy = new Date();
-        
+
         let años = hoy.getFullYear() - fecha.getFullYear();
         let meses = hoy.getMonth() - fecha.getMonth();
-        
+
         if (meses < 0 || (meses === 0 && hoy.getDate() < fecha.getDate())) {
             años--;
             meses += 12;
@@ -44,7 +44,7 @@ const ContenedorPrincipal = () => {
 
         async function cargarDatosDashboard() {
             try {
-                // 1. Cargar perfil del cliente autenticado
+                // 1. Cargar perfil del cliente
                 const perfil = await clienteService.obtenerPerfil();
                 if (!cancelado && perfil) {
                     setUsuario({
@@ -52,7 +52,7 @@ const ContenedorPrincipal = () => {
                     });
                 }
 
-                // 2. Cargar las mascotas reales del cliente desde MySQL
+                // 2. Cargar las mascotas
                 const mascotas = await mascotaService.obtenerMascotas();
                 if (!cancelado) {
                     setMascotasCliente(mascotas || []);
@@ -76,7 +76,6 @@ const ContenedorPrincipal = () => {
 
     return (
         <div className="panelCliente">
-            <h1 className="tituloPanel">¡Bienvenido de nuevo, {usuario.nombre}!</h1>
 
             <div className="filaSuperiorTarjetas">
                 {/* Tarjeta: Próxima Cita */}
@@ -112,8 +111,8 @@ const ContenedorPrincipal = () => {
                     <h3 className="tituloTarjeta">Acciones rápidas</h3>
                     <div className="listaAcciones">
                         <button className="botonPrimario botonAnchoCompleto">+ Agendar cita</button>
-                        <button 
-                            className="botonPrimario botonAnchoCompleto" 
+                        <button
+                            className="botonPrimario botonAnchoCompleto"
                             onClick={() => navigate('/cliente/mascotas')}
                         >
                             + Registrar Mascota
@@ -140,8 +139,8 @@ const ContenedorPrincipal = () => {
                             const edad = calcularEdad(fechaNac);
 
                             return (
-                                <div 
-                                    key={id || indice} 
+                                <div
+                                    key={id || indice}
                                     className="tarjetaMascotaIndividual"
                                     onClick={() => navigate('/cliente/mascotas')}
                                     style={{ cursor: 'pointer' }}
@@ -173,8 +172,8 @@ const ContenedorPrincipal = () => {
                     ) : (
                         <div className="estadoVacio" style={{ width: '100%' }}>
                             <p>Aún no tienes mascotas registradas en tu cuenta.</p>
-                            <button 
-                                className="botonPrimario" 
+                            <button
+                                className="botonPrimario"
                                 onClick={() => navigate('/cliente/mascotas')}
                             >
                                 + Registrar Mascota

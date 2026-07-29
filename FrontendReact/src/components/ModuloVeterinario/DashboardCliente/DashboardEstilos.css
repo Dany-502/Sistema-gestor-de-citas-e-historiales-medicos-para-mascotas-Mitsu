@@ -1,9 +1,10 @@
-/* Contenedor Principal */
+/* ==========================================================================
+   DashboardEstilos.css - Estilos del Dashboard Principal
+   ========================================================================== */
 .dashboard-veterinario-container {
   width: 100%;
   min-width: 0;
 }
-
 .dashboard-titulo {
   color: #0f172a;
   font-size: 28px;
@@ -11,12 +12,9 @@
   margin-top: 0;
   margin-bottom: 25px;
 }
-
 .section-subtitle {
   color: #1e293b;
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 15px;
 }
-
-/* Fin de clases principales del contenedor de Dashboard */

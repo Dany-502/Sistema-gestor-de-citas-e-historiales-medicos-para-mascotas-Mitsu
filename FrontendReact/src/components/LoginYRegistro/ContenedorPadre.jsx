@@ -22,8 +22,8 @@ export default function ContenedorPadre({ alIniciarSesion }) {
                 {/* Renderizado del componente correspondiente */}
                 <div className="cuerpoAutenticacion">
                     {pestanaActiva === 'iniciarSesion' ? (
-                        <FormularioLogin 
-                            cambiarARegistro={() => setPestanaActiva('registrarse')} 
+                        <FormularioLogin
+                            cambiarARegistro={() => setPestanaActiva('registrarse')}
                             alIniciarSesion={alIniciarSesion}
                         />
                     ) : (

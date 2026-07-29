@@ -26,6 +26,7 @@ const Navbar = ({ alCerrarSesion }) => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.clear();
     if (alCerrarSesion) {
       alCerrarSesion();
     }

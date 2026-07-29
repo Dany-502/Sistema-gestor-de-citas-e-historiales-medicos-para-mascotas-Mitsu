@@ -1,41 +1,37 @@
+/* ==========================================================================
+   MisCitasEstilos.css - Estilos del Módulo Mis Citas
+   ========================================================================== */
 .contenedorMisCitas {
   width: 100%;
 }
-
 .cabeceraCitas {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 25px;
 }
-
 .textosCabecera {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
-
 .tituloCitas {
   font-size: 28px;
   font-weight: 800;
   color: #002244;
   margin: 0;
 }
-
 .subtituloCitas {
   font-size: 15px;
   color: #5c6c75;
   margin: 0;
 }
-
-/* KPIs */
 .panelKpiCitas {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
   margin-bottom: 30px;
 }
-
 .kpiCardCitas {
   background-color: #ffffff;
   border-radius: 12px;
@@ -46,21 +42,17 @@
   flex-direction: column;
   gap: 5px;
 }
-
 .kpiLabel {
   font-size: 13px;
   color: #718096;
   font-weight: 600;
   text-transform: uppercase;
 }
-
 .kpiValue {
   font-size: 24px;
   font-weight: 800;
   color: #002244;
 }
-
-/* Filtros y Búsqueda */
 .barraHerramientasCitas {
   display: flex;
   justify-content: space-between;
@@ -69,7 +61,6 @@
   flex-wrap: wrap;
   margin-bottom: 20px;
 }
-
 .buscadorCitas {
   flex: 1;
   min-width: 250px;
@@ -82,17 +73,14 @@
   outline: none;
   background-color: #ffffff;
 }
-
 .buscadorCitas:focus {
   border-color: #ff8b6a;
 }
-
 .filtrosCitas {
   display: flex;
   gap: 12px;
   align-items: center;
 }
-
 .selectFiltroCitas {
   padding: 10px 14px;
   border: 1px solid #c9d3db;
@@ -102,11 +90,9 @@
   background-color: #ffffff;
   outline: none;
 }
-
 .selectFiltroCitas:focus {
   border-color: #ff8b6a;
 }
-
 .botonAgendarCita {
   background-color: #ff8b6a;
   color: #ffffff;
@@ -117,12 +103,9 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
-
 .botonAgendarCita:hover {
   background-color: #ff7650;
 }
-
-/* Leyenda de Colores */
 .leyendaColoresCitas {
   display: flex;
   gap: 20px;
@@ -133,7 +116,6 @@
   border: 1px solid #e0e6ed;
   margin-top: 20px;
 }
-
 .itemLeyendaCitas {
   display: flex;
   align-items: center;
@@ -142,30 +124,23 @@
   font-weight: 600;
   color: #4a5568;
 }
-
 .indicadorColorCitas {
   width: 14px;
   height: 14px;
   border-radius: 4px;
 }
-
 .indicadorColorCitas.pendiente {
   background-color: #ffb84d;
 }
-
 .indicadorColorCitas.confirmada {
   background-color: #4cd964;
 }
-
 .indicadorColorCitas.realizada {
   background-color: #007aff;
 }
-
 .indicadorColorCitas.cancelada {
   background-color: #ff3b30;
 }
-
-/* Contenedor del Calendario */
 .calendarioContenedor {
   background-color: #ffffff;
   border-radius: 16px;
@@ -174,12 +149,9 @@
   border: 1px solid #e0e6ed;
   height: 600px;
 }
-
-/* Sobreescribir estilos de React Big Calendar */
 .rbc-calendar {
   font-family: inherit;
 }
-
 .rbc-toolbar button {
   border: 1px solid #c9d3db;
   color: #4a5568;
@@ -187,7 +159,6 @@
   border-radius: 4px;
   transition: all 0.2s ease;
 }
-
 .rbc-toolbar button:active,
 .rbc-toolbar button.rbc-active {
   background-color: #ff8b6a !important;
@@ -195,11 +166,9 @@
   color: #ffffff !important;
   box-shadow: none !important;
 }
-
 .rbc-toolbar button:hover {
   background-color: #f8fafc;
 }
-
 .rbc-event {
   border-radius: 6px;
   font-weight: 600;
@@ -208,42 +177,32 @@
   padding: 4px 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
-
 .rbc-time-slot {
   min-height: 45px;
 }
-
 .rbc-today {
   background-color: rgba(255, 139, 106, 0.05);
 }
-
-/* Estilos de Eventos según Estado */
 .rbc-event.evento-pendiente {
   background-color: #ffeccf;
   color: #b26a00;
   border-left: 4px solid #ffb84d;
 }
-
 .rbc-event.evento-confirmada {
   background-color: #e2fbe8;
   color: #106626;
   border-left: 4px solid #4cd964;
 }
-
 .rbc-event.evento-realizada {
   background-color: #e5f1ff;
   color: #004085;
   border-left: 4px solid #007aff;
 }
-
 .rbc-event.evento-cancelada {
   background-color: #ffe5e5;
   color: #851414;
   border-left: 4px solid #ff3b30;
 }
-
-/* HORAS NO LABORALES */
 .hora-no-laboral {
   background-color: rgba(255, 139, 106, 0.12);
-  /* Naranja muy suave */
 }

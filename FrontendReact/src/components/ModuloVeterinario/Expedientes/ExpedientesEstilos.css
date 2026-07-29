@@ -1,10 +1,12 @@
+/* ==========================================================================
+   ExpedientesEstilos.css - Estilos del Módulo Expedientes Médicos
+   ========================================================================== */
 .expedientes-veterinario-container {
   padding: 40px;
   background-color: #f1f5f9;
   min-height: 100vh;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
-
 .expedientes-header {
   display: flex;
   justify-content: space-between;
@@ -13,26 +15,22 @@
   gap: 20px;
   flex-wrap: wrap;
 }
-
 .expedientes-titulo {
   color: #0f172a;
   font-size: 28px;
   font-weight: 700;
   margin: 0 0 10px 0;
 }
-
 .expedientes-subtitulo {
   color: #64748b;
   font-size: 16px;
   margin: 0;
 }
-
 .buscador-contenedor {
   flex: 1;
   max-width: 400px;
   min-width: 250px;
 }
-
 .input-busqueda {
   width: 100%;
   padding: 12px 20px;
@@ -43,18 +41,15 @@
   transition: all 0.2s;
   box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
-
 .input-busqueda:focus {
   border-color: #17c3b2;
   box-shadow: 0 0 0 3px rgba(23, 195, 178, 0.2);
 }
-
 .grid-pacientes {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 30px;
 }
-
 .estado-cargando {
   display: flex;
   flex-direction: column;
@@ -64,7 +59,6 @@
   color: #64748b;
   font-weight: 500;
 }
-
 .spinner-carga {
   border: 4px solid #f1f5f9;
   border-top: 4px solid #17c3b2;
@@ -74,12 +68,10 @@
   animation: girar 1s linear infinite;
   margin-bottom: 15px;
 }
-
 @keyframes girar {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-
 .estado-vacio-expedientes {
   background-color: white;
   border-radius: 12px;
@@ -88,19 +80,16 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   border: 1px dashed #cbd5e1;
 }
-
 .estado-vacio-expedientes .icono-vacio {
   font-size: 60px;
   margin-bottom: 20px;
   opacity: 0.5;
 }
-
 .estado-vacio-expedientes h3 {
   color: #1e293b;
   margin: 0 0 10px 0;
   font-size: 20px;
 }
-
 .estado-vacio-expedientes p {
   color: #64748b;
   margin: 0;

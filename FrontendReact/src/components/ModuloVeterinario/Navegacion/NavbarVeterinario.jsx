@@ -6,6 +6,15 @@ const NavbarVeterinario = ({ alCerrarSesion }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const nombreUsuario = 'Miguel Alonso'; // Dummy data para el veterinario
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.clear();
+    if (alCerrarSesion) {
+      alCerrarSesion();
+    }
+    window.location.href = '/';
+  };
+
   return (
     <nav className="navbar-cliente">
       <div className="navbar-spacer"></div>
@@ -27,7 +36,7 @@ const NavbarVeterinario = ({ alCerrarSesion }) => {
         {menuOpen && (
           <div className="dropdown-menu">
             <button className="dropdown-item">Perfil Profesional</button>
-            <button className="dropdown-item" onClick={alCerrarSesion}>Cerrar Sesión</button>
+            <button className="dropdown-item" onClick={handleLogout}>Cerrar Sesión</button>
           </div>
         )}
       </div>
