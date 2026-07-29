@@ -1,0 +1,155 @@
+/* Citas Pendientes */
+.citas-pendientes-section {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  margin-top: 30px;
+}
+
+.citas-pendientes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.citas-pendientes-header .section-subtitle {
+  margin-bottom: 0;
+}
+
+.citas-leyenda {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 400;
+}
+
+.citas-lista {
+  display: flex;
+  flex-direction: column;
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+/* Estilo del scrollbar para webkit */
+.citas-lista::-webkit-scrollbar {
+  width: 8px;
+}
+.citas-lista::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+.citas-lista::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.citas-lista::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.cita-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.cita-item:last-child {
+  border-bottom: none;
+}
+
+.cita-fecha-columna {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 600;
+  width: 90px;
+  margin-right: 10px;
+}
+
+.cita-hora {
+  font-weight: 600;
+  color: #334155;
+  font-size: 14px;
+  width: 85px;
+  margin-right: 15px;
+}
+
+.cita-info-mascota {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 15px;
+  flex: 2;
+}
+
+.cita-detalles-mascota {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.cita-nombre {
+  margin: 0;
+  font-size: 16px;
+  color: #0f172a;
+}
+
+.cita-raza {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.cita-servicio {
+  flex: 1.5;
+  color: #475569;
+  font-size: 14px;
+}
+
+.cita-acciones {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-atender {
+  background-color: #17c3b2;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: background-color 0.2s;
+}
+
+.btn-atender:hover {
+  background-color: #139d8f;
+}
+
+.btn-detalles-sm {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.btn-detalles-sm:hover {
+  background-color: #e2e8f0;
+  color: #0f172a;
+}
+
+.mensaje-vacio {
+  color: #64748b;
+  text-align: center;
+  padding: 20px 0;
+}

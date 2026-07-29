@@ -56,9 +56,12 @@ const TarjetaMascota = ({ mascota, onEliminar, onEditar, onVerCarnet }) => {
                     </h3>
                     <p className="razaMascota">{especie} - {raza}</p>
                 </div>
-                <button className="botonOpciones" onClick={toggleMenu}>
-                    ...
-                </button>
+                
+                {(onEditar || onEliminar) && (
+                    <button className="botonOpciones" onClick={toggleMenu}>
+                        ...
+                    </button>
+                )}
 
                 {menuAbierto && (
                     <div className="menuOpciones">

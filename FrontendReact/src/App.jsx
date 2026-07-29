@@ -10,6 +10,7 @@ import MisCitas from './components/ModuloCliente/MisCitas/MisCitas';
 // Modulo Veterinario
 import VeterinarioLayout from './components/ModuloVeterinario/Layout/VeterinarioLayout';
 import DashboardVeterinario from './components/ModuloVeterinario/DashboardCliente/DashboardVeterinario';
+import ExpedientesVeterinario from './components/ModuloVeterinario/Expedientes/ExpedientesVeterinario';
 
 function App() {
   const [sesionIniciada, setSesionIniciada] = useState(() => {
@@ -70,7 +71,8 @@ function App() {
           element={<VeterinarioLayout />}
         >
           <Route path="dashboard" element={<DashboardVeterinario />} />
-          {/* Aquí irán agenda, expedientes, etc. */}
+          <Route path="expedientes" element={<ExpedientesVeterinario />} />
+          {/* Aquí irán agenda, etc. */}
         </Route>
       </Routes>
     </BrowserRouter>
