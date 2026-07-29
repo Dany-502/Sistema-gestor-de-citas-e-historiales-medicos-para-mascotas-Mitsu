@@ -2,9 +2,28 @@ import React, { useState } from 'react';
 import './CarnetMascotaEstilos.css';
 import iconPata from '../../../assets/iconos/pata.png'; // Fallback icon
 import iconLapiz from '../../../assets/iconos/lapiz-blog.png';
+import CarnetInformacionGeneral from './CarnetInformacionGeneral';
+import CarnetHistorialVacunas from './CarnetHistorialVacunas';
+import CarnetHistorialCitas from './CarnetHistorialCitas';
 
-const CarnetMascotaModal = ({ mascotaDto, onEditar, onClose }) => {
+const CarnetMascotaModal = ({ mascotaDto, onEditar, onClose, esVeterinario = false }) => {
     const [pestanaActiva, setPestanaActiva] = useState('informacion');
+
+    // Estados para formularios veterinarios
+    const [mostrarFormVacuna, setMostrarFormVacuna] = useState(false);
+    const [datosVacuna, setDatosVacuna] = useState({
+        nombreDosis: '',
+        fechaAplicacion: new Date().toISOString().split('T')[0],
+        fechaProxAplicacion: '',
+        pesoAplicacion: ''
+    });
+
+    const [mostrarFormDiagnostico, setMostrarFormDiagnostico] = useState(false);
+    const [datosDiagnostico, setDatosDiagnostico] = useState({
+        idCita: '',
+        descripcionCita: '',
+        diagnostico: ''
+    });
 
     // Desestructuración segura asumiendo la estructura del DTO propuesto para Spring Boot
     const {
@@ -27,115 +46,35 @@ const CarnetMascotaModal = ({ mascotaDto, onEditar, onClose }) => {
         switch (pestanaActiva) {
             case 'informacion':
                 return (
-                    <div className="infoGeneralGrid">
-                        {/* Grid de Datos de la Mascota */}
-                        <div className="datosMascotaGrid">
-                            <div className="datoItem">
-                                <span className="datoLabel">Especie</span>
-                                <span className="datoValor">{especie || 'N/A'}</span>
-                            </div>
-                            <div className="datoItem">
-                                <span className="datoLabel">Fecha de Nacimiento</span>
-                                <span className="datoValor">{fechaNacimiento || 'N/A'}</span>
-                            </div>
-                            <div className="datoItem">
-                                <span className="datoLabel">Raza</span>
-                                <span className="datoValor">{raza || 'N/A'}</span>
-                            </div>
-                            <div className="datoItem">
-                                <span className="datoLabel">Peso</span>
-                                <span className="datoValor">{peso || 'N/A'}</span>
-                            </div>
-                            <div className="datoItem">
-                                <span className="datoLabel">Sexo</span>
-                                <span className="datoValor">{sexo || 'N/A'}</span>
-                            </div>
-                            <div className="datoItem">
-                                <span className="datoLabel">Color</span>
-                                <span className="datoValor">{color || 'N/A'}</span>
-                            </div>
-                        </div>
-
-                        {/* Tarjeta Adulto Responsable */}
-                        <div className="tarjetaResponsable">
-                            <div className="responsableItem">
-                                <span className="datoLabel">Adulto Responsable</span>
-                                <span className="datoValor">{adultoResponsable?.nombreCliente || 'N/A'}</span>
-                            </div>
-                            <div className="responsableItem">
-                                <span className="datoLabel">Teléfono de Contacto</span>
-                                <span className="datoValor">{adultoResponsable?.telefonoContacto || 'N/A'}</span>
-                            </div>
-                        </div>
-                    </div>
+                    <CarnetInformacionGeneral 
+                        especie={especie}
+                        fechaNacimiento={fechaNacimiento}
+                        raza={raza}
+                        peso={peso}
+                        sexo={sexo}
+                        color={color}
+                        adultoResponsable={adultoResponsable}
+                    />
                 );
             case 'vacunas':
                 return (
-                    <div className="tablaCarnetContenedor">
-                        {historialVacunas.length > 0 ? (
-                            <table className="tablaCarnet">
-                                <thead>
-                                    <tr>
-                                        <th>Dosis / Vacuna</th>
-                                        <th>Fecha Aplicación</th>
-                                        <th>Próxima Aplicación</th>
-                                        <th>Peso</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {historialVacunas.map(v => (
-                                        <tr key={v.id}>
-                                            <td><strong>{v.vacuna}</strong></td>
-                                            <td>{v.fecha}</td>
-                                            <td>{v.proxima}</td>
-                                            <td>{v.peso}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        ) : (
-                            <div className="seccionVacia">
-                                <p>No hay registro de vacunas.</p>
-                            </div>
-                        )}
-                    </div>
+                    <CarnetHistorialVacunas 
+                        historialVacunas={historialVacunas}
+                        mostrarFormVacuna={mostrarFormVacuna}
+                        setMostrarFormVacuna={setMostrarFormVacuna}
+                        datosVacuna={datosVacuna}
+                        setDatosVacuna={setDatosVacuna}
+                    />
                 );
             case 'citas':
                 return (
-                    <div className="tablaCarnetContenedor">
-                        {historialCitas.length > 0 ? (
-                            <table className="tablaCarnet">
-                                <thead>
-                                    <tr>
-                                        <th>Fecha y Hora</th>
-                                        <th>Servicio</th>
-                                        <th>Veterinario Atendió</th>
-                                        <th>Descripción</th>
-                                        <th>Estado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {historialCitas.map(c => (
-                                        <tr key={c.id}>
-                                            <td><strong>{c.fecha}</strong></td>
-                                            <td>{c.servicio}</td>
-                                            <td>{c.veterinario}</td>
-                                            <td>{c.descripcion}</td>
-                                            <td>
-                                                <span className={`estadoBadge ${c.estado.toLowerCase()}`}>
-                                                    {c.estado}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        ) : (
-                            <div className="seccionVacia">
-                                <p>No hay registro de citas previas.</p>
-                            </div>
-                        )}
-                    </div>
+                    <CarnetHistorialCitas 
+                        historialCitas={historialCitas}
+                        mostrarFormDiagnostico={mostrarFormDiagnostico}
+                        setMostrarFormDiagnostico={setMostrarFormDiagnostico}
+                        datosDiagnostico={datosDiagnostico}
+                        setDatosDiagnostico={setDatosDiagnostico}
+                    />
                 );
             default:
                 return null;
@@ -169,26 +108,51 @@ const CarnetMascotaModal = ({ mascotaDto, onEditar, onClose }) => {
                     </div>
                 </div>
 
-                {/* Pestañas (Tabs) */}
-                <div className="carnetTabsContainer">
-                    <button 
-                        className={`carnetTab ${pestanaActiva === 'informacion' ? 'active' : ''}`}
-                        onClick={() => setPestanaActiva('informacion')}
-                    >
-                        Información general
-                    </button>
-                    <button 
-                        className={`carnetTab ${pestanaActiva === 'vacunas' ? 'active' : ''}`}
-                        onClick={() => setPestanaActiva('vacunas')}
-                    >
-                        Historial de vacunas
-                    </button>
-                    <button 
-                        className={`carnetTab ${pestanaActiva === 'citas' ? 'active' : ''}`}
-                        onClick={() => setPestanaActiva('citas')}
-                    >
-                        Historial de citas
-                    </button>
+                {/* Pestañas (Tabs) y Botones de Acción */}
+                <div className="carnetTabsArea">
+                    <div className="carnetTabsContainer">
+                        <button 
+                            className={`carnetTab ${pestanaActiva === 'informacion' ? 'active' : ''}`}
+                            onClick={() => {
+                                setPestanaActiva('informacion');
+                                setMostrarFormVacuna(false);
+                                setMostrarFormDiagnostico(false);
+                            }}
+                        >
+                            Información general
+                        </button>
+                        <button 
+                            className={`carnetTab ${pestanaActiva === 'vacunas' ? 'active' : ''}`}
+                            onClick={() => {
+                                setPestanaActiva('vacunas');
+                                setMostrarFormDiagnostico(false);
+                            }}
+                        >
+                            Historial de vacunas
+                        </button>
+                        <button 
+                            className={`carnetTab ${pestanaActiva === 'citas' ? 'active' : ''}`}
+                            onClick={() => {
+                                setPestanaActiva('citas');
+                                setMostrarFormVacuna(false);
+                            }}
+                        >
+                            Historial de citas
+                        </button>
+                    </div>
+
+                    <div className="carnetAccionesPestana">
+                        {esVeterinario && pestanaActiva === 'vacunas' && !mostrarFormVacuna && (
+                            <button className="btnVeterinario" onClick={() => setMostrarFormVacuna(true)}>
+                                + Registrar Vacuna
+                            </button>
+                        )}
+                        {esVeterinario && pestanaActiva === 'citas' && !mostrarFormDiagnostico && (
+                            <button className="btnVeterinario" onClick={() => setMostrarFormDiagnostico(true)}>
+                                + Redactar Diagnóstico
+                            </button>
+                        )}
+                    </div>
                 </div>
 
                 {/* Contenido Dinámico */}
