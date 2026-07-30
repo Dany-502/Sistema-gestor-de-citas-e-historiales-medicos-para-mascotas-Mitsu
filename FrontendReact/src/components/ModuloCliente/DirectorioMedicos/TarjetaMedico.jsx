@@ -1,17 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './TarjetaMedicoEstilos.css';
 import iconoMedico from '../../../assets/iconos/medico.png';
 import Swal from 'sweetalert2';
 
 const TarjetaMedico = ({ medico, esAdmin = false, onEditar }) => {
+    const navigate = useNavigate();
 
     const handleAgendar = () => {
-        Swal.fire({
-            title: '¡Próximamente!',
-            text: `El módulo para agendar citas con el Dr/Dra. ${medico.apPaterno} estará disponible muy pronto.`,
-            icon: 'info',
-            confirmButtonColor: '#ff8b6a',
-            confirmButtonText: 'Entendido'
+        navigate('/cliente/mis-citas', { 
+            state: { preselectedVeterinario: medico.idVeterinario } 
         });
     };
 

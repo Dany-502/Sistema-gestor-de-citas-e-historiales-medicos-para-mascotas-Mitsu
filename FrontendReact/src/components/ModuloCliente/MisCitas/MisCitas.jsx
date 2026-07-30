@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'moment/dist/locale/es';
@@ -23,6 +24,20 @@ const MisCitas = () => {
     const [citaSeleccionada, setCitaSeleccionada] = useState(null);
     const [vistaCalendario, setVistaCalendario] = useState('month');
     const [fechaCalendario, setFechaCalendario] = useState(new Date());
+    const [veterinarioInicial, setVeterinarioInicial] = useState('');
+
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (location.state && location.state.preselectedVeterinario) {
+            setVeterinarioInicial(location.state.preselectedVeterinario);
+            setModalAbierto(true);
+            
+            // Clean up state so a refresh doesn't reopen it
+            navigate('.', { replace: true, state: {} });
+        }
+    }, [location.state, navigate]);
 
     const [citas, setCitas] = useState([]);
 
@@ -259,9 +274,13 @@ const MisCitas = () => {
 
             <FormularioNuevaCitaModal
                 isOpen={modalAbierto}
-                onClose={() => setModalAbierto(false)}
+                onClose={() => {
+                    setModalAbierto(false);
+                    setVeterinarioInicial('');
+                }}
                 onSave={cargarCitas}
                 citasProgramadas={citas}
+                initialVeterinario={veterinarioInicial}
             />
 
             <ResumenCitaModal

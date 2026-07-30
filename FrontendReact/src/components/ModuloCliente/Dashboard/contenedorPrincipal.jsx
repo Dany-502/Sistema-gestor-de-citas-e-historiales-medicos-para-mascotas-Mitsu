@@ -57,6 +57,41 @@ const ContenedorPrincipal = () => {
                 if (!cancelado) {
                     setMascotasCliente(mascotas || []);
                 }
+
+                // 3. Cargar las citas
+                const { citaService } = await import('../../../services/api');
+                const citas = await citaService.obtenerMisCitas();
+                if (!cancelado) {
+                    const citasPendientes = citas.filter(c => c.estado === 'Pendiente' || c.estado === 'Confirmada');
+                    // Find closest future appointment (assuming list is sorted descending or we just sort them)
+                    const ahora = new Date();
+                    const citasFuturas = citasPendientes.filter(c => new Date(c.fechaHoraInicio) >= ahora)
+                        .sort((a, b) => new Date(a.fechaHoraInicio) - new Date(b.fechaHoraInicio));
+
+                    if (citasFuturas.length > 0) {
+                        const prox = citasFuturas[0];
+                        const fechaObj = new Date(prox.fechaHoraInicio);
+                        setProximaCita({
+                            idCita: prox.idCita,
+                            mascotaNombre: prox.nombreMascota,
+                            especie: prox.especieMascota || 'Mascota',
+                            raza: prox.razaMascota || '',
+                            fecha: fechaObj.toLocaleDateString(),
+                            hora: fechaObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                            servicio: prox.nombreServicio,
+                            estado: prox.estado
+                        });
+                    }
+
+                    // Assign pending appointments to each pet to display on cards
+                    if (mascotas && mascotas.length > 0) {
+                        const mascotasConCitas = mascotas.map(m => {
+                            const numPendientes = citasPendientes.filter(c => c.idMascota === (m.id_Mascota || m.idMascota)).length;
+                            return { ...m, numCitasPendientes: numPendientes };
+                        });
+                        setMascotasCliente(mascotasConCitas);
+                    }
+                }
             } catch (error) {
                 console.error("Error al cargar información del dashboard:", error);
             } finally {
@@ -89,19 +124,18 @@ const ContenedorPrincipal = () => {
                             <div className="avatarMascotaTemporal"></div>
                             <div className="infoCita">
                                 <h4>
-                                    {proximaCita.mascotaNombre} ({proximaCita.especie}, {proximaCita.raza}) - {proximaCita.fecha}, {proximaCita.hora}
+                                    {proximaCita.mascotaNombre} ({proximaCita.especie}{proximaCita.raza ? `, ${proximaCita.raza}` : ''}) - {proximaCita.fecha}, {proximaCita.hora}
                                 </h4>
-                                <p><strong>Servicio:</strong> {proximaCita.servicio}</p>
+                                <p><strong>Servicio:</strong> {proximaCita.servicio} <span style={{marginLeft: '10px', color: proximaCita.estado === 'Confirmada' ? 'green' : 'orange'}}>({proximaCita.estado})</span></p>
                                 <div className="accionesCita">
-                                    <button className="botonPrimario">Cancelar</button>
-                                    <button className="botonPrimario">Ver detalles</button>
+                                    <button className="botonPrimario" onClick={() => navigate('/cliente/mis-citas')}>Ver Detalles</button>
                                 </div>
                             </div>
                         </div>
                     ) : (
                         <div className="contenidoCita estadoVacio">
                             <p>No tienes ninguna cita programada próximamente.</p>
-                            <button className="botonPrimario">Agendar una cita</button>
+                            <button className="botonPrimario" onClick={() => navigate('/cliente/mis-citas')}>Agendar una cita</button>
                         </div>
                     )}
                 </div>
@@ -161,8 +195,10 @@ const ContenedorPrincipal = () => {
                                     </div>
                                     <div className="estadoMascota">
                                         <div className="filaEstado">
-                                            <div className="puntoGris"></div>
-                                            <span>-Sin citas pendientes</span>
+                                            <div className={mascota.numCitasPendientes > 0 ? "puntoVerde" : "puntoGris"} style={mascota.numCitasPendientes > 0 ? {backgroundColor: 'green', width: '10px', height: '10px', borderRadius: '50%', display: 'inline-block', marginRight: '5px'} : {}}></div>
+                                            <span style={mascota.numCitasPendientes > 0 ? {color: 'green', fontWeight: 'bold'} : {}}>
+                                                {mascota.numCitasPendientes > 0 ? `${mascota.numCitasPendientes} cita(s) pendiente(s)` : '-Sin citas pendientes'}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

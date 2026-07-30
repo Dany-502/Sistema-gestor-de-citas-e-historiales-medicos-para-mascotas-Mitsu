@@ -7,12 +7,12 @@ import DatePicker from 'react-datepicker';
 import { setHours, setMinutes } from 'date-fns';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = [] }) => {
+const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = [], initialVeterinario = '' }) => {
     const [fechaHoraInicio, setFechaHoraInicio] = useState(null);
     let fechaHoraFin = null;
     const [mascota, setMascota] = useState('');
     const [servicio, setServicio] = useState('');
-    const [veterinario, setVeterinario] = useState('');
+    const [veterinario, setVeterinario] = useState(initialVeterinario);
     const [tipoVacuna, setTipoVacuna] = useState('');
     const [descripcion, setDescripcion] = useState('');
 
@@ -30,6 +30,7 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
 
     useEffect(() => {
         if (isOpen) {
+            setVeterinario(initialVeterinario || '');
             const cargarOpciones = async () => {
                 try {
                     const [mascotasData, vetsData, servsData] = await Promise.all([
