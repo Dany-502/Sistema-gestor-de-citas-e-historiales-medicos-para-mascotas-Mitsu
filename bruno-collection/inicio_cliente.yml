@@ -1,0 +1,22 @@
+info:
+  name: inicio_cliente
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: https://mitsu-veterinaria.duckdns.org/api/auth/login
+  body:
+    type: json
+    data: |-
+      {
+        "correoElectronico": "miguel@mitsu.com",
+        "contrasena": "123456"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

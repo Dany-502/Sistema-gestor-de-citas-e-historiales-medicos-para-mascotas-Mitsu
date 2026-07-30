@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import { clienteService } from '../../../services/api';
 import './PerfilUsuarioEstilos.css';
 
 const PerfilUsuario = () => {
@@ -16,46 +17,68 @@ const PerfilUsuario = () => {
 
 
     useEffect(() => {
-        // Simulando carga de datos desde el backend (/api/auth/me)
-        setTimeout(() => {
+        const cargarPerfilReal = async () => {
             const rolActual = localStorage.getItem('rol') || 'Cliente';
-            let mockData = {};
+            let datosCargados = null;
 
-            if (rolActual === 'Administrador' || rolActual === 'Admin') {
-                mockData = {
-                    nombre: 'Super',
-                    apPaterno: 'Admin',
-                    apMaterno: '',
-                    email: 'admin@mitsu.com',
-                    telefono: '555-0000',
-                    direccion: 'Av. Veterinaria 123, Ciudad',
-                    rol: 'Administrador'
-                };
-            } else if (rolActual === 'Veterinario') {
-                mockData = {
-                    nombre: 'Miguel',
-                    apPaterno: 'Alonso',
-                    apMaterno: 'Pérez',
-                    email: 'miguel@mitsu.com',
-                    telefono: '555-1234',
-                    direccion: 'Consultorio 4, Clínica Mitsu',
-                    rol: 'Veterinario'
-                };
-            } else {
-                mockData = {
-                    nombre: 'María',
-                    apPaterno: 'Fernández',
-                    apMaterno: 'López',
-                    email: 'maria@gmail.com',
-                    telefono: '555-9876',
-                    direccion: 'Calle Los Pinos 45, Residencial Flora',
-                    rol: 'Cliente'
-                };
+            try {
+                if (rolActual === 'CLIENTE' || rolActual === 'Cliente') {
+                    const datosCliente = await clienteService.obtenerPerfil();
+                    if (datosCliente) {
+                        datosCargados = {
+                            nombre: datosCliente.nombre || '',
+                            apPaterno: datosCliente.apPaterno || '',
+                            apMaterno: datosCliente.apMaterno || '',
+                            email: datosCliente.correoElectronico || datosCliente.correo || '',
+                            telefono: datosCliente.telefono || '',
+                            direccion: datosCliente.direccion || '',
+                            rol: 'Cliente'
+                        };
+                    }
+                }
+            } catch (err) {
+                console.error("Error al obtener perfil desde backend, usando respaldo local:", err);
             }
 
-            setPerfil(mockData);
+            if (!datosCargados) {
+                if (rolActual === 'ADMIN' || rolActual === 'Administrador' || rolActual === 'Admin') {
+                    datosCargados = {
+                        nombre: 'Administrador',
+                        apPaterno: 'Mitsu',
+                        apMaterno: '',
+                        email: 'admin@mitsu.com',
+                        telefono: '555-0000',
+                        direccion: 'Av. Mitsu Veterinaria 123',
+                        rol: 'Administrador'
+                    };
+                } else if (rolActual === 'VETERINARIO' || rolActual === 'Veterinario') {
+                    datosCargados = {
+                        nombre: 'Dr. Alejandro',
+                        apPaterno: 'Fernández',
+                        apMaterno: 'Luna',
+                        email: 'dr.alejandro@mitsu.com',
+                        telefono: '555-1234',
+                        direccion: 'Consultorio 1, Clínica Mitsu',
+                        rol: 'Veterinario'
+                    };
+                } else {
+                    datosCargados = {
+                        nombre: 'Miguel',
+                        apPaterno: 'Alonso',
+                        apMaterno: 'Heredia',
+                        email: 'miguel@mitsu.com',
+                        telefono: '555-9876',
+                        direccion: 'Calle Los Pinos 45, Residencial Mitsu',
+                        rol: 'Cliente'
+                    };
+                }
+            }
+
+            setPerfil(datosCargados);
             setCargando(false);
-        }, 800);
+        };
+
+        cargarPerfilReal();
     }, []);
 
     const handlePerfilChange = (e) => {

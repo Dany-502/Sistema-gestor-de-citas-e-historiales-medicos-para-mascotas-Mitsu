@@ -1,0 +1,17 @@
+info:
+  name: Listar mascotas
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: https://mitsu-veterinaria.duckdns.org/api/mascotas
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJtaWd1ZWxAbWl0c3UuY29tIiwiaWF0IjoxNzg1Mzg3NDA5LCJleHAiOjE3ODU0NzM4MDl9.rTP1VN7Vt8bkUkm47g4NOhK8SbZ-8dXNgHqAYpYguIojgTRMSLAOf4puWwr4qPGv
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

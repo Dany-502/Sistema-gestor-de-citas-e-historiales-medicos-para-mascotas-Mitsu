@@ -1,0 +1,17 @@
+info:
+  name: Cancelar Cita
+  type: http
+  seq: 10
+
+http:
+  method: DELETE
+  url: http://66.179.80.246:8089/api/citas/3
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJtaWd1ZWxAbWl0c3UuY29tIiwiaWF0IjoxNzg1Mzg3NDA5LCJleHAiOjE3ODU0NzM4MDl9.rTP1VN7Vt8bkUkm47g4NOhK8SbZ-8dXNgHqAYpYguIojgTRMSLAOf4puWwr4qPGv
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

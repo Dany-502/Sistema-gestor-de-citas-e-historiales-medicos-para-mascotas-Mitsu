@@ -44,16 +44,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (correo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 if (jwtUtil.validarToken(token, correo)) {
-                    Optional<Cliente> clienteOpt = clienteRepository.findByCorreoElectronico(correo);
-
-                    if (clienteOpt.isPresent()) {
-                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                                correo,
-                                null,
-                                Collections.singletonList(new SimpleGrantedAuthority("ROLE_CLIENTE")));
-                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        SecurityContextHolder.getContext().setAuthentication(authToken);
-                    }
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            correo,
+                            null,
+                            Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
         } catch (Exception e) {

@@ -1,0 +1,27 @@
+info:
+  name: Nuevo Cliente
+  type: http
+  seq: 12
+
+http:
+  method: POST
+  url: https://mitsu-veterinaria.duckdns.org/api/auth/registro
+  body:
+    type: json
+    data: |-
+      {
+        "nombre": "Carlos",
+        "apPaterno": "Mendoza",
+        "apMaterno": "Gómez",
+        "direccion": "Av. Las Flores 456, Col. Centro",
+        "telefono": "5512345678",
+        "correoElectronico": "carlos.mendoza@example.com",
+        "contrasena": "password123"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,39 @@
+info:
+  name: Actualizar mascota
+  type: http
+  seq: 5
+
+http:
+  method: PUT
+  url: https://mitsu-veterinaria.duckdns.org/api/mascotas/%23FRL2003
+  headers:
+    - name: Authorization
+      value: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJtaWd1ZWxAbWl0c3UuY29tIiwiaWF0IjoxNzg1MjU1MTIzLCJleHAiOjE3ODUzNDE1MjN9.jEIi-u5K0Bq548V_Frt40Mj-0O4vDOH07YebP6-Csxmn-vs_tzdz4l7hrqQeFQHk
+  body:
+    type: json
+    data: |2-
+       {
+          "id_Mascota": "#FRL2003",
+          "NombreMascota": "Cachorro_act",
+          "Especie": "Perro",
+          "Raza": "Maltes",
+          "FechaNacimiento": "2025-01-01",
+          "Sexo": "Macho",
+          "Color": "Blanco",
+          "Peso": 4.00,
+          "Alergias": "Polen",
+          "descripcion": "Perro muy juguetón y amigable",
+          "informacionAdicional": "Perro muy juguetón y amigable",
+          "adultoResponsable": "Miguel Alberto",
+          "estado": "Activo",
+          "fotoUrl": null
+        }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJtaWd1ZWxAbWl0c3UuY29tIiwiaWF0IjoxNzg1Mzg3NDA5LCJleHAiOjE3ODU0NzM4MDl9.rTP1VN7Vt8bkUkm47g4NOhK8SbZ-8dXNgHqAYpYguIojgTRMSLAOf4puWwr4qPGv
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
