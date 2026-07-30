@@ -19,5 +19,6 @@ public class VeterinarioDTO {
     private String telefono;
     private String correoElectronico;
     private String direccion;
+    private String contrasena;
     private List<HorarioDTO> horarios;
 }

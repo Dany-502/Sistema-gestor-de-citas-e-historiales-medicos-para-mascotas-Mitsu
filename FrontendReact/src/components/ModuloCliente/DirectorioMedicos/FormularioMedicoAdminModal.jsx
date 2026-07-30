@@ -28,6 +28,7 @@ const FormularioMedicoAdminModal = ({ medicoAEditar, onGuardar, onClose }) => {
         cedula: medicoAEditar ? (medicoAEditar.cedula || '') : '',
         telefono: medicoAEditar ? medicoAEditar.telefono : '',
         correoElectronico: medicoAEditar ? medicoAEditar.correo : '',
+        contrasena: '',
         horarios: medicoAEditar && medicoAEditar.horarios ? 
                   diasPorDefecto.map(d => {
                       const hExtra = medicoAEditar.horarios.find(h => h.diaSemana === d.dia);
@@ -66,6 +67,22 @@ const FormularioMedicoAdminModal = ({ medicoAEditar, onGuardar, onClose }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        // Validación de contraseña
+        if (!esEdicion || formData.contrasena) {
+            const password = formData.contrasena || '';
+            const tieneMayuscula = /[A-Z]/.test(password);
+            const tieneNumero = /[0-9]/.test(password);
+            if (!tieneMayuscula || !tieneNumero || password.length < 6) {
+                Swal.fire({
+                    title: 'Contraseña inválida', 
+                    text: 'La contraseña debe tener al menos 6 caracteres, 1 mayúscula y 1 número.', 
+                    icon: 'warning',
+                    confirmButtonColor: '#3b82f6'
+                });
+                return;
+            }
+        }
         
         if (onGuardar) {
             onGuardar({
@@ -157,6 +174,19 @@ const FormularioMedicoAdminModal = ({ medicoAEditar, onGuardar, onClose }) => {
                                 <div className="formGroup fullWidth">
                                     <label>Correo Electrónico (Contacto)*</label>
                                     <input type="email" name="correoElectronico" value={formData.correoElectronico} onChange={handleInputChange} required />
+                                </div>
+
+                                <div className="formGroup fullWidth">
+                                    <label>Contraseña de Acceso{esEdicion ? '' : '*'}</label>
+                                    <input 
+                                        type="password" 
+                                        name="contrasena" 
+                                        placeholder={esEdicion ? "Dejar en blanco para no cambiar" : "Mínimo 6 caracteres"} 
+                                        value={formData.contrasena || ''} 
+                                        onChange={handleInputChange} 
+                                        autoComplete="new-password"
+                                        required={!esEdicion} 
+                                    />
                                 </div>
 
                                 <div className="formGroup fullWidth form-group-horarios">

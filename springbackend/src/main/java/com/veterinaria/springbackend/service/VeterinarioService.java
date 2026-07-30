@@ -34,7 +34,11 @@ public class VeterinarioService {
         v.setTelefono(dto.getTelefono());
         v.setCorreoElectronico(dto.getCorreoElectronico());
         v.setDireccion(dto.getDireccion());
-        v.setContrasena(passwordEncoder.encode("123456")); // Contraseña default para nuevos médicos
+        
+        String passwordToUse = (dto.getContrasena() != null && !dto.getContrasena().trim().isEmpty()) 
+                ? dto.getContrasena() 
+                : "123456";
+        v.setContrasena(passwordEncoder.encode(passwordToUse));
 
         Veterinario guardado = veterinarioRepository.save(v);
         return convertirADTO(guardado);
@@ -60,6 +64,7 @@ public class VeterinarioService {
                 v.getTelefono(),
                 v.getCorreoElectronico(),
                 v.getDireccion(),
+                null, // No enviar la contraseña al cliente
                 horarios
         );
     }
