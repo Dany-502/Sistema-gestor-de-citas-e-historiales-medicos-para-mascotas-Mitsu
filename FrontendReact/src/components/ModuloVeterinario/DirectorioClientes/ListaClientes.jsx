@@ -20,61 +20,14 @@ const ListaClientes = () => {
             try {
                 setCargando(true);
                 const data = await clienteService.obtenerTodos();
-                let resultado = data || [];
-                if (resultado.length === 0) {
-                    resultado = demoClientes;
-                }
-                setClientes(resultado);
+                setClientes(data || []);
                 setCargando(false);
             } catch (err) {
-                console.error("Error al cargar clientes, usando datos demo:", err);
-                setClientes(demoClientes);
+                console.error("Error al cargar clientes:", err);
+                setClientes([]);
                 setCargando(false);
             }
         };
-
-        const demoClientes = [
-            {
-                idCliente: 1,
-                nombre: 'Juan',
-                apPaterno: 'Pérez',
-                apMaterno: 'García',
-                correoElectronico: 'juan.perez@email.com',
-                telefono: '555-1234',
-                direccion: 'Calle Falsa 123, Colonia Centro',
-                cantidadMascotas: 2,
-                mascotas: [
-                    { idMascota: 'M001', nombre: 'Firulais', especie: 'Perro', raza: 'Labrador' },
-                    { idMascota: 'M002', nombre: 'Michi', especie: 'Gato', raza: 'Siamés' }
-                ]
-            },
-            {
-                idCliente: 2,
-                nombre: 'María',
-                apPaterno: 'López',
-                apMaterno: 'Martínez',
-                correoElectronico: 'maria.lopez@email.com',
-                telefono: '555-5678',
-                direccion: 'Av. Siempre Viva 742',
-                cantidadMascotas: 1,
-                mascotas: [
-                    { idMascota: 'M003', nombre: 'Max', especie: 'Perro', raza: 'Golden Retriever' }
-                ]
-            },
-            {
-                idCliente: 3,
-                nombre: 'Carlos',
-                apPaterno: 'Ruiz',
-                apMaterno: 'Sánchez',
-                correoElectronico: 'carlos.ruiz@email.com',
-                telefono: '555-9012',
-                direccion: 'Boulevard de los Sueños Rotos',
-                cantidadMascotas: 1,
-                mascotas: [
-                    { idMascota: 'M004', nombre: 'Luna', especie: 'Gato', raza: 'Persa' }
-                ]
-            }
-        ];
 
         cargarClientes();
     }, []);

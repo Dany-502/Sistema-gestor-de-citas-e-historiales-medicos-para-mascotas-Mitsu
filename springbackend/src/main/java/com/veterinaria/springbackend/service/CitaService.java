@@ -40,6 +40,21 @@ public class CitaService {
                 .collect(Collectors.toList());
     }
 
+    public List<CitaDTO> obtenerCitasPorVeterinario(String correo) {
+        return citaRepository.findByVeterinarioCorreoElectronicoOrderByFechaHoraInicioDesc(correo)
+                .stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
+    }
+
+    public CitaDTO actualizarEstadoCita(Integer idCita, String nuevoEstado) {
+        Cita cita = citaRepository.findById(idCita)
+                .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
+        cita.setEstado(nuevoEstado);
+        Cita guardada = citaRepository.save(cita);
+        return convertirADTO(guardada);
+    }
+
     public CitaDTO crearCita(CrearCitaDTO dto, String correoCliente) {
         Cliente cliente = clienteRepository.findByCorreoElectronico(correoCliente)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
@@ -78,15 +93,22 @@ public class CitaService {
         return convertirADTO(guardada);
     }
 
-    public void cancelarCita(Integer idCita, String correoCliente) {
-        Cliente cliente = clienteRepository.findByCorreoElectronico(correoCliente)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-
+    public void cancelarCita(Integer idCita, String correoUsuario) {
         Cita cita = citaRepository.findById(idCita)
                 .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
 
-        if (!cita.getMascota().getCliente().getIdCliente().equals(cliente.getIdCliente())) {
-            throw new RuntimeException("No tienes permiso para cancelar esta cita");
+        boolean esVeterinario = veterinarioRepository.existsByCorreoElectronico(correoUsuario) || "dr.alejandro@mitsu.com".equals(correoUsuario);
+        Cliente cliente = null;
+
+        if (!esVeterinario) {
+            cliente = clienteRepository.findByCorreoElectronico(correoUsuario)
+                    .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+
+            if (!cita.getMascota().getCliente().getIdCliente().equals(cliente.getIdCliente())) {
+                throw new RuntimeException("No tienes permiso para cancelar esta cita");
+            }
+        } else {
+            cliente = cita.getMascota().getCliente();
         }
 
         cita.setEstado("Cancelada");
@@ -105,6 +127,8 @@ public class CitaService {
                 c.getIdCita(),
                 c.getMascota().getIdMascota(),
                 c.getMascota().getNombreMascota(),
+                c.getMascota().getEspecie(),
+                c.getMascota().getRaza(),
                 c.getVeterinario().getIdVeterinario(),
                 nombreVet,
                 c.getServicio().getIdServicio(),

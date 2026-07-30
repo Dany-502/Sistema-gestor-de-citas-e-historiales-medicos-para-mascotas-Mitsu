@@ -8,7 +8,8 @@ import ResumenCitaModal from '../../ModuloCliente/MisCitas/ResumenCitaModal';
 import ConfigurarHorarioModal from './ConfigurarHorarioModal';
 import FormularioCitaAdminModal from './FormularioCitaAdminModal';
 import Swal from 'sweetalert2';
-import { citaService } from '../../../services/api';
+import { citaService, mascotaService } from '../../../services/api';
+import { useNavigate } from 'react-router-dom';
 
 moment.locale('es');
 const localizer = momentLocalizer(moment);
@@ -24,6 +25,7 @@ const AgendaVeterinario = ({ esAdmin = false }) => {
     const [horaApertura, setHoraApertura] = useState(9);
     const [horaCierre, setHoraCierre] = useState(20);
     const [citaSeleccionada, setCitaSeleccionada] = useState(null);
+    const navigate = useNavigate();
     const [vistaCalendario, setVistaCalendario] = useState('month');
     const [fechaCalendario, setFechaCalendario] = useState(new Date());
 
@@ -41,86 +43,14 @@ const AgendaVeterinario = ({ esAdmin = false }) => {
             }));
 
             if (citasFormateadas.length === 0) {
-                const hoy = new Date();
-                const mañana = new Date(hoy);
-                mañana.setDate(hoy.getDate() + 1);
-                citasFormateadas = [
-                    {
-                        idCita: 1,
-                        title: 'Luna (Gato, Siamés) - Consulta general',
-                        nombreMascota: 'Luna (Gato, Siamés)',
-                        nombreVeterinario: 'Dr. Alejandro Fernández',
-                        nombreServicio: 'Consulta general',
-                        start: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 10, 0),
-                        end: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 11, 0),
-                        descripcion: 'Dueño: María Fernández. Revisión de rutina.',
-                        estado: 'Pendiente'
-                    },
-                    {
-                        idCita: 2,
-                        title: 'Max (Perro, Golden) - Revisión Dermatológica',
-                        nombreMascota: 'Max (Perro, Golden)',
-                        nombreVeterinario: 'Dr. Alejandro Fernández',
-                        nombreServicio: 'Revisión Dermatológica',
-                        start: new Date(mañana.getFullYear(), mañana.getMonth(), mañana.getDate(), 14, 30),
-                        end: new Date(mañana.getFullYear(), mañana.getMonth(), mañana.getDate(), 15, 30),
-                        descripcion: 'Dueño: Carlos Romero. Problemas de alergia en piel.',
-                        estado: 'Confirmada'
-                    }
-                ];
+                // Si no hay citas, simplemente dejamos el array vacío en lugar de mocks
+                setCitas([]);
+            } else {
+                setCitas(citasFormateadas);
             }
-            setCitas(citasFormateadas);
         } catch (err) {
-            console.error("Error al cargar citas de la agenda, usando datos demo:", err);
-            const hoy = new Date();
-            const mañana = new Date(hoy);
-            mañana.setDate(hoy.getDate() + 1);
-
-            const citasMock = [
-                {
-                    idCita: 1,
-                    title: 'Luna (Gato, Siamés) - Consulta general',
-                    nombreMascota: 'Luna (Gato, Siamés)',
-                    nombreVeterinario: 'Dr. Alejandro Fernández',
-                    nombreServicio: 'Consulta general',
-                    start: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 10, 0),
-                    end: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 11, 0),
-                    descripcion: 'Dueño: María Fernández. Revisión de rutina.',
-                    estado: 'Pendiente'
-                },
-                {
-                    idCita: 2,
-                    title: 'Max (Perro, Golden) - Revisión Dermatológica',
-                    nombreMascota: 'Max (Perro, Golden)',
-                    nombreVeterinario: 'Dr. Alejandro Fernández',
-                    nombreServicio: 'Revisión Dermatológica',
-                    start: new Date(mañana.getFullYear(), mañana.getMonth(), mañana.getDate(), 14, 30),
-                    end: new Date(mañana.getFullYear(), mañana.getMonth(), mañana.getDate(), 15, 30),
-                    descripcion: 'Dueño: Carlos Romero. Problemas de alergia en piel.',
-                    estado: 'Confirmada'
-                },
-                {
-                    idCita: 3,
-                    nombreMascota: 'Pipo (Pájaro, Canario)',
-                    nombreVeterinario: 'Ana Pérez',
-                    nombreServicio: 'Corte de alas y uñas',
-                    start: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 12, 0),
-                    end: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 13, 0),
-                    descripcion: 'Dueño: María Fernández. Chequeo general.',
-                    estado: 'Confirmada'
-                },
-                {
-                    idCita: 4,
-                    nombreMascota: 'Michi (Gato, Persa)',
-                    nombreVeterinario: 'Miguel Alonso',
-                    nombreServicio: 'Vacunación',
-                    start: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 16, 0),
-                    end: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 17, 0),
-                    descripcion: 'Dueño: Laura Gutiérrez. Canceló por motivos personales.',
-                    estado: 'Cancelada'
-                }
-            ];
-            setCitas(citasMock);
+            console.error("Error al cargar citas de la agenda:", err);
+            setCitas([]);
         } finally {
             setCargando(false);
         }
@@ -173,36 +103,53 @@ const AgendaVeterinario = ({ esAdmin = false }) => {
         setModalResumenAbierto(true);
     };
 
-    const handleCancelarCita = (idCita) => {
-        // SIMULACIÓN: Cancelar cita en el backend
+    const handleCancelarCita = async (idCita) => {
         setModalResumenAbierto(false);
-        Swal.fire({
-            icon: 'success',
-            title: 'Cita cancelada',
-            text: 'La cita ha sido cancelada exitosamente.',
-            confirmColor: '#0284c7'
-        });
-        // Simulamos la eliminación local
-        setCitas(prev => prev.filter(c => c.idCita !== idCita));
+        try {
+            await citaService.cancelarCita(idCita);
+            Swal.fire({
+                icon: 'success',
+                title: 'Cita cancelada',
+                text: 'La cita ha sido cancelada exitosamente.',
+                confirmButtonColor: '#0284c7'
+            });
+            setCitas(prev => prev.map(c => c.idCita === idCita ? { ...c, estado: 'Cancelada' } : c));
+        } catch (err) {
+            Swal.fire('Error', 'No se pudo cancelar la cita: ' + err.message, 'error');
+        }
     };
 
-    const handleCompletarCita = (idCita) => {
+    const handleCompletarCita = async (idCita) => {
         setModalResumenAbierto(false);
-        // Simulamos el cambio de estado local
-        setCitas(prev => prev.map(c =>
-            c.idCita === idCita ? { ...c, estado: 'Realizada' } : c
-        ));
+        try {
+            await citaService.actualizarEstado(idCita, 'Realizada');
+            Swal.fire({
+                icon: 'success',
+                title: 'Cita Completada',
+                text: 'La cita ha sido marcada como realizada.',
+                confirmButtonColor: '#0284c7'
+            });
+            setCitas(prev => prev.map(c => c.idCita === idCita ? { ...c, estado: 'Realizada' } : c));
+        } catch (err) {
+            Swal.fire('Error', 'No se pudo completar la cita: ' + err.message, 'error');
+        }
     };
 
-    const handleIrExpediente = (cita) => {
+    const handleConfirmarCita = async (cita) => {
+        // En AgendaVeterinario, el objeto cita que viene del modal de Resumen ya es el evento
+        const idCita = cita.idCita;
+        try {
+            await citaService.actualizarEstado(idCita, 'Confirmada');
+            // Swal fire is handled in ResumenCitaModal for confirmation success
+            setCitas(prev => prev.map(c => c.idCita === idCita ? { ...c, estado: 'Confirmada' } : c));
+        } catch (err) {
+            Swal.fire('Error', 'No se pudo confirmar la cita: ' + err.message, 'error');
+        }
+    };
+
+    const handleIrExpediente = async (cita) => {
         setModalResumenAbierto(false);
-        Swal.fire({
-            icon: 'info',
-            title: 'Redirigiendo...',
-            text: `Aquí se redirigiría al expediente de ${cita.nombreMascota}.`,
-            confirmColor: '#0284c7'
-        });
-        // En el futuro: navigate('/veterinario/expedientes', { state: { mascotaId: cita.mascotaId } })
+        navigate('/veterinario/expedientes');
     };
 
     const handleConfigurarHorario = () => {
@@ -387,6 +334,7 @@ const AgendaVeterinario = ({ esAdmin = false }) => {
                 esVeterinario={!esAdmin}
                 esAdmin={esAdmin}
                 onCompletarCita={handleCompletarCita}
+                onConfirmarCita={handleConfirmarCita}
                 onIrExpediente={handleIrExpediente}
             />
 

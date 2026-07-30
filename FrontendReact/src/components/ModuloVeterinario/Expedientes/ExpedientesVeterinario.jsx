@@ -27,81 +27,30 @@ const ExpedientesVeterinario = ({ esAdmin = false }) => {
                 const data = await mascotaService.obtenerTodas();
                 let pacientesMapeados = (data || []).map(p => ({
                     ...p,
+                    idMascota: p.id_Mascota || p.idMascota,
                     nombreMascota: p.NombreMascota || p.nombreMascota,
                     especie: p.Especie || p.especie,
                     raza: p.Raza || p.raza,
                     sexo: p.Sexo || p.sexo,
                     peso: p.Peso || p.peso,
+                    fechaNacimiento: p.FechaNacimiento || p.fechaNacimiento,
+                    color: p.Color || p.color,
+                    adultoResponsable: p.adultoResponsable,
                     alergias: p.Alergias || p.alergias || 'Ninguna',
                     historialVacunas: p.historialVacunas || [],
                     historialCitas: p.historialCitas || []
                 }));
 
-                // Si viene vacío del backend, cargar datos demo para pruebas
-                if (pacientesMapeados.length === 0) {
-                    pacientesMapeados = demoPacientes;
-                }
                 setPacientes(pacientesMapeados);
             } catch (err) {
-                console.error("Error al cargar expedientes, usando datos de demostración:", err);
-                setPacientes(demoPacientes);
+                console.error("Error al cargar expedientes:", err);
+                setPacientes([]);
             } finally {
                 setCargando(false);
             }
         };
 
-        const demoPacientes = [
-            {
-                idMascota: 'M001',
-                nombreMascota: 'Luna',
-                especie: 'Gato',
-                raza: 'Siamés',
-                peso: 4.2,
-                fechaNacimiento: '2021-05-15',
-                sexo: 'Hembra',
-                alergias: 'Ninguna',
-                historialVacunas: [
-                    { id: 101, vacuna: 'Triple Felina', fecha: '2023-08-10', proxima: '2024-08-10', peso: '4.0 kg' }
-                ],
-                historialCitas: [
-                    { id: 201, fecha: '2023-11-05 10:00', servicio: 'Consulta General', veterinario: 'Dr. Alejandro Fernández', descripcion: 'Chequeo general. Paciente sano.', estado: 'Completada' }
-                ]
-            },
-            {
-                idMascota: 'M002',
-                nombreMascota: 'Max',
-                especie: 'Perro',
-                raza: 'Golden Retriever',
-                peso: 28.5,
-                fechaNacimiento: '2019-11-20',
-                sexo: 'Macho',
-                alergias: 'Pollo',
-                historialVacunas: [
-                    { id: 102, vacuna: 'Rabia', fecha: '2023-01-15', proxima: '2024-01-15', peso: '28.0 kg' },
-                    { id: 103, vacuna: 'Séxtuple Canina', fecha: '2023-04-20', proxima: '2024-04-20', peso: '28.2 kg' }
-                ],
-                historialCitas: [
-                    { id: 202, fecha: '2023-09-12 11:30', servicio: 'Consulta Dermatológica', veterinario: 'Dr. Alejandro Fernández', descripcion: 'Alergia en piel. Dieta especial.', estado: 'Completada' }
-                ]
-            },
-            {
-                idMascota: 'M003',
-                nombreMascota: 'Firulais',
-                especie: 'Perro',
-                raza: 'Labrador',
-                peso: 25.0,
-                fechaNacimiento: '2022-03-10',
-                sexo: 'Macho',
-                alergias: 'Ninguna',
-                historialVacunas: [
-                    { id: 104, vacuna: 'Antirrábica', fecha: '2023-05-10', proxima: '2024-05-10', peso: '24.5 kg' }
-                ],
-                historialCitas: [
-                    { id: 203, fecha: '2023-10-01 16:00', servicio: 'Consulta General', veterinario: 'Dr. Alejandro Fernández', descripcion: 'Revisión preventiva de salud.', estado: 'Completada' }
-                ]
-            }
-        ];
-        
+
         cargarPacientes();
     }, []);
 
@@ -110,11 +59,15 @@ const ExpedientesVeterinario = ({ esAdmin = false }) => {
         setModalCarnetAbierto(true);
     };
 
+    useEffect(() => {
+        setPaginaActual(1);
+    }, [busqueda]);
+
     // Filtrar pacientes por búsqueda
     const pacientesFiltrados = pacientes.filter(p => 
-        p.nombreMascota.toLowerCase().includes(busqueda.toLowerCase()) ||
-        p.especie.toLowerCase().includes(busqueda.toLowerCase()) ||
-        p.raza.toLowerCase().includes(busqueda.toLowerCase())
+        (p.nombreMascota || '').toLowerCase().includes(busqueda.toLowerCase()) ||
+        (p.especie || '').toLowerCase().includes(busqueda.toLowerCase()) ||
+        (p.raza || '').toLowerCase().includes(busqueda.toLowerCase())
     );
 
     // Lógica de paginación

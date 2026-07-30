@@ -26,8 +26,8 @@ const CarnetMascotaModal = ({ mascotaDto, onEditar, onClose, esVeterinario = fal
     });
 
     // Desestructuración segura asumiendo la estructura del DTO propuesto para Spring Boot
+    const idMascota = mascotaDto?.idMascota || mascotaDto?.id_Mascota;
     const {
-        idMascota,
         nombreMascota,
         estado,
         especie,
@@ -64,6 +64,7 @@ const CarnetMascotaModal = ({ mascotaDto, onEditar, onClose, esVeterinario = fal
                         setMostrarFormVacuna={setMostrarFormVacuna}
                         datosVacuna={datosVacuna}
                         setDatosVacuna={setDatosVacuna}
+                        idMascota={idMascota}
                     />
                 );
             case 'citas':
@@ -74,6 +75,7 @@ const CarnetMascotaModal = ({ mascotaDto, onEditar, onClose, esVeterinario = fal
                         setMostrarFormDiagnostico={setMostrarFormDiagnostico}
                         datosDiagnostico={datosDiagnostico}
                         setDatosDiagnostico={setDatosDiagnostico}
+                        idMascota={idMascota}
                     />
                 );
             default:

@@ -5,8 +5,39 @@ const CarnetHistorialVacunas = ({
     mostrarFormVacuna, 
     setMostrarFormVacuna, 
     datosVacuna, 
-    setDatosVacuna 
+    setDatosVacuna,
+    idMascota
 }) => {
+    const handleGuardarVacuna = async () => {
+        try {
+            const { mascotaService } = await import('../../../services/api');
+            const Swal = (await import('sweetalert2')).default;
+            
+            Swal.fire({ title: 'Guardando...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            
+            const nuevaVacuna = await mascotaService.registrarVacuna(idMascota, {
+                vacuna: datosVacuna.nombreDosis,
+                fecha: datosVacuna.fechaAplicacion,
+                proxima: datosVacuna.fechaProxAplicacion || null,
+                peso: datosVacuna.pesoAplicacion ? parseFloat(datosVacuna.pesoAplicacion) : null
+            });
+            
+            historialVacunas.unshift(nuevaVacuna); // Add to local array to show immediately
+            
+            Swal.fire('Guardado', 'La vacuna ha sido registrada correctamente.', 'success');
+            setMostrarFormVacuna(false);
+            setDatosVacuna({
+                nombreDosis: '',
+                fechaAplicacion: new Date().toISOString().split('T')[0],
+                fechaProxAplicacion: '',
+                pesoAplicacion: ''
+            });
+        } catch (error) {
+            const Swal = (await import('sweetalert2')).default;
+            Swal.fire('Error', 'No se pudo guardar la vacuna: ' + error.message, 'error');
+        }
+    };
+
     return (
         <div className="tablaCarnetContenedor">
             {mostrarFormVacuna ? (
@@ -32,10 +63,7 @@ const CarnetHistorialVacunas = ({
                     </div>
                     <div className="formAcciones">
                         <button className="btnCancelarForm" onClick={() => setMostrarFormVacuna(false)}>Cancelar</button>
-                        <button className="btnGuardarForm" onClick={() => {
-                            console.log("Guardando vacuna...", datosVacuna);
-                            setMostrarFormVacuna(false);
-                        }}>Guardar Registro</button>
+                        <button className="btnGuardarForm" onClick={handleGuardarVacuna}>Guardar Registro</button>
                     </div>
                 </div>
             ) : (

@@ -1,12 +1,55 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const CarnetHistorialCitas = ({ 
     historialCitas, 
     mostrarFormDiagnostico, 
     setMostrarFormDiagnostico, 
     datosDiagnostico, 
-    setDatosDiagnostico 
+    setDatosDiagnostico,
+    idMascota
 }) => {
+    const [citasDisponibles, setCitasDisponibles] = useState([]);
+
+    useEffect(() => {
+        if (mostrarFormDiagnostico) {
+            import('../../../services/api').then(({ citaService }) => {
+                citaService.obtenerTodas().then(todas => {
+                    const citasMascota = todas.filter(c => c.mascotaId === idMascota && (c.estado === 'Realizada' || c.estado === 'Pendiente' || c.estado === 'Confirmada'));
+                    setCitasDisponibles(citasMascota);
+                }).catch(err => console.error(err));
+            });
+        }
+    }, [mostrarFormDiagnostico, idMascota]);
+
+    const handleGuardarDiagnostico = async () => {
+        try {
+            const { mascotaService } = await import('../../../services/api');
+            const Swal = (await import('sweetalert2')).default;
+            
+            if (!datosDiagnostico.idCita) {
+                Swal.fire('Atención', 'Debes seleccionar una cita', 'warning');
+                return;
+            }
+            
+            Swal.fire({ title: 'Guardando...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            
+            const nuevoHistorial = await mascotaService.registrarHistorial(idMascota, {
+                idCita: parseInt(datosDiagnostico.idCita),
+                motivo: datosDiagnostico.descripcionCita,
+                diagnostico: datosDiagnostico.diagnostico
+            });
+            
+            historialCitas.unshift(nuevoHistorial); // Add locally
+            
+            Swal.fire('Guardado', 'El diagnóstico ha sido guardado exitosamente.', 'success');
+            setMostrarFormDiagnostico(false);
+            setDatosDiagnostico({ idCita: '', descripcionCita: '', diagnostico: '' });
+        } catch (error) {
+            const Swal = (await import('sweetalert2')).default;
+            Swal.fire('Error', 'No se pudo guardar: ' + error.message, 'error');
+        }
+    };
+
     return (
         <div className="tablaCarnetContenedor">
             {mostrarFormDiagnostico ? (
@@ -17,8 +60,8 @@ const CarnetHistorialCitas = ({
                             <label>Vincular a Cita (ID Cita)</label>
                             <select value={datosDiagnostico.idCita} onChange={e => setDatosDiagnostico({...datosDiagnostico, idCita: e.target.value})}>
                                 <option value="">Selecciona una cita pasada...</option>
-                                {historialCitas && historialCitas.map(c => (
-                                    <option key={c.id} value={c.id}>Cita {c.fecha} - {c.servicio}</option>
+                                {citasDisponibles.map(c => (
+                                    <option key={c.idCita} value={c.idCita}>Cita {new Date(c.fechaHoraInicio).toLocaleDateString()} - {c.nombreServicio}</option>
                                 ))}
                             </select>
                         </div>
@@ -33,10 +76,7 @@ const CarnetHistorialCitas = ({
                     </div>
                     <div className="formAcciones">
                         <button className="btnCancelarForm" onClick={() => setMostrarFormDiagnostico(false)}>Cancelar</button>
-                        <button className="btnGuardarForm" onClick={() => {
-                            console.log("Guardando diagnóstico...", datosDiagnostico);
-                            setMostrarFormDiagnostico(false);
-                        }}>Guardar Diagnóstico</button>
+                        <button className="btnGuardarForm" onClick={handleGuardarDiagnostico}>Guardar Diagnóstico</button>
                     </div>
                 </div>
             ) : (
@@ -44,25 +84,19 @@ const CarnetHistorialCitas = ({
                     <table className="tablaCarnet">
                         <thead>
                             <tr>
-                                <th>Fecha y Hora</th>
-                                <th>Servicio</th>
-                                <th>Veterinario Atendió</th>
-                                <th>Descripción</th>
-                                <th>Estado</th>
+                                <th>Fecha</th>
+                                <th>Motivo / Descripción</th>
+                                <th>Veterinario</th>
+                                <th>Diagnóstico</th>
                             </tr>
                         </thead>
                         <tbody>
                             {historialCitas.map(c => (
-                                <tr key={c.id}>
-                                    <td><strong>{c.fecha}</strong></td>
-                                    <td>{c.servicio}</td>
+                                <tr key={c.idHistorial}>
+                                    <td><strong>{c.fecha ? new Date(c.fecha).toLocaleDateString() : 'N/A'}</strong></td>
+                                    <td>{c.motivo}</td>
                                     <td>{c.veterinario}</td>
-                                    <td>{c.descripcion}</td>
-                                    <td>
-                                        <span className={`estadoBadge ${c.estado.toLowerCase()}`}>
-                                            {c.estado}
-                                        </span>
-                                    </td>
+                                    <td>{c.diagnostico}</td>
                                 </tr>
                             ))}
                         </tbody>

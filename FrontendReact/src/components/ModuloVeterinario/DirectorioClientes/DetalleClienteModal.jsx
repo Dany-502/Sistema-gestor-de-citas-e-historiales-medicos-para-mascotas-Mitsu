@@ -56,12 +56,12 @@ const DetalleClienteModal = ({ isOpen, onClose, cliente }) => {
                                     <tbody>
                                         {cliente.mascotas.map((mascota, index) => (
                                             <tr key={index}>
-                                                <td className="idMascotaTd">{mascota.idMascota || 'N/A'}</td>
-                                                <td className="nombreMascotaTd">{mascota.nombre}</td>
+                                                <td className="idMascotaTd">{mascota.idMascota || mascota.id_Mascota || 'N/A'}</td>
+                                                <td className="nombreMascotaTd">{mascota.nombreMascota || mascota.NombreMascota || 'Sin nombre'}</td>
                                                 <td>
-                                                    <span className="especieBadge">{mascota.especie}</span>
+                                                    <span className="especieBadge">{mascota.especie || mascota.Especie || 'N/A'}</span>
                                                 </td>
-                                                <td className="razaMascotaTd">{mascota.raza || 'No especificada'}</td>
+                                                <td className="razaMascotaTd">{mascota.raza || mascota.Raza || 'No especificada'}</td>
                                             </tr>
                                         ))}
                                     </tbody>

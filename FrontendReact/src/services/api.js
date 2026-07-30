@@ -64,6 +64,14 @@ export const mascotaService = {
     eliminarMascota: (idMascota) => fetchConAuth(`/mascotas/${encodeURIComponent(idMascota)}`, {
         method: 'DELETE',
     }),
+    registrarVacuna: (idMascota, datos) => fetchConAuth(`/mascotas/${encodeURIComponent(idMascota)}/vacunas`, {
+        method: 'POST',
+        body: JSON.stringify(datos),
+    }),
+    registrarHistorial: (idMascota, datos) => fetchConAuth(`/mascotas/${encodeURIComponent(idMascota)}/historial`, {
+        method: 'POST',
+        body: JSON.stringify(datos),
+    }),
 };
 
 // Servicios de Veterinarios
@@ -93,5 +101,9 @@ export const citaService = {
     }),
     cancelarCita: (idCita) => fetchConAuth(`/citas/${idCita}`, {
         method: 'DELETE',
+    }),
+    actualizarEstado: (idCita, estado) => fetchConAuth(`/citas/${idCita}/estado`, {
+        method: 'PUT',
+        body: JSON.stringify({ estado }),
     }),
 };

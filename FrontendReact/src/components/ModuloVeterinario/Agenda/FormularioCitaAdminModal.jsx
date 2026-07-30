@@ -34,20 +34,11 @@ const FormularioCitaAdminModal = ({ isOpen, onClose, onSave }) => {
         if (isOpen) {
             const cargarOpciones = async () => {
                 try {
-                    const [clsData, vetsData, servsData] = await Promise.all([
-                        clienteService.obtenerTodos().catch(() => [
-                            { idCliente: 1, nombre: 'María Fernández', correo: 'maria@gmail.com' },
-                            { idCliente: 2, nombre: 'Carlos Romero', correo: 'carlos@gmail.com' }
-                        ]),
-                        veterinarioService.obtenerVeterinarios().catch(() => [
-                            { idVeterinario: 1, nombre: 'Miguel', apPaterno: 'Alonso', especialidad: 'Cirujano' },
-                            { idVeterinario: 2, nombre: 'Ana', apPaterno: 'Gomez', especialidad: 'Medicina General' }
-                        ]),
-                        servicioService.obtenerServicios().catch(() => [
-                            { idServicio: 1, nombreServicio: 'Consulta General', duracionTiempo: 30 },
-                            { idServicio: 2, nombreServicio: 'Vacunación', duracionTiempo: 15 },
-                            { idServicio: 3, nombreServicio: 'Desparasitación', duracionTiempo: 15 }
-                        ])
+                    const [clsData, vetsData, servsData, mascotasTotales] = await Promise.all([
+                        clienteService.obtenerTodos().catch(() => []),
+                        veterinarioService.obtenerVeterinarios().catch(() => []),
+                        servicioService.obtenerServicios().catch(() => []),
+                        mascotaService.obtenerTodas().catch(() => [])
                     ]);
 
                     setClientesDisponibles(clsData || []);
@@ -61,6 +52,14 @@ const FormularioCitaAdminModal = ({ isOpen, onClose, onSave }) => {
                         nombreServicio: s.nombreServicio,
                         duracion: s.duracionTiempo || 30
                     })));
+
+                    // Fetching all pets and mapping them so we can show them or filter them.
+                    setMascotasDisponibles(mascotasTotales.map(m => ({
+                        idMascota: m.id_Mascota || m.idMascota || m.id,
+                        nombre: m.NombreMascota || m.nombreMascota || m.nombre,
+                        especie: m.Especie || m.especie,
+                        raza: m.Raza || m.raza
+                    })));
                 } catch (err) {
                     console.error("Error al cargar datos del modal admin:", err);
                 }
@@ -69,25 +68,11 @@ const FormularioCitaAdminModal = ({ isOpen, onClose, onSave }) => {
         }
     }, [isOpen]);
 
-    // Load pets when client changes
+    // Load pets when client changes (No longer hardcoded, we just show all pets since client-pet mapping via ID isn't directly exposed)
+    // Future improvement: Add an endpoint to filter pets by client ID on backend.
     useEffect(() => {
         if (cliente) {
-            // Mock pets based on client
-            if (cliente === '1') {
-                setMascotasDisponibles([
-                    { idMascota: 1, nombre: 'Luna', especie: 'Gato', raza: 'Siamés', color: 'Blanco' },
-                    { idMascota: 3, nombre: 'Pipo', especie: 'Pájaro', raza: 'Canario', color: 'Amarillo' }
-                ]);
-            } else if (cliente === '2') {
-                setMascotasDisponibles([
-                    { idMascota: 2, nombre: 'Max', especie: 'Perro', raza: 'Bulldog', color: 'Café' }
-                ]);
-            } else {
-                setMascotasDisponibles([]);
-            }
             setMascota(''); // Reset mascota
-        } else {
-            setMascotasDisponibles([]);
         }
     }, [cliente]);
 

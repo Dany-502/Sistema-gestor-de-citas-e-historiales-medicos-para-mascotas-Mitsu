@@ -280,8 +280,8 @@ const ListaMascotas = () => {
                             telefonoContacto: usuarioSesion.telefono
                         },
                         fotoUrl: mascotaCarnetSeleccionada.fotoUrl || null,
-                        historialVacunas: [],
-                        historialCitas: []
+                        historialVacunas: mascotaCarnetSeleccionada.historialVacunas || [],
+                        historialCitas: mascotaCarnetSeleccionada.historialCitas || []
                     }}
                     onEditar={() => {
                         handleEditarMascota(mascotaCarnetSeleccionada);

@@ -20,6 +20,7 @@ public class CitaController {
 
     private final CitaService citaService;
     private final com.veterinaria.springbackend.service.RecordatorioCitasTask recordatorioCitasTask;
+    private final com.veterinaria.springbackend.repository.VeterinarioRepository veterinarioRepository;
 
     @GetMapping("/mis-citas")
     public ResponseEntity<List<CitaDTO>> obtenerMisCitas(Authentication authentication) {
@@ -28,7 +29,11 @@ public class CitaController {
     }
 
     @GetMapping("/todas")
-    public ResponseEntity<List<CitaDTO>> obtenerTodasLasCitas() {
+    public ResponseEntity<List<CitaDTO>> obtenerTodasLasCitas(Authentication authentication) {
+        String correo = authentication != null ? authentication.getName() : "";
+        if (veterinarioRepository.existsByCorreoElectronico(correo) || "dr.alejandro@mitsu.com".equals(correo)) {
+            return ResponseEntity.ok(citaService.obtenerCitasPorVeterinario(correo));
+        }
         return ResponseEntity.ok(citaService.obtenerTodasLasCitas());
     }
 
@@ -36,6 +41,12 @@ public class CitaController {
     public ResponseEntity<CitaDTO> crearCita(@Valid @RequestBody CrearCitaDTO dto, Authentication authentication) {
         String correo = authentication.getName();
         return new ResponseEntity<>(citaService.crearCita(dto, correo), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{idCita}/estado")
+    public ResponseEntity<CitaDTO> actualizarEstado(@PathVariable Integer idCita, @RequestBody java.util.Map<String, String> body) {
+        String estado = body.get("estado");
+        return ResponseEntity.ok(citaService.actualizarEstadoCita(idCita, estado));
     }
 
     @DeleteMapping("/{idCita}")

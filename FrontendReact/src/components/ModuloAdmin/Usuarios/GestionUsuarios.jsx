@@ -7,52 +7,7 @@ import iconBasura from '../../../assets/iconos/barra-de-basura.svg';
 import './GestionUsuariosEstilos.css';
 
 const GestionUsuarios = () => {
-    // Datos simulados iniciales
-    const mockIniciales = [
-        { 
-            id: 1, nombre: 'Miguel', apellido: 'Alonso', correo: 'vet@mistu.com', rol: 'Veterinario', fechaRegistro: '2026-01-15',
-            especialidad: 'Medicina General', cedula: '12345678', 
-            horarios: [
-                { diaSemana: 'Lunes', horaInicio: '09:00', horaFin: '18:00' },
-                { diaSemana: 'Martes', horaInicio: '09:00', horaFin: '18:00' },
-                { diaSemana: 'Miércoles', horaInicio: '09:00', horaFin: '18:00' },
-                { diaSemana: 'Jueves', horaInicio: '09:00', horaFin: '18:00' },
-                { diaSemana: 'Viernes', horaInicio: '09:00', horaFin: '18:00' },
-                { diaSemana: 'Sábado', horaInicio: '10:00', horaFin: '14:00' }
-            ]
-        },
-        { 
-            id: 2, nombre: 'María', apellido: 'Fernández', correo: 'maria@gmail.com', rol: 'Cliente', fechaRegistro: '2026-03-22',
-            mascotas: [
-                { idMascota: 'M001', nombre: 'Firulais', especie: 'Perro', raza: 'Mestizo' },
-                { idMascota: 'M002', nombre: 'Michi', especie: 'Gato', raza: 'Siamés' },
-                { idMascota: 'M003', nombre: 'Pipo', especie: 'Pájaro', raza: 'Canario' }
-            ]
-        },
-        { id: 3, nombre: 'Admin', apellido: 'Mistu', correo: 'admin@mistu.com', rol: 'Admin', fechaRegistro: '2025-12-01' },
-        { id: 4, nombre: 'Carlos', apellido: 'Gómez', correo: 'carlos.g@hotmail.com', rol: 'Cliente', fechaRegistro: '2026-05-10' },
-        { 
-            id: 5, nombre: 'Ana', apellido: 'Pérez', correo: 'ana.perez@mistu.com', rol: 'Veterinario', fechaRegistro: '2026-02-05',
-            especialidad: 'Cirugía Veterinaria', cedula: '87654321', 
-            horarios: [
-                { diaSemana: 'Lunes', horaInicio: '10:00', horaFin: '20:00' },
-                { diaSemana: 'Miércoles', horaInicio: '10:00', horaFin: '20:00' },
-                { diaSemana: 'Viernes', horaInicio: '10:00', horaFin: '20:00' }
-            ]
-        },
-        { id: 6, nombre: 'Luis', apellido: 'Ramírez', correo: 'luis.r@gmail.com', rol: 'Cliente', fechaRegistro: '2026-06-11' },
-        { id: 7, nombre: 'Sofía', apellido: 'Martínez', correo: 'sofia.m@gmail.com', rol: 'Cliente', fechaRegistro: '2026-06-15' },
-        { id: 8, nombre: 'Jorge', apellido: 'Díaz', correo: 'jdiaz@mistu.com', rol: 'Admin', fechaRegistro: '2026-06-20' },
-        { id: 9, nombre: 'Camila', apellido: 'Rojas', correo: 'camila.r@gmail.com', rol: 'Cliente', fechaRegistro: '2026-07-01' },
-        { id: 10, nombre: 'Roberto', apellido: 'Sánchez', correo: 'roberto.s@mistu.com', rol: 'Veterinario', fechaRegistro: '2026-07-05', especialidad: 'Odontología', cedula: '44556677' },
-        { id: 11, nombre: 'Laura', apellido: 'Gutiérrez', correo: 'laura.g@gmail.com', rol: 'Cliente', fechaRegistro: '2026-07-10' },
-        { id: 12, nombre: 'Diego', apellido: 'Torres', correo: 'diego.t@gmail.com', rol: 'Cliente', fechaRegistro: '2026-07-12' },
-        { id: 13, nombre: 'Valentina', apellido: 'Flores', correo: 'valentina.f@mistu.com', rol: 'Veterinario', fechaRegistro: '2026-07-18', especialidad: 'Dermatología', cedula: '99887766' },
-        { id: 14, nombre: 'Andrés', apellido: 'Castro', correo: 'andres.c@gmail.com', rol: 'Cliente', fechaRegistro: '2026-07-22' },
-        { id: 15, nombre: 'Isabella', apellido: 'Ortiz', correo: 'isabella.o@gmail.com', rol: 'Cliente', fechaRegistro: '2026-07-25' },
-    ];
-
-    const [usuarios, setUsuarios] = useState(mockIniciales);
+    const [usuarios, setUsuarios] = useState([]);
     const [busqueda, setBusqueda] = useState('');
     const [filtroRol, setFiltroRol] = useState('');
     
@@ -96,6 +51,7 @@ const GestionUsuarios = () => {
                 }
             } catch (err) {
                 console.error("Error al obtener usuarios backend:", err);
+                setUsuarios([]);
             }
         };
 

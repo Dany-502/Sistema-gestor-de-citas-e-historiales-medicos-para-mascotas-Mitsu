@@ -35,11 +35,11 @@ const CarnetInformacionGeneral = ({ especie, fechaNacimiento, raza, peso, sexo, 
             <div className="tarjetaResponsable">
                 <div className="responsableItem">
                     <span className="datoLabel">Adulto Responsable</span>
-                    <span className="datoValor">{adultoResponsable?.nombreCliente || 'N/A'}</span>
+                    <span className="datoValor">{typeof adultoResponsable === 'string' ? adultoResponsable : (adultoResponsable?.nombreCliente || adultoResponsable || 'N/A')}</span>
                 </div>
                 <div className="responsableItem">
                     <span className="datoLabel">Teléfono de Contacto</span>
-                    <span className="datoValor">{adultoResponsable?.telefonoContacto || 'N/A'}</span>
+                    <span className="datoValor">{adultoResponsable?.telefonoContacto || 'Registrado en Directorio'}</span>
                 </div>
             </div>
         </div>

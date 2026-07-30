@@ -13,6 +13,8 @@ public class CitaDTO {
     private Integer idCita;
     private String mascotaId;
     private String nombreMascota;
+    private String especie;
+    private String raza;
     private Integer veterinarioId;
     private String nombreVeterinario;
     private Integer servicioId;

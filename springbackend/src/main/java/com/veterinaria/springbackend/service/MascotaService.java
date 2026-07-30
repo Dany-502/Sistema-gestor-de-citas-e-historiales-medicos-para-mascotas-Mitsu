@@ -1,10 +1,18 @@
 package com.veterinaria.springbackend.service;
 
 import com.veterinaria.springbackend.dto.MascotaDTO;
+import com.veterinaria.springbackend.dto.HistorialClinicoDTO;
+import com.veterinaria.springbackend.dto.VacunaMascotaDTO;
+import com.veterinaria.springbackend.entity.Cita;
 import com.veterinaria.springbackend.entity.Cliente;
+import com.veterinaria.springbackend.entity.HistorialClinico;
 import com.veterinaria.springbackend.entity.Mascota;
+import com.veterinaria.springbackend.entity.VacunaMascota;
+import com.veterinaria.springbackend.repository.CitaRepository;
 import com.veterinaria.springbackend.repository.ClienteRepository;
+import com.veterinaria.springbackend.repository.HistorialClinicoRepository;
 import com.veterinaria.springbackend.repository.MascotaRepository;
+import com.veterinaria.springbackend.repository.VacunaMascotaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +28,9 @@ public class MascotaService {
 
     private final MascotaRepository mascotaRepository;
     private final ClienteRepository clienteRepository;
+    private final VacunaMascotaRepository vacunaMascotaRepository;
+    private final HistorialClinicoRepository historialClinicoRepository;
+    private final CitaRepository citaRepository;
 
     @Transactional(readOnly = true)
     public List<MascotaDTO> obtenerMascotasPorCliente(String correoCliente) {
@@ -37,6 +48,18 @@ public class MascotaService {
     @Transactional(readOnly = true)
     public List<MascotaDTO> obtenerTodasLasMascotas() {
         return mascotaRepository.findAll().stream()
+                .filter(mascota -> !"Inactivo".equalsIgnoreCase(mascota.getEstado()))
+                .map(mascota -> {
+                    Cliente c = mascota.getCliente();
+                    String adulto = c != null ? c.getNombre() + " " + c.getApPaterno() : "No registrado";
+                    return convertirADTO(mascota, adulto);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<MascotaDTO> obtenerMascotasPorVeterinario(String correo) {
+        return mascotaRepository.findMascotasByVeterinario(correo).stream()
                 .filter(mascota -> !"Inactivo".equalsIgnoreCase(mascota.getEstado()))
                 .map(mascota -> {
                     Cliente c = mascota.getCliente();
@@ -92,6 +115,61 @@ public class MascotaService {
         mascotaRepository.save(mascota);
     }
 
+    @Transactional
+    public VacunaMascotaDTO registrarVacuna(String idMascota, VacunaMascotaDTO dto) {
+        Mascota mascota = mascotaRepository.findById(idMascota)
+                .orElseThrow(() -> new RuntimeException("Mascota no encontrada"));
+
+        VacunaMascota vacuna = VacunaMascota.builder()
+                .mascota(mascota)
+                .nombreDosis(dto.getVacuna())
+                .fechaAplicacion(dto.getFecha())
+                .fechaProxAplicacion(dto.getProxima())
+                .pesoAplicacion(dto.getPeso())
+                .build();
+        
+        vacuna = vacunaMascotaRepository.save(vacuna);
+
+        return VacunaMascotaDTO.builder()
+                .idAplicacion(vacuna.getIdAplicacion())
+                .idMascota(vacuna.getMascota().getIdMascota())
+                .vacuna(vacuna.getNombreDosis())
+                .fecha(vacuna.getFechaAplicacion())
+                .proxima(vacuna.getFechaProxAplicacion())
+                .peso(vacuna.getPesoAplicacion())
+                .build();
+    }
+
+    @Transactional
+    public HistorialClinicoDTO registrarHistorial(String idMascota, HistorialClinicoDTO dto) {
+        Mascota mascota = mascotaRepository.findById(idMascota)
+                .orElseThrow(() -> new RuntimeException("Mascota no encontrada"));
+        
+        Cita cita = citaRepository.findById(dto.getIdCita())
+                .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
+
+        HistorialClinico historial = HistorialClinico.builder()
+                .mascota(mascota)
+                .cita(cita)
+                .descripcionCita(dto.getMotivo())
+                .diagnostico(dto.getDiagnostico())
+                .build();
+        
+        historial = historialClinicoRepository.save(historial);
+
+        String nombreVet = cita.getVeterinario() != null ? "Dr. " + cita.getVeterinario().getApPaterno() : "Veterinario";
+
+        return HistorialClinicoDTO.builder()
+                .idHistorial(historial.getIdHistorial())
+                .idMascota(mascota.getIdMascota())
+                .idCita(cita.getIdCita())
+                .fecha(cita.getFechaHoraInicio() != null ? cita.getFechaHoraInicio().toLocalDate() : null)
+                .motivo(historial.getDescripcionCita())
+                .diagnostico(historial.getDiagnostico())
+                .veterinario(nombreVet)
+                .build();
+    }
+
     private void copiarDatosDTOAEntidad(MascotaDTO dto, Mascota mascota) {
         String nombre = dto.getNombreMascota();
         if (nombre != null && !nombre.trim().isEmpty()) {
@@ -137,6 +215,30 @@ public class MascotaService {
     }
 
     private MascotaDTO convertirADTO(Mascota mascota, String adultoResponsable) {
+        List<VacunaMascotaDTO> vacunas = vacunaMascotaRepository.findByMascotaIdMascotaOrderByFechaAplicacionDesc(mascota.getIdMascota())
+                .stream().map(v -> VacunaMascotaDTO.builder()
+                        .idAplicacion(v.getIdAplicacion())
+                        .idMascota(mascota.getIdMascota())
+                        .vacuna(v.getNombreDosis())
+                        .fecha(v.getFechaAplicacion())
+                        .proxima(v.getFechaProxAplicacion())
+                        .peso(v.getPesoAplicacion())
+                        .build()).collect(Collectors.toList());
+
+        List<HistorialClinicoDTO> historial = historialClinicoRepository.findByMascotaIdMascotaOrderByCitaFechaHoraInicioDesc(mascota.getIdMascota())
+                .stream().map(h -> {
+                    String vetName = h.getCita().getVeterinario() != null ? h.getCita().getVeterinario().getNombre() + " " + h.getCita().getVeterinario().getApPaterno() : "Veterinario";
+                    return HistorialClinicoDTO.builder()
+                        .idHistorial(h.getIdHistorial())
+                        .idMascota(mascota.getIdMascota())
+                        .idCita(h.getCita().getIdCita())
+                        .fecha(h.getCita().getFechaHoraInicio() != null ? h.getCita().getFechaHoraInicio().toLocalDate() : null)
+                        .motivo(h.getDescripcionCita())
+                        .diagnostico(h.getDiagnostico())
+                        .veterinario(vetName)
+                        .build();
+                }).collect(Collectors.toList());
+
         return MascotaDTO.builder()
                 .idMascota(mascota.getIdMascota())
                 .nombreMascota(mascota.getNombreMascota())
@@ -152,6 +254,8 @@ public class MascotaService {
                 .adultoResponsable(adultoResponsable)
                 .estado(mascota.getEstado() != null ? mascota.getEstado() : "Activo")
                 .fotoUrl(mascota.getImagen())
+                .historialVacunas(vacunas)
+                .historialCitas(historial)
                 .build();
     }
 }

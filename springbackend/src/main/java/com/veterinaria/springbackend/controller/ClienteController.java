@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/clientes")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 public class ClienteController {
 
     private final ClienteRepository clienteRepository;
     private final com.veterinaria.springbackend.repository.MascotaRepository mascotaRepository;
+    private final com.veterinaria.springbackend.repository.VeterinarioRepository veterinarioRepository;
 
     @GetMapping("/me")
     public ResponseEntity<ClienteResponseDTO> obtenerPerfil(Authentication authentication) {
@@ -43,8 +44,15 @@ public class ClienteController {
     }
 
     @GetMapping
-    public ResponseEntity<java.util.List<ClienteResponseDTO>> obtenerTodosLosClientes() {
-        java.util.List<Cliente> clientes = clienteRepository.findAll();
+    public ResponseEntity<java.util.List<ClienteResponseDTO>> obtenerTodosLosClientes(Authentication authentication) {
+        String correo = authentication != null ? authentication.getName() : "";
+        java.util.List<Cliente> clientes;
+
+        if (veterinarioRepository.existsByCorreoElectronico(correo) || "dr.alejandro@mitsu.com".equals(correo)) {
+            clientes = clienteRepository.findClientesByVeterinario(correo);
+        } else {
+            clientes = clienteRepository.findAll();
+        }
         java.util.List<ClienteResponseDTO> resultado = clientes.stream().map(cliente -> {
             java.util.List<com.veterinaria.springbackend.entity.Mascota> mascotasEntity = mascotaRepository.findByClienteIdCliente(cliente.getIdCliente());
             java.util.List<com.veterinaria.springbackend.dto.MascotaDTO> mascotasDTO = mascotasEntity.stream().map(m -> 

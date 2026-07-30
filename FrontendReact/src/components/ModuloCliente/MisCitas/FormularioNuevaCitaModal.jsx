@@ -33,19 +33,9 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
             const cargarOpciones = async () => {
                 try {
                     const [mascotasData, vetsData, servsData] = await Promise.all([
-                        mascotaService.obtenerMascotas().catch(() => [
-                            { idMascota: 1, nombreMascota: 'Luna', especie: 'Gato', raza: 'Siamés', color: 'Blanco' },
-                            { idMascota: 2, nombreMascota: 'Max', especie: 'Perro', raza: 'Bulldog', color: 'Café' }
-                        ]),
-                        veterinarioService.obtenerVeterinarios().catch(() => [
-                            { idVeterinario: 1, nombre: 'Miguel', apPaterno: 'Alonso', especialidad: 'Cirujano' },
-                            { idVeterinario: 2, nombre: 'Ana', apPaterno: 'Gomez', especialidad: 'Medicina General' }
-                        ]),
-                        servicioService.obtenerServicios().catch(() => [
-                            { idServicio: 1, nombreServicio: 'Consulta General', duracionTiempo: 30 },
-                            { idServicio: 2, nombreServicio: 'Vacunación', duracionTiempo: 15 },
-                            { idServicio: 3, nombreServicio: 'Cirugía', duracionTiempo: 120 }
-                        ])
+                        mascotaService.obtenerMascotas().catch(() => []),
+                        veterinarioService.obtenerVeterinarios().catch(() => []),
+                        servicioService.obtenerServicios().catch(() => [])
                     ]);
                     setMascotasDisponibles(mascotasData.map(m => ({
                         idMascota: m.id_Mascota || m.idMascota || m.id,

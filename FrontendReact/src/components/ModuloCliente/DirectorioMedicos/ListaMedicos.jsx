@@ -23,12 +23,8 @@ const ListaMedicos = ({ esAdmin = false }) => {
                 const datos = await veterinarioService.obtenerVeterinarios();
                 setMedicos(datos);
             } catch (err) {
-                console.error("Error al cargar veterinarios, usando mocks:", err);
-                // Mock data para ver el diseño
-                setMedicos([
-                    { idVeterinario: 1, nombre: 'Miguel', apPaterno: 'Alonso', especialidad: 'Cirujano', telefono: '555-1234', correo: 'miguel@veterinaria.com', horarioApertura: '09:00', horarioCierre: '18:00', fotoUrl: null },
-                    { idVeterinario: 2, nombre: 'Ana', apPaterno: 'Gomez', especialidad: 'Medicina General', telefono: '555-5678', correo: 'ana@veterinaria.com', horarioApertura: '10:00', horarioCierre: '20:00', fotoUrl: null }
-                ]);
+                console.error("Error al cargar veterinarios:", err);
+                setMedicos([]);
             } finally {
                 setCargando(false);
             }
@@ -158,9 +154,6 @@ const ListaMedicos = ({ esAdmin = false }) => {
                             setMedicos(prev => [nuevoVet, ...prev]);
                         } catch (err) {
                             console.error("Error al guardar médico en backend:", err);
-                            // Fallback local
-                            const idSimulado = Date.now();
-                            setMedicos(prev => [{ ...datosMedico, idVeterinario: idSimulado }, ...prev]);
                         }
                         setModalAbierto(false);
                     }}
