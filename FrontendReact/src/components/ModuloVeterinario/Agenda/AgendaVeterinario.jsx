@@ -72,6 +72,10 @@ const AgendaVeterinario = ({ esAdmin = false }) => {
             setCitas(citasFormateadas);
         } catch (err) {
             console.error("Error al cargar citas de la agenda, usando datos demo:", err);
+            const hoy = new Date();
+            const mañana = new Date(hoy);
+            mañana.setDate(hoy.getDate() + 1);
+
             const citasMock = [
                 {
                     idCita: 1,
