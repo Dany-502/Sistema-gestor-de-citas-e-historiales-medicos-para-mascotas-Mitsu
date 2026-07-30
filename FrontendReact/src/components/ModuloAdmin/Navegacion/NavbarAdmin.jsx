@@ -6,6 +6,7 @@ import '../../ModuloCliente/Navegacion/NavegacionEstilos.css';
 const NavbarAdmin = ({ alCerrarSesion }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const nombreUsuario = 'Super Admin';
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -36,7 +37,7 @@ const NavbarAdmin = ({ alCerrarSesion }) => {
 
         {menuOpen && (
           <div className="dropdown-menu">
-            <button className="dropdown-item">Perfil Administrador</button>
+            <button className="dropdown-item" onClick={() => { setMenuOpen(false); navigate('/admin/perfil'); }}>Perfil Administrador</button>
             <button className="dropdown-item" onClick={handleLogout}>Cerrar Sesión</button>
           </div>
         )}

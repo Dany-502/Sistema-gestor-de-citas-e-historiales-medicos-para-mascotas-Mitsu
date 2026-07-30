@@ -7,6 +7,9 @@ import ListaMascotas from './components/ModuloCliente/MisMascotas/ListaMascotas'
 import ListaMedicos from './components/ModuloCliente/DirectorioMedicos/ListaMedicos';
 import MisCitas from './components/ModuloCliente/MisCitas/MisCitas';
 
+// Modulo Compartido
+import PerfilUsuario from './components/Compartido/PerfilUsuario/PerfilUsuario';
+
 // Modulo Veterinario
 import VeterinarioLayout from './components/ModuloVeterinario/Layout/VeterinarioLayout';
 import DashboardVeterinario from './components/ModuloVeterinario/DashboardCliente/DashboardVeterinario';
@@ -69,7 +72,7 @@ function App() {
           <Route path="mascotas" element={<ListaMascotas />} />
           <Route path="medicos" element={<ListaMedicos />} />
           <Route path="citas" element={<MisCitas />} />
-          {/* Aquí irán citas, etc. */}
+          <Route path="perfil" element={<PerfilUsuario />} />
         </Route>
 
         {/* Rutas del Módulo Veterinario */}
@@ -81,6 +84,7 @@ function App() {
           <Route path="expedientes" element={<ExpedientesVeterinario />} />
           <Route path="directorio" element={<ListaClientes />} />
           <Route path="agenda" element={<AgendaVeterinario />} />
+          <Route path="perfil" element={<PerfilUsuario />} />
         </Route>
 
         {/* Rutas del Módulo Administrador */}
@@ -92,6 +96,7 @@ function App() {
           <Route path="agenda" element={<AgendaVeterinario esAdmin={true} />} />
           <Route path="expedientes" element={<ExpedientesVeterinario esAdmin={true} />} />
           <Route path="medicos" element={<ListaMedicos esAdmin={true} />} />
+          <Route path="perfil" element={<PerfilUsuario />} />
         </Route>
       </Routes>
     </BrowserRouter>

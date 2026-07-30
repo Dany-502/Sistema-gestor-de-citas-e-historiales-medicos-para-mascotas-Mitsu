@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import iconFlecha from '../../../assets/iconos/angulo-hacia-abajo.png';
 import './NavegacionEstilos.css';
 import { clienteService } from '../../../services/api';
@@ -6,6 +7,7 @@ import { clienteService } from '../../../services/api';
 const Navbar = ({ alCerrarSesion }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [nombreUsuario, setNombreUsuario] = useState('Cliente Mitsu');
+  const navigate = useNavigate();
 
   useEffect(() => {
     let cancelado = false;
@@ -53,6 +55,7 @@ const Navbar = ({ alCerrarSesion }) => {
 
         {menuOpen && (
           <div className="dropdown-menu">
+            <button className="dropdown-item" onClick={() => { setMenuOpen(false); navigate('/cliente/perfil'); }}>Mi Perfil</button>
             <button className="dropdown-item" onClick={handleLogout}>Cerrar Sesión</button>
           </div>
         )}

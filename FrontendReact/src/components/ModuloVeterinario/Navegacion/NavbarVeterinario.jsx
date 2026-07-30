@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import iconFlecha from '../../../assets/iconos/angulo-hacia-abajo.png';
 import '../../ModuloCliente/Navegacion/NavegacionEstilos.css';
 
 const NavbarVeterinario = ({ alCerrarSesion }) => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const nombreUsuario = 'Miguel Alonso'; // Dummy data para el veterinario
+  const nombreUsuario = 'Dr. Miguel Alonso';
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -35,7 +37,7 @@ const NavbarVeterinario = ({ alCerrarSesion }) => {
 
         {menuOpen && (
           <div className="dropdown-menu">
-            <button className="dropdown-item">Perfil Profesional</button>
+            <button className="dropdown-item" onClick={() => { setMenuOpen(false); navigate('/veterinario/perfil'); }}>Mi Perfil</button>
             <button className="dropdown-item" onClick={handleLogout}>Cerrar Sesión</button>
           </div>
         )}

@@ -1,0 +1,219 @@
+.contenedorPerfilUniversal {
+  padding: 40px;
+  background-color: #f8fafc;
+  min-height: calc(100vh - 70px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.perfilCargando {
+  align-items: center;
+  justify-content: center;
+}
+
+.textoCargandoPerfil {
+  color: #64748b;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.cabeceraPerfil {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.textosCabecera {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.tituloPerfil {
+  color: #0f172a;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.subtituloPerfil {
+  font-size: 15px;
+  color: #5c6c75;
+  margin: 0;
+}
+
+.cuerpoPerfilPlano {
+  display: flex;
+  flex-direction: column;
+}
+
+.seccionAvatarPerfilPlano {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.avatarPerfilFrame {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 4px solid #ffffff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.avatarPerfilContent {
+  width: 100%;
+  height: 100%;
+  background-color: #e2e8f0;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatarPerfilContent svg {
+  width: 60px;
+  height: 60px;
+}
+
+.infoPrincipalPerfil {
+  margin-left: 20px;
+  padding-bottom: 10px;
+}
+
+.infoPrincipalPerfil h2 {
+  margin: 0;
+  font-size: 26px;
+  color: #0f172a;
+}
+
+.badgeRolPerfil {
+  display: inline-block;
+  background-color: #e6f0ff;
+  color: #1a73e8;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.gridPerfilSecciones {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+.seccionPerfil {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 30px;
+}
+
+.seccionPerfil h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #334155;
+  border-bottom: 1px solid #cbd5e1;
+  padding-bottom: 10px;
+}
+
+.perfilFormGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.perfilFormGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.perfilFormGroup.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.perfilFormGroup label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.perfilFormGroup input {
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #1e293b;
+  transition: all 0.2s;
+  background-color: #ffffff;
+}
+
+.perfilFormGroup input:focus {
+  border-color: #10b981;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1);
+}
+
+.perfilFormGroup input:disabled {
+  background-color: #f1f5f9;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+.accionesPerfilFooter {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.btnGuardarPerfil {
+  background-color: #10b981;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btnGuardarPerfil:hover {
+  background-color: #059669;
+}
+
+@media (max-width: 768px) {
+  .contenedorPerfilUniversal {
+    padding: 20px 10px;
+  }
+  
+  .seccionAvatarPerfilPlano {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .infoPrincipalPerfil {
+    margin-left: 0;
+    margin-top: 15px;
+    padding-bottom: 0;
+  }
+  
+  .perfilFormGrid {
+    grid-template-columns: 1fr;
+  }
+}
