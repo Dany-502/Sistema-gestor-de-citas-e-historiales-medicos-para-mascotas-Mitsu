@@ -1,0 +1,155 @@
+/* GestionUsuariosEstilos.css */
+.contenedorUsuarios {
+    width: 100%;
+}
+
+.cabeceraUsuarios {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.textosCabeceraUsuarios {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.tituloUsuarios {
+    color: #0f172a;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.subtituloUsuarios {
+    font-size: 15px;
+    color: #5c6c75;
+    margin: 0;
+}
+
+.barraHerramientasUsuarios {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 16px;
+}
+
+.buscadorUsuarios {
+    flex: 1;
+    max-width: 400px;
+    padding: 12px 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+.buscadorUsuarios:focus {
+    border-color: #26b5b7;
+    box-shadow: 0 0 0 3px rgba(38, 181, 183, 0.1);
+}
+
+.selectFiltroUsuarios {
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    background-color: white;
+    cursor: pointer;
+}
+
+.tablaUsuariosContenedor {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    overflow: auto;
+    max-height: 65vh;
+}
+
+.tablaUsuarios {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tablaUsuarios th {
+    background-color: #f1f5f9;
+    padding: 16px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tablaUsuarios td {
+    padding: 16px;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.tablaUsuarios tr:last-child td {
+    border-bottom: none;
+}
+
+.tablaUsuarios tr:hover {
+    background-color: #f8fafc;
+}
+
+.badgeRol {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.badgeRol.admin {
+    background-color: #f1f5f9;
+    color: #475569;
+}
+
+.badgeRol.cliente {
+    background-color: #e2fbe8;
+    color: #106626;
+}
+
+.badgeRol.veterinario {
+    background-color: #e5f1ff;
+    color: #004085;
+}
+
+.accionesUsuario {
+    display: flex;
+    gap: 8px;
+}
+
+.btnAccionUsuario {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    font-size: 18px;
+}
+
+.btnAccionUsuario:hover {
+    background-color: #e2e8f0;
+}
+
+.btnAccionUsuario.editar {
+    color: #007aff;
+}
+
+.btnAccionUsuario.eliminar {
+    color: #ff3b30;
+}
+
+.btnAccionUsuario.eliminar:hover {
+    background-color: #ffe5e5;
+}

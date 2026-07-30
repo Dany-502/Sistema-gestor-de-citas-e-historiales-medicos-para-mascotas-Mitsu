@@ -9,7 +9,7 @@ import iconoPata from '../../../assets/iconos/pata.png';
 import iconoEstetoscopio from '../../../assets/iconos/estetoscopio.png';
 import iconoPortapapeles from '../../../assets/iconos/portapapeles.png';
 
-const ResumenCitaModal = ({ isOpen, onClose, cita, onCancel, esVeterinario = false, onIrExpediente, onCompletarCita, onConfirmarCita }) => {
+const ResumenCitaModal = ({ isOpen, onClose, cita, onCancel, esVeterinario = false, esAdmin = false, onIrExpediente, onCompletarCita, onConfirmarCita }) => {
     if (!isOpen || !cita) return null;
 
     const handleCancelarClick = () => {
@@ -172,7 +172,7 @@ const ResumenCitaModal = ({ isOpen, onClose, cita, onCancel, esVeterinario = fal
                             Marcar como Realizada
                         </button>
                     )}
-                    {esVeterinario && (
+                    {(esVeterinario || esAdmin) && (
                         <button className="btnAccionPrimario" onClick={() => { if(onIrExpediente) onIrExpediente(cita) }} style={{ backgroundColor: '#4a5568', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', flex: 1 }}>
                             Ir al Expediente
                         </button>
@@ -183,7 +183,14 @@ const ResumenCitaModal = ({ isOpen, onClose, cita, onCancel, esVeterinario = fal
                             Cancelar Cita
                         </button>
                     )}
-                    <button className="btnCerrarPrimario" onClick={onClose} style={{ flex: 1 }}>Cerrar</button>
+                    {esAdmin && (
+                        <button className="btnCancelarSecundario" onClick={() => {
+                            Swal.fire('Eliminada', 'Cita borrada permanentemente de la BD (Admin)', 'success');
+                            onClose();
+                        }} style={{ flex: 1, backgroundColor: '#dc2626', color: 'white', borderColor: '#dc2626' }}>
+                            Eliminar BD
+                        </button>
+                    )}
                 </div>
 
             </div>

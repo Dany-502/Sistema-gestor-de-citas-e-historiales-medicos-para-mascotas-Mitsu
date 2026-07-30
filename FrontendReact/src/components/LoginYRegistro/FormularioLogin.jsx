@@ -51,6 +51,24 @@ export default function FormularioLogin({ cambiarARegistro, alIniciarSesion }) {
         setEstaCargando(true);
 
         try {
+            // MOCK PARA EL ADMINISTRADOR
+            if ((correoElectronico === 'admin@mistu.com' || correoElectronico === 'admin@mitsu.com') && contrasena === 'admin123') {
+                localStorage.setItem('token', 'mock_admin_token');
+                localStorage.setItem('rol', 'ADMIN');
+                if (alIniciarSesion) alIniciarSesion();
+                navigate('/admin/usuarios');
+                return;
+            }
+
+            // MOCK PARA VETERINARIO TEMPORAL
+            if ((correoElectronico === 'vet@mistu.com' || correoElectronico === 'vet@mitsu.com') && contrasena === 'vet123') {
+                localStorage.setItem('token', 'mock_vet_token');
+                localStorage.setItem('rol', 'VETERINARIO');
+                if (alIniciarSesion) alIniciarSesion();
+                navigate('/veterinario/dashboard');
+                return;
+            }
+
             let datos;
             try {
                 const respuesta = await fetch('https://mitsu-veterinaria.duckdns.org/api/auth/login', {
@@ -99,7 +117,9 @@ export default function FormularioLogin({ cambiarARegistro, alIniciarSesion }) {
                 alIniciarSesion();
             }
 
-            if (datos.rol === 'VETERINARIO') {
+            if (datos.rol === 'ADMIN') {
+                navigate('/admin/usuarios');
+            } else if (datos.rol === 'VETERINARIO') {
                 navigate('/veterinario/dashboard');
             } else {
                 navigate('/cliente/dashboard');

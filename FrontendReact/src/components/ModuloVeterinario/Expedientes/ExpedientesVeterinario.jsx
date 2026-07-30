@@ -4,7 +4,7 @@ import TarjetaMascota from '../../ModuloCliente/MisMascotas/TarjetaMascota';
 import CarnetMascotaModal from '../../ModuloCliente/MisMascotas/CarnetMascotaModal';
 import { mascotaService } from '../../../services/api';
 
-const ExpedientesVeterinario = () => {
+const ExpedientesVeterinario = ({ esAdmin = false }) => {
     const [cargando, setCargando] = useState(true);
     const [busqueda, setBusqueda] = useState('');
     const [pacientes, setPacientes] = useState([]);
@@ -210,9 +210,11 @@ const ExpedientesVeterinario = () => {
             {/* Modal Reutilizado */}
             {modalCarnetAbierto && (
                 <CarnetMascotaModal 
-                    onClose={() => setModalCarnetAbierto(false)}
+                    isOpen={modalCarnetAbierto} 
+                    onClose={() => setModalCarnetAbierto(false)} 
                     mascotaDto={mascotaSeleccionada}
                     esVeterinario={true}
+                    esAdmin={esAdmin}
                 />
             )}
         </div>
