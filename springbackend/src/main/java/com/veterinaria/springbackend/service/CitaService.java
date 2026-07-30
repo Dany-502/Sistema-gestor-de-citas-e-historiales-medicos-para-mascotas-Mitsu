@@ -33,6 +33,13 @@ public class CitaService {
                 .collect(Collectors.toList());
     }
 
+    public List<CitaDTO> obtenerTodasLasCitas() {
+        return citaRepository.findAll()
+                .stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
+    }
+
     public CitaDTO crearCita(CrearCitaDTO dto, String correoCliente) {
         Cliente cliente = clienteRepository.findByCorreoElectronico(correoCliente)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));

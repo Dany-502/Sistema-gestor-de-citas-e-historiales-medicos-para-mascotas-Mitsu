@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://66.179.80.246:8089/api';
+const API_BASE_URL = 'https://mitsu-veterinaria.duckdns.org/api';
 
 /**
  * Función auxiliar para realizar peticiones HTTP autenticadas con JWT.
@@ -46,11 +46,13 @@ async function fetchConAuth(endpoint, options = {}) {
 // Servicios de Autenticación y Cliente
 export const clienteService = {
     obtenerPerfil: () => fetchConAuth('/clientes/me'),
+    obtenerTodos: () => fetchConAuth('/clientes'),
 };
 
 // Servicios de Mascotas
 export const mascotaService = {
     obtenerMascotas: () => fetchConAuth('/mascotas'),
+    obtenerTodas: () => fetchConAuth('/mascotas/todas'),
     registrarMascota: (datosMascota) => fetchConAuth('/mascotas', {
         method: 'POST',
         body: JSON.stringify(datosMascota),
@@ -77,6 +79,7 @@ export const servicioService = {
 // Servicios de Citas
 export const citaService = {
     obtenerMisCitas: () => fetchConAuth('/citas/mis-citas'),
+    obtenerTodas: () => fetchConAuth('/citas/todas'),
     crearCita: (datosCita) => fetchConAuth('/citas', {
         method: 'POST',
         body: JSON.stringify(datosCita),

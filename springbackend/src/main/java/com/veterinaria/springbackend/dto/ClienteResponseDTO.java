@@ -19,4 +19,6 @@ public class ClienteResponseDTO {
     private String direccion;
     private String telefono;
     private String correoElectronico;
+    private Integer cantidadMascotas;
+    private java.util.List<MascotaDTO> mascotas;
 }

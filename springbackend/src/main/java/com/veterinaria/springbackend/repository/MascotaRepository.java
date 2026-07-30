@@ -12,5 +12,7 @@ public interface MascotaRepository extends JpaRepository<Mascota, String> {
 
     List<Mascota> findByClienteCorreoElectronico(String correoElectronico);
 
+    List<Mascota> findByClienteIdCliente(Integer idCliente);
+
     Optional<Mascota> findByIdMascotaAndClienteCorreoElectronico(String idMascota, String correoElectronico);
 }

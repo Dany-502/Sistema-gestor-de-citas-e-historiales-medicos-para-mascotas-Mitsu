@@ -34,6 +34,18 @@ public class MascotaService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<MascotaDTO> obtenerTodasLasMascotas() {
+        return mascotaRepository.findAll().stream()
+                .filter(mascota -> !"Inactivo".equalsIgnoreCase(mascota.getEstado()))
+                .map(mascota -> {
+                    Cliente c = mascota.getCliente();
+                    String adulto = c != null ? c.getNombre() + " " + c.getApPaterno() : "No registrado";
+                    return convertirADTO(mascota, adulto);
+                })
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public MascotaDTO registrarMascota(MascotaDTO dto, String correoCliente) {
         Cliente cliente = clienteRepository.findByCorreoElectronico(correoCliente)

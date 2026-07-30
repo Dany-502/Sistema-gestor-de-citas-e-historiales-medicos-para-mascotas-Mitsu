@@ -81,21 +81,46 @@ public class WhatsAppService {
 
     @Async
     public void enviarNotificacionNuevaCita(Cita cita, Cliente cliente) {
-        if (!enabled)
+        if (!enabled || cliente == null || cliente.getTelefono() == null || cliente.getTelefono().trim().isEmpty()) {
             return;
-
-        log.info("Procesando notificación de nueva cita ID: {}. Cliente: {}, Teléfono: '{}'",
-                cita != null ? cita.getIdCita() : "null",
-                cliente != null ? cliente.getNombre() : "null",
-                cliente != null ? cliente.getTelefono() : "null");
-
-        if (cliente != null && cliente.getTelefono() != null && !cliente.getTelefono().trim().isEmpty()) {
-            log.info("Enviando plantilla 'hello_world' de Meta al crear la cita para el cliente {}",
-                    cliente.getNombre());
-            enviarPlantillaHelloWorld(cliente.getTelefono());
-        } else {
-            log.warn("No se envió WhatsApp porque el cliente no tiene un teléfono válido registrado.");
         }
+
+        log.info("Enviando mensaje detallado de nueva cita ID: {} a {}", cita != null ? cita.getIdCita() : "null",
+                cliente.getTelefono());
+
+        String fechaFormateada = cita.getFechaHoraInicio() != null
+                ? cita.getFechaHoraInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+                : "";
+
+        String nombreMascota = (cita != null && cita.getMascota() != null
+                && cita.getMascota().getNombreMascota() != null)
+                        ? cita.getMascota().getNombreMascota()
+                        : "tu mascota";
+
+        String nombreServicio = (cita != null && cita.getServicio() != null
+                && cita.getServicio().getNombreServicio() != null)
+                        ? cita.getServicio().getNombreServicio()
+                        : "Consulta veterinaria";
+
+        String nombreVet = (cita != null && cita.getVeterinario() != null && cita.getVeterinario().getNombre() != null)
+                ? cita.getVeterinario().getNombre() + " " + cita.getVeterinario().getApPaterno()
+                : "Médico de turno";
+
+        String mensaje = String.format(
+                "*Veterinaria Mitsu - Confirmación de Cita* 🐾\n\n" +
+                        "¡Hola *%s*! Tu cita ha sido agendada con éxito:\n\n" +
+                        "*Mascota:* %s\n" +
+                        "*Fecha y Hora:* %s\n" +
+                        "*Servicio:* %s\n" +
+                        "*Atendido por:* %s\n\n" +
+                        "¡Gracias por confiar en nosotros!",
+                cliente.getNombre(),
+                nombreMascota,
+                fechaFormateada,
+                nombreServicio,
+                nombreVet);
+
+        enviarMensajeMetaWhatsApp(cliente.getTelefono(), mensaje);
     }
 
     @Async

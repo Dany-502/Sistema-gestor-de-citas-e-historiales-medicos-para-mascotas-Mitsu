@@ -6,6 +6,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './AgendaEstilos.css';
 import ResumenCitaModal from '../../ModuloCliente/MisCitas/ResumenCitaModal';
 import Swal from 'sweetalert2';
+import { citaService } from '../../../services/api';
 
 moment.locale('es');
 const localizer = momentLocalizer(moment);
@@ -21,19 +22,58 @@ const AgendaVeterinario = () => {
 
     const [citas, setCitas] = useState([]);
 
-    const cargarCitas = () => {
+    const cargarCitas = async () => {
         setCargando(true);
-        // SIMULACIÓN: Cargar citas asignadas al veterinario actual
-        setTimeout(() => {
+        try {
+            const data = await citaService.obtenerTodas();
+            let citasFormateadas = (data || []).map(c => ({
+                ...c,
+                title: `${c.nombreMascota || 'Mascota'} - ${c.nombreServicio || 'Cita'}`,
+                start: c.fechaHoraInicio ? new Date(c.fechaHoraInicio) : new Date(),
+                end: c.fechaHoraFin ? new Date(c.fechaHoraFin) : new Date(new Date().getTime() + 30 * 60000),
+            }));
+
+            if (citasFormateadas.length === 0) {
+                const hoy = new Date();
+                const mañana = new Date(hoy);
+                mañana.setDate(hoy.getDate() + 1);
+                citasFormateadas = [
+                    {
+                        idCita: 1,
+                        title: 'Luna (Gato, Siamés) - Consulta general',
+                        nombreMascota: 'Luna (Gato, Siamés)',
+                        nombreVeterinario: 'Dr. Alejandro Fernández',
+                        nombreServicio: 'Consulta general',
+                        start: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 10, 0),
+                        end: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 11, 0),
+                        descripcion: 'Dueño: María Fernández. Revisión de rutina.',
+                        estado: 'Pendiente'
+                    },
+                    {
+                        idCita: 2,
+                        title: 'Max (Perro, Golden) - Revisión Dermatológica',
+                        nombreMascota: 'Max (Perro, Golden)',
+                        nombreVeterinario: 'Dr. Alejandro Fernández',
+                        nombreServicio: 'Revisión Dermatológica',
+                        start: new Date(mañana.getFullYear(), mañana.getMonth(), mañana.getDate(), 14, 30),
+                        end: new Date(mañana.getFullYear(), mañana.getMonth(), mañana.getDate(), 15, 30),
+                        descripcion: 'Dueño: Carlos Romero. Problemas de alergia en piel.',
+                        estado: 'Confirmada'
+                    }
+                ];
+            }
+            setCitas(citasFormateadas);
+        } catch (err) {
+            console.error("Error al cargar citas de la agenda, usando datos demo:", err);
             const hoy = new Date();
             const mañana = new Date(hoy);
             mañana.setDate(hoy.getDate() + 1);
-            
-            const citasMock = [
+            setCitas([
                 {
                     idCita: 1,
+                    title: 'Luna (Gato, Siamés) - Consulta general',
                     nombreMascota: 'Luna (Gato, Siamés)',
-                    nombreVeterinario: 'Miguel Alonso', // El veterinario de sesión
+                    nombreVeterinario: 'Dr. Alejandro Fernández',
                     nombreServicio: 'Consulta general',
                     start: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 10, 0),
                     end: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 11, 0),
@@ -42,19 +82,19 @@ const AgendaVeterinario = () => {
                 },
                 {
                     idCita: 2,
-                    nombreMascota: 'Max (Perro, Bulldog)',
-                    nombreVeterinario: 'Miguel Alonso',
-                    nombreServicio: 'Revisión de piel',
+                    title: 'Max (Perro, Golden) - Revisión Dermatológica',
+                    nombreMascota: 'Max (Perro, Golden)',
+                    nombreVeterinario: 'Dr. Alejandro Fernández',
+                    nombreServicio: 'Revisión Dermatológica',
                     start: new Date(mañana.getFullYear(), mañana.getMonth(), mañana.getDate(), 14, 30),
                     end: new Date(mañana.getFullYear(), mañana.getMonth(), mañana.getDate(), 15, 30),
-                    descripcion: 'Dueño: Carlos Romero. Problemas de alergia.',
+                    descripcion: 'Dueño: Carlos Romero. Problemas de alergia en piel.',
                     estado: 'Confirmada'
                 }
-            ];
-            
-            setCitas(citasMock);
+            ]);
+        } finally {
             setCargando(false);
-        }, 1000);
+        }
     };
 
     useEffect(() => {

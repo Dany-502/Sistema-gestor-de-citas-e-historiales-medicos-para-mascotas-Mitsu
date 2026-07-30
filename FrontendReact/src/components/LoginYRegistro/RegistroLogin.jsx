@@ -53,7 +53,7 @@ export default function RegistroLogin({ cambiarALogin }) {
         setEstaCargando(true);
         
         try {
-            const respuesta = await fetch('http://66.179.80.246:8089/api/auth/registro', {
+            const respuesta = await fetch('https://mitsu-veterinaria.duckdns.org/api/auth/registro', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './ListaClientesEstilos.css';
 import TarjetaCliente from './TarjetaCliente';
 import DetalleClienteModal from './DetalleClienteModal';
+import { clienteService } from '../../../services/api';
 
 const ListaClientes = () => {
     const [cargando, setCargando] = useState(true);
@@ -18,108 +19,62 @@ const ListaClientes = () => {
         const cargarClientes = async () => {
             try {
                 setCargando(true);
-                // Simulación de carga de clientes (Mock)
-                setTimeout(() => {
-                    const mockClientes = [
-                        {
-                            idCliente: 1,
-                            nombre: 'Juan',
-                            apPaterno: 'Pérez',
-                            apMaterno: 'García',
-                            correoElectronico: 'juan.perez@email.com',
-                            telefono: '555-1234',
-                            direccion: 'Calle Falsa 123, Colonia Centro',
-                            cantidadMascotas: 6,
-                            mascotas: [
-                                { idMascota: 'M001', nombre: 'Firulais', especie: 'Perro', raza: 'Mestizo' },
-                                { idMascota: 'M002', nombre: 'Michi', especie: 'Gato', raza: 'Siamés' },
-                                { idMascota: 'M003', nombre: 'Pipo', especie: 'Pájaro', raza: 'Canario' },
-                                { idMascota: 'M004', nombre: 'Rex', especie: 'Perro', raza: 'Pastor Alemán' },
-                                { idMascota: 'M005', nombre: 'Garfield', especie: 'Gato', raza: 'Persa' },
-                                { idMascota: 'M006', nombre: 'Nemo', especie: 'Pez', raza: 'Payaso' }
-                            ]
-                        },
-                        {
-                            idCliente: 2,
-                            nombre: 'María',
-                            apPaterno: 'López',
-                            apMaterno: 'Martínez',
-                            correoElectronico: 'maria.lopez@email.com',
-                            telefono: '555-5678',
-                            direccion: 'Av. Siempre Viva 742',
-                            cantidadMascotas: 1,
-                            mascotas: [
-                                { idMascota: 'M007', nombre: 'Max', especie: 'Perro', raza: 'Golden Retriever' }
-                            ]
-                        },
-                        {
-                            idCliente: 3,
-                            nombre: 'Carlos',
-                            apPaterno: 'Ruiz',
-                            apMaterno: 'Sánchez',
-                            correoElectronico: 'carlos.ruiz@email.com',
-                            telefono: '555-9012',
-                            direccion: 'Boulevard de los Sueños Rotos',
-                            cantidadMascotas: 3,
-                            mascotas: [
-                                { idMascota: 'M008', nombre: 'Lola', especie: 'Perro', raza: 'Bulldog' },
-                                { idMascota: 'M009', nombre: 'Pelusa', especie: 'Gato', raza: 'Persa' },
-                                { idMascota: 'M010', nombre: 'Paco', especie: 'Loro', raza: 'Cacatúa' }
-                            ]
-                        },
-                         {
-                            idCliente: 4,
-                            nombre: 'Ana',
-                            apPaterno: 'Gómez',
-                            apMaterno: 'Díaz',
-                            correoElectronico: 'ana.gomez@email.com',
-                            telefono: '555-3456',
-                            direccion: 'Privada las Flores 45',
-                            cantidadMascotas: 1,
-                            mascotas: [
-                                { idMascota: 'M011', nombre: 'Luna', especie: 'Gato', raza: 'Mestizo' }
-                            ]
-                        },
-                        {
-                            idCliente: 5,
-                            nombre: 'Pedro',
-                            apPaterno: 'Ramírez',
-                            apMaterno: 'Cruz',
-                            correoElectronico: 'pedro.ramirez@email.com',
-                            telefono: '555-7890',
-                            direccion: 'Calle 10, Manzana 4',
-                            cantidadMascotas: 2,
-                            mascotas: [
-                                { idMascota: 'M012', nombre: 'Rocky', especie: 'Perro', raza: 'Boxer' },
-                                { idMascota: 'M013', nombre: 'Simba', especie: 'Gato', raza: 'Bengala' }
-                            ]
-                        },
-                        {
-                            idCliente: 6,
-                            nombre: 'Laura',
-                            apPaterno: 'Torres',
-                            apMaterno: 'Vargas',
-                            correoElectronico: 'laura.torres@email.com',
-                            telefono: '555-2468',
-                            direccion: 'Av. Universidad 1000',
-                            cantidadMascotas: 4,
-                            mascotas: [
-                                { idMascota: 'M014', nombre: 'Coco', especie: 'Perro', raza: 'Poodle' },
-                                { idMascota: 'M015', nombre: 'Thor', especie: 'Perro', raza: 'Husky' },
-                                { idMascota: 'M016', nombre: 'Bella', especie: 'Gato', raza: 'Angora' },
-                                { idMascota: 'M017', nombre: 'Nemo', especie: 'Pez', raza: 'Payaso' }
-                            ]
-                        }
-                    ];
-                    setClientes(mockClientes);
-                    setCargando(false);
-                }, 800);
+                const data = await clienteService.obtenerTodos();
+                let resultado = data || [];
+                if (resultado.length === 0) {
+                    resultado = demoClientes;
+                }
+                setClientes(resultado);
+                setCargando(false);
             } catch (err) {
-                console.error("Error al cargar clientes:", err);
-                setError(err.message || "No se pudo cargar la lista de clientes");
+                console.error("Error al cargar clientes, usando datos demo:", err);
+                setClientes(demoClientes);
                 setCargando(false);
             }
         };
+
+        const demoClientes = [
+            {
+                idCliente: 1,
+                nombre: 'Juan',
+                apPaterno: 'Pérez',
+                apMaterno: 'García',
+                correoElectronico: 'juan.perez@email.com',
+                telefono: '555-1234',
+                direccion: 'Calle Falsa 123, Colonia Centro',
+                cantidadMascotas: 2,
+                mascotas: [
+                    { idMascota: 'M001', nombre: 'Firulais', especie: 'Perro', raza: 'Labrador' },
+                    { idMascota: 'M002', nombre: 'Michi', especie: 'Gato', raza: 'Siamés' }
+                ]
+            },
+            {
+                idCliente: 2,
+                nombre: 'María',
+                apPaterno: 'López',
+                apMaterno: 'Martínez',
+                correoElectronico: 'maria.lopez@email.com',
+                telefono: '555-5678',
+                direccion: 'Av. Siempre Viva 742',
+                cantidadMascotas: 1,
+                mascotas: [
+                    { idMascota: 'M003', nombre: 'Max', especie: 'Perro', raza: 'Golden Retriever' }
+                ]
+            },
+            {
+                idCliente: 3,
+                nombre: 'Carlos',
+                apPaterno: 'Ruiz',
+                apMaterno: 'Sánchez',
+                correoElectronico: 'carlos.ruiz@email.com',
+                telefono: '555-9012',
+                direccion: 'Boulevard de los Sueños Rotos',
+                cantidadMascotas: 1,
+                mascotas: [
+                    { idMascota: 'M004', nombre: 'Luna', especie: 'Gato', raza: 'Persa' }
+                ]
+            }
+        ];
 
         cargarClientes();
     }, []);

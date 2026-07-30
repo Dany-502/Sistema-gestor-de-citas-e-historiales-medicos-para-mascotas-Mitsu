@@ -25,6 +25,7 @@ function App() {
 
   const manejarCerrarSesion = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('rol');
     setSesionIniciada(false);
   };
 

@@ -27,6 +27,11 @@ public class CitaController {
         return ResponseEntity.ok(citaService.obtenerMisCitas(correo));
     }
 
+    @GetMapping("/todas")
+    public ResponseEntity<List<CitaDTO>> obtenerTodasLasCitas() {
+        return ResponseEntity.ok(citaService.obtenerTodasLasCitas());
+    }
+
     @PostMapping
     public ResponseEntity<CitaDTO> crearCita(@Valid @RequestBody CrearCitaDTO dto, Authentication authentication) {
         String correo = authentication.getName();

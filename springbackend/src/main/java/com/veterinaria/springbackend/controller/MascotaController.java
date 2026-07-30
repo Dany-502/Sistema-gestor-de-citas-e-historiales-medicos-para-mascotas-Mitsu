@@ -24,6 +24,12 @@ public class MascotaController {
         return ResponseEntity.ok(mascotas);
     }
 
+    @GetMapping("/todas")
+    public ResponseEntity<List<MascotaDTO>> obtenerTodasLasMascotas() {
+        List<MascotaDTO> mascotas = mascotaService.obtenerTodasLasMascotas();
+        return ResponseEntity.ok(mascotas);
+    }
+
     @PostMapping
     public ResponseEntity<MascotaDTO> registrarMascota(@RequestBody MascotaDTO dto, Authentication authentication) {
         String correo = authentication.getName();

@@ -29,13 +29,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO request) {
-        String token = authService.login(request);
-
-        // Devolvemos un JSON con el token para que React lo pueda guardar
-        Map<String, String> respuesta = new HashMap<>();
-        respuesta.put("token", token);
-        respuesta.put("mensaje", "Inicio de sesión exitoso");
-
+        Map<String, String> respuesta = authService.login(request);
         return ResponseEntity.ok(respuesta);
     }
 }
