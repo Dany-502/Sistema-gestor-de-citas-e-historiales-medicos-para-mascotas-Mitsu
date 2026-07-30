@@ -5,16 +5,23 @@ import 'moment/dist/locale/es';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './AgendaEstilos.css';
 import ResumenCitaModal from '../../ModuloCliente/MisCitas/ResumenCitaModal';
+import ConfigurarHorarioModal from './ConfigurarHorarioModal';
+import FormularioCitaAdminModal from './FormularioCitaAdminModal';
 import Swal from 'sweetalert2';
 
 moment.locale('es');
 const localizer = momentLocalizer(moment);
 
-const AgendaVeterinario = () => {
+const AgendaVeterinario = ({ esAdmin = false }) => {
     const [cargando, setCargando] = useState(true);
     const [busqueda, setBusqueda] = useState('');
     const [filtroEstado, setFiltroEstado] = useState('');
+    const [filtroMedico, setFiltroMedico] = useState('');
     const [modalResumenAbierto, setModalResumenAbierto] = useState(false);
+    const [modalHorarioAbierto, setModalHorarioAbierto] = useState(false);
+    const [modalNuevaCitaAbierto, setModalNuevaCitaAbierto] = useState(false);
+    const [horaApertura, setHoraApertura] = useState(9);
+    const [horaCierre, setHoraCierre] = useState(20);
     const [citaSeleccionada, setCitaSeleccionada] = useState(null);
     const [vistaCalendario, setVistaCalendario] = useState('month');
     const [fechaCalendario, setFechaCalendario] = useState(new Date());
@@ -28,7 +35,7 @@ const AgendaVeterinario = () => {
             const hoy = new Date();
             const mañana = new Date(hoy);
             mañana.setDate(hoy.getDate() + 1);
-            
+
             const citasMock = [
                 {
                     idCita: 1,
@@ -49,9 +56,29 @@ const AgendaVeterinario = () => {
                     end: new Date(mañana.getFullYear(), mañana.getMonth(), mañana.getDate(), 15, 30),
                     descripcion: 'Dueño: Carlos Romero. Problemas de alergia.',
                     estado: 'Confirmada'
+                },
+                {
+                    idCita: 3,
+                    nombreMascota: 'Pipo (Pájaro, Canario)',
+                    nombreVeterinario: 'Ana Pérez',
+                    nombreServicio: 'Corte de alas y uñas',
+                    start: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 12, 0),
+                    end: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 13, 0),
+                    descripcion: 'Dueño: María Fernández. Chequeo general.',
+                    estado: 'Confirmada'
+                },
+                {
+                    idCita: 4,
+                    nombreMascota: 'Michi (Gato, Persa)',
+                    nombreVeterinario: 'Miguel Alonso',
+                    nombreServicio: 'Vacunación',
+                    start: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 16, 0),
+                    end: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 17, 0),
+                    descripcion: 'Dueño: Laura Gutiérrez. Canceló por motivos personales.',
+                    estado: 'Cancelada'
                 }
             ];
-            
+
             setCitas(citasMock);
             setCargando(false);
         }, 1000);
@@ -91,7 +118,7 @@ const AgendaVeterinario = () => {
 
     const slotStyleGetter = (date) => {
         const hora = date.getHours();
-        if (hora < 9 || hora >= 20) {
+        if (hora < horaApertura || hora >= horaCierre) {
             return {
                 className: 'hora-no-laboral'
             };
@@ -120,7 +147,7 @@ const AgendaVeterinario = () => {
     const handleCompletarCita = (idCita) => {
         setModalResumenAbierto(false);
         // Simulamos el cambio de estado local
-        setCitas(prev => prev.map(c => 
+        setCitas(prev => prev.map(c =>
             c.idCita === idCita ? { ...c, estado: 'Realizada' } : c
         ));
     };
@@ -136,6 +163,26 @@ const AgendaVeterinario = () => {
         // En el futuro: navigate('/veterinario/expedientes', { state: { mascotaId: cita.mascotaId } })
     };
 
+    const handleConfigurarHorario = () => {
+        setModalHorarioAbierto(true);
+    };
+
+    const handleGuardarHorario = (apertura, cierre) => {
+        setHoraApertura(apertura);
+        setHoraCierre(cierre);
+        setModalHorarioAbierto(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'Horario Actualizado',
+            text: 'El calendario ahora refleja los nuevos horarios de la clínica.',
+            confirmButtonColor: '#0284c7'
+        });
+    };
+
+    const handleGuardarNuevaCitaAdmin = () => {
+        // En el futuro: recargarCitas()
+    };
+
     // Filtros
     const citasFiltradas = citas.filter((cita) => {
         const coincideBusqueda =
@@ -143,7 +190,9 @@ const AgendaVeterinario = () => {
             cita.nombreServicio.toLowerCase().includes(busqueda.toLowerCase());
 
         const coincideEstado = filtroEstado ? cita.estado === filtroEstado : true;
-        return coincideBusqueda && coincideEstado;
+        const coincideMedico = esAdmin && filtroMedico ? cita.nombreVeterinario === filtroMedico : true;
+
+        return coincideBusqueda && coincideEstado && coincideMedico;
     });
 
     const eventosMapeados = citasFiltradas.map(c => ({
@@ -155,9 +204,21 @@ const AgendaVeterinario = () => {
         <div className="contenedorMisCitas">
             <div className="cabeceraCitas">
                 <div className="textosCabecera">
-                    <h2 className="tituloCitas" style={{color: '#0f172a'}}>Mi Agenda</h2>
-                    <p className="subtituloCitas">Revisa las citas y pacientes que tienes programados.</p>
+                    <h2 className="tituloCitas" style={{ color: '#0f172a' }}>
+                        Agenda {esAdmin ? 'Administrador' : 'del Veterinario'}
+                    </h2>
+                    <p className="subtituloCitas">
+                        {esAdmin ? 'Monitoreo de todas las citas y pacientes programados en la clínica.' : 'Administra tus citas y horarios de atención médica.'}
+                    </p>
                 </div>
+                {esAdmin && (
+                    <button
+                        className="botonAgendarCita"
+                        onClick={() => setModalNuevaCitaAbierto(true)}
+                    >
+                        Agendar Nueva Cita
+                    </button>
+                )}
             </div>
 
             {/* KPIs */}
@@ -167,13 +228,20 @@ const AgendaVeterinario = () => {
                     <span className="kpiValue">{citas.filter(c => c.start.getDate() === new Date().getDate() && (c.estado === 'Confirmada' || c.estado === 'Pendiente')).length}</span>
                 </div>
                 <div className="kpiCardCitas">
-                    <span className="kpiLabel">Por confirmar</span>
+                    <span className="kpiLabel">{esAdmin ? 'Solicitudes Pendientes' : 'Por confirmar'}</span>
                     <span className="kpiValue" style={{ color: '#ffb84d' }}>{citas.filter(c => c.estado === 'Pendiente').length}</span>
                 </div>
-                <div className="kpiCardCitas">
-                    <span className="kpiLabel">Pacientes atendidos</span>
-                    <span className="kpiValue" style={{ color: '#007aff' }}>{citas.filter(c => c.estado === 'Realizada').length}</span>
-                </div>
+                {esAdmin ? (
+                    <div className="kpiCardCitas">
+                        <span className="kpiLabel" style={{ color: '#dc2626' }}>Citas Canceladas</span>
+                        <span className="kpiValue" style={{ color: '#dc2626' }}>{citas.filter(c => c.estado === 'Cancelada').length}</span>
+                    </div>
+                ) : (
+                    <div className="kpiCardCitas">
+                        <span className="kpiLabel">Pacientes atendidos</span>
+                        <span className="kpiValue" style={{ color: '#007aff' }}>{citas.filter(c => c.estado === 'Realizada').length}</span>
+                    </div>
+                )}
                 <div className="kpiCardCitas">
                     <span className="kpiLabel">Total programadas</span>
                     <span className="kpiValue">{citas.filter(c => c.estado === 'Confirmada' || c.estado === 'Pendiente').length}</span>
@@ -190,7 +258,26 @@ const AgendaVeterinario = () => {
                     className="buscadorCitas"
                 />
 
-                <div className="filtrosCitas">
+                <div className="filtrosCitas" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    {esAdmin && (
+                        <button
+                            onClick={handleConfigurarHorario}
+                            style={{ backgroundColor: '#0f172a', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+                        >
+                            ⚙️ Configurar Horario
+                        </button>
+                    )}
+                    {esAdmin && (
+                        <select
+                            value={filtroMedico}
+                            onChange={(e) => setFiltroMedico(e.target.value)}
+                            className="selectFiltroCitas"
+                        >
+                            <option value="">Todos los Médicos</option>
+                            <option value="Miguel Alonso">Miguel Alonso</option>
+                            <option value="Ana Pérez">Ana Pérez</option>
+                        </select>
+                    )}
                     <select
                         value={filtroEstado}
                         onChange={(e) => setFiltroEstado(e.target.value)}
@@ -255,9 +342,24 @@ const AgendaVeterinario = () => {
                 onClose={() => setModalResumenAbierto(false)}
                 cita={citaSeleccionada}
                 onCancel={handleCancelarCita}
-                esVeterinario={true}
+                esVeterinario={!esAdmin}
+                esAdmin={esAdmin}
                 onCompletarCita={handleCompletarCita}
                 onIrExpediente={handleIrExpediente}
+            />
+
+            <ConfigurarHorarioModal
+                isOpen={modalHorarioAbierto}
+                onClose={() => setModalHorarioAbierto(false)}
+                horaAperturaActual={horaApertura}
+                horaCierreActual={horaCierre}
+                onGuardar={handleGuardarHorario}
+            />
+
+            <FormularioCitaAdminModal
+                isOpen={modalNuevaCitaAbierto}
+                onClose={() => setModalNuevaCitaAbierto(false)}
+                onSave={handleGuardarNuevaCitaAdmin}
             />
         </div>
     );

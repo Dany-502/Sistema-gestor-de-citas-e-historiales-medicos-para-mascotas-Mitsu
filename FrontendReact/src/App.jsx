@@ -14,6 +14,10 @@ import ExpedientesVeterinario from './components/ModuloVeterinario/Expedientes/E
 import ListaClientes from './components/ModuloVeterinario/DirectorioClientes/ListaClientes';
 import AgendaVeterinario from './components/ModuloVeterinario/Agenda/AgendaVeterinario';
 
+// Modulo Admin
+import AdminLayout from './components/ModuloAdmin/Layout/AdminLayout';
+import GestionUsuarios from './components/ModuloAdmin/Usuarios/GestionUsuarios';
+
 function App() {
   const [sesionIniciada, setSesionIniciada] = useState(() => {
     return !!localStorage.getItem('token');
@@ -76,6 +80,17 @@ function App() {
           <Route path="expedientes" element={<ExpedientesVeterinario />} />
           <Route path="directorio" element={<ListaClientes />} />
           <Route path="agenda" element={<AgendaVeterinario />} />
+        </Route>
+
+        {/* Rutas del Módulo Administrador */}
+        <Route 
+          path="/admin" 
+          element={<AdminLayout alCerrarSesion={manejarCerrarSesion} />}
+        >
+          <Route path="usuarios" element={<GestionUsuarios />} />
+          <Route path="agenda" element={<AgendaVeterinario esAdmin={true} />} />
+          <Route path="expedientes" element={<ExpedientesVeterinario esAdmin={true} />} />
+          <Route path="medicos" element={<ListaMedicos esAdmin={true} />} />
         </Route>
       </Routes>
     </BrowserRouter>

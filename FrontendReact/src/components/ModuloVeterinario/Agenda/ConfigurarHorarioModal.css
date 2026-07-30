@@ -1,0 +1,125 @@
+.modalOverlayConfiguracion {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContenidoConfiguracion {
+    background-color: white;
+    border-radius: 12px;
+    padding: 30px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.btnCerrarModal {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.btnCerrarModal:hover {
+    color: #475569;
+}
+
+.tituloModalConfiguracion {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 22px;
+    color: #1e293b;
+    text-align: center;
+}
+
+.formularioConfiguracion {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.mensajeErrorConfiguracion {
+    background-color: #fee2e2;
+    color: #ef4444;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.grupoFormularioConfig {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.grupoFormularioConfig label {
+    font-weight: 600;
+    color: #475569;
+    font-size: 14px;
+}
+
+.grupoFormularioConfig input {
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.grupoFormularioConfig input:focus {
+    border-color: #26b5b7;
+    box-shadow: 0 0 0 3px rgba(38, 181, 183, 0.1);
+}
+
+.accionesModalConfiguracion {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.btnSecundarioConfig {
+    flex: 1;
+    padding: 12px;
+    background-color: #f1f5f9;
+    color: #475569;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btnSecundarioConfig:hover {
+    background-color: #e2e8f0;
+}
+
+.btnPrimarioConfig {
+    flex: 1;
+    padding: 12px;
+    background-color: #ff8b6a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btnPrimarioConfig:hover {
+    background-color: #f07e5d;
+}

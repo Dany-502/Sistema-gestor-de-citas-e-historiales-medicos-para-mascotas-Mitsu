@@ -51,6 +51,22 @@ export default function FormularioLogin({ cambiarARegistro, alIniciarSesion }) {
         setEstaCargando(true);
 
         try {
+            // MOCK PARA EL ADMINISTRADOR
+            if (correoElectronico === 'admin@mistu.com' && contrasena === 'admin123') {
+                localStorage.setItem('token', 'mock_admin_token');
+                if (alIniciarSesion) alIniciarSesion();
+                navigate('/admin/usuarios');
+                return; // Salimos de la función sin hacer fetch
+            }
+
+            // MOCK PARA EL VETERINARIO TEMPORAL
+            if (correoElectronico === 'vet@mistu.com' && contrasena === 'vet123') {
+                localStorage.setItem('token', 'mock_vet_token');
+                if (alIniciarSesion) alIniciarSesion();
+                navigate('/veterinario/dashboard');
+                return;
+            }
+
             const respuesta = await fetch('http://66.179.80.246:8089/api/auth/login', {
                 method: 'POST',
                 headers: {

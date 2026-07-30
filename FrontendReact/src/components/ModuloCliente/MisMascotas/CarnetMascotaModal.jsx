@@ -6,7 +6,7 @@ import CarnetInformacionGeneral from './CarnetInformacionGeneral';
 import CarnetHistorialVacunas from './CarnetHistorialVacunas';
 import CarnetHistorialCitas from './CarnetHistorialCitas';
 
-const CarnetMascotaModal = ({ mascotaDto, onEditar, onClose, esVeterinario = false }) => {
+const CarnetMascotaModal = ({ mascotaDto, onEditar, onClose, esVeterinario = false, esAdmin = false }) => {
     const [pestanaActiva, setPestanaActiva] = useState('informacion');
 
     // Estados para formularios veterinarios
@@ -150,6 +150,16 @@ const CarnetMascotaModal = ({ mascotaDto, onEditar, onClose, esVeterinario = fal
                         {esVeterinario && pestanaActiva === 'citas' && !mostrarFormDiagnostico && (
                             <button className="btnVeterinario" onClick={() => setMostrarFormDiagnostico(true)}>
                                 + Redactar Diagnóstico
+                            </button>
+                        )}
+                        {esAdmin && (
+                            <button className="btnVeterinario" onClick={() => {
+                                import('sweetalert2').then(Swal => {
+                                    Swal.default.fire('Eliminado', 'Expediente borrado de la BD (Admin)', 'success');
+                                    onClose();
+                                });
+                            }} style={{ backgroundColor: '#dc2626', borderColor: '#dc2626' }}>
+                                Eliminar Expediente
                             </button>
                         )}
                     </div>

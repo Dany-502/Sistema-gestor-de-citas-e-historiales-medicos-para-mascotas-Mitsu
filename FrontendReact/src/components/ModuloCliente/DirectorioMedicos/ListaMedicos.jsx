@@ -3,7 +3,7 @@ import './ListaMedicosEstilos.css';
 import TarjetaMedico from './TarjetaMedico';
 import { veterinarioService } from '../../../services/api';
 
-const ListaMedicos = () => {
+const ListaMedicos = ({ esAdmin = false }) => {
     const [cargando, setCargando] = useState(true);
     const [busqueda, setBusqueda] = useState('');
     const [paginaActual, setPaginaActual] = useState(1);
@@ -44,8 +44,15 @@ const ListaMedicos = () => {
             <div className="cabeceraMedicos">
                 <div className="textosCabecera">
                     <h2 className="tituloMedicos">Directorio de Médicos</h2>
-                    <p className="subtituloMedicos">Conoce a nuestros especialistas y sus horarios de atención.</p>
+                    <p className="subtituloMedicos">
+                        {esAdmin ? 'Gestión de veterinarios y personal médico.' : 'Conoce a nuestros especialistas y sus horarios de atención.'}
+                    </p>
                 </div>
+                {esAdmin && (
+                    <button className="btnAccionPrimario" style={{ backgroundColor: '#10b981', alignSelf: 'center' }}>
+                        + Agregar Médico
+                    </button>
+                )}
             </div>
 
             <div className="barraFiltros">
@@ -115,6 +122,7 @@ const ListaMedicos = () => {
                         <TarjetaMedico 
                             key={medico.idVeterinario} 
                             medico={medico} 
+                            esAdmin={esAdmin}
                         />
                     ))}
                 </div>
