@@ -224,3 +224,54 @@
   background-color: #d32f2f;
   transform: translateY(-1px);
 }
+
+.flex-wrap-center {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn-confirmar-cita {
+  background-color: #f59e0b !important;
+  color: white !important;
+  border: none !important;
+  padding: 10px 15px !important;
+  border-radius: 8px !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  flex: 1 !important;
+}
+
+.btn-completar-cita {
+  background-color: #0077cc !important;
+  color: white !important;
+  border: none !important;
+  padding: 10px 15px !important;
+  border-radius: 8px !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  flex: 1 !important;
+}
+
+.btn-ir-expediente {
+  background-color: #4a5568 !important;
+  color: white !important;
+  border: none !important;
+  padding: 10px 15px !important;
+  border-radius: 8px !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  flex: 1 !important;
+}
+
+.flex-1 {
+  flex: 1 !important;
+}
+
+.btn-eliminar-bd {
+  flex: 1 !important;
+  background-color: #dc2626 !important;
+  color: white !important;
+  border-color: #dc2626 !important;
+}

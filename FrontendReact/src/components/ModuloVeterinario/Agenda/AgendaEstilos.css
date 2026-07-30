@@ -247,3 +247,35 @@
   background-color: rgba(255, 139, 106, 0.12);
   /* Naranja muy suave */
 }
+
+.text-slate-900 {
+  color: #0f172a !important;
+}
+
+.text-orange-warning {
+  color: #ffb84d !important;
+}
+
+.text-red-danger {
+  color: #dc2626 !important;
+}
+
+.text-blue-primary {
+  color: #007aff !important;
+}
+
+.flex-center-gap-10 {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-configurar-horario {
+  background-color: #0f172a !important;
+  color: white !important;
+  border: none !important;
+  padding: 10px 15px !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  font-weight: bold !important;
+}

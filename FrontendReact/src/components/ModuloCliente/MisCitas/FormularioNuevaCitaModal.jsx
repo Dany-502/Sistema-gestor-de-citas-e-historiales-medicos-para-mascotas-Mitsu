@@ -9,7 +9,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = [] }) => {
     const [fechaHoraInicio, setFechaHoraInicio] = useState(null);
-    const [fechaHoraFin, setFechaHoraFin] = useState(null);
+    let fechaHoraFin = null;
     const [mascota, setMascota] = useState('');
     const [servicio, setServicio] = useState('');
     const [veterinario, setVeterinario] = useState('');
@@ -72,17 +72,12 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
         }
     }, [isOpen]);
 
-    useEffect(() => {
-        if (fechaHoraInicio && servicio) {
-            const servObj = serviciosDisponibles.find(s => s.idServicio === Number(servicio));
-            if (servObj) {
-                const end = new Date(fechaHoraInicio.getTime() + (servObj.duracion || 30) * 60000);
-                setFechaHoraFin(end);
-            }
-        } else {
-            setFechaHoraFin(null);
+    if (fechaHoraInicio && servicio) {
+        const servObj = serviciosDisponibles.find(s => s.idServicio === Number(servicio));
+        if (servObj) {
+            fechaHoraFin = new Date(fechaHoraInicio.getTime() + (servObj.duracion || 30) * 60000);
         }
-    }, [fechaHoraInicio, servicio, serviciosDisponibles]);
+    }
 
     const obtenerHorasExcluidas = () => {
         if (!fechaHoraInicio) return [];
@@ -137,7 +132,6 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
             });
 
             setFechaHoraInicio(null);
-            setFechaHoraFin(null);
             setMascota('');
             setServicio('');
             setVeterinario('');

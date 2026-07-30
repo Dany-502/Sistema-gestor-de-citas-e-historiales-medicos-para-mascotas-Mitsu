@@ -1,25 +1,52 @@
-import React, { useState, useRef } from 'react';
-import './FormularioMascotaModalEstilos.css';
+import React, { useState, useRef, useEffect } from 'react';
+import '../../ModuloCliente/MisMascotas/FormularioMascotaModalEstilos.css';
+import './FormularioMascotaAdminModal.css';
 import Swal from 'sweetalert2';
 
-const FormularioMascotaModal = ({ mascotaAEditar, onGuardar, onClose }) => {
-    const [fotoPrevia, setFotoPrevia] = useState(
-        mascotaAEditar ? (mascotaAEditar.fotoUrl || mascotaAEditar.imagen || null) : null
-    );
+const FormularioMascotaAdminModal = ({ isOpen, onClose, onSave }) => {
+    const [fotoPrevia, setFotoPrevia] = useState(null);
     const fileInputRef = useRef(null);
-    const esEdicion = !!mascotaAEditar;
+
+    const [clientesDisponibles, setClientesDisponibles] = useState([
+        { idCliente: 1, nombre: 'María Fernández', correo: 'maria@gmail.com' },
+        { idCliente: 2, nombre: 'Carlos Romero', correo: 'carlos@gmail.com' }
+    ]);
 
     const [formData, setFormData] = useState({
-        nombre: mascotaAEditar ? (mascotaAEditar.NombreMascota || mascotaAEditar.nombreMascota || '') : '',
-        especie: mascotaAEditar ? (mascotaAEditar.Especie || mascotaAEditar.especie || '') : '',
-        raza: mascotaAEditar ? (mascotaAEditar.Raza || mascotaAEditar.raza || '') : '',
-        fechaNacimiento: mascotaAEditar ? (mascotaAEditar.FechaNacimiento || mascotaAEditar.fechaNacimiento || '') : '',
-        sexo: mascotaAEditar ? (mascotaAEditar.Sexo || mascotaAEditar.sexo || '') : '',
-        color: mascotaAEditar ? (mascotaAEditar.Color || mascotaAEditar.color || '') : '',
-        peso: mascotaAEditar ? (mascotaAEditar.Peso !== undefined ? mascotaAEditar.Peso : mascotaAEditar.peso || '') : '',
-        alergias: mascotaAEditar ? (mascotaAEditar.Alergias || mascotaAEditar.alergias || '') : '',
-        informacionAdicional: mascotaAEditar ? (mascotaAEditar.informacionAdicional || mascotaAEditar.descripcion || '') : ''
+        idCliente: '',
+        nombre: '',
+        especie: '',
+        raza: '',
+        fechaNacimiento: '',
+        sexo: '',
+        color: '',
+        peso: '',
+        alergias: '',
+        informacionAdicional: ''
     });
+
+    useEffect(() => {
+        if (isOpen) {
+            // Mocks for clients (already initialized in state)
+            
+            // Reset form
+            setFormData({
+                idCliente: '',
+                nombre: '',
+                especie: '',
+                raza: '',
+                fechaNacimiento: '',
+                sexo: '',
+                color: '',
+                peso: '',
+                alergias: '',
+                informacionAdicional: ''
+            });
+            setFotoPrevia(null);
+        }
+    }, [isOpen]);
+
+    if (!isOpen) return null;
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -43,9 +70,14 @@ const FormularioMascotaModal = ({ mascotaAEditar, onGuardar, onClose }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         
-        // Enviar datos al padre (ListaMascotas) que llamará al backend real
-        if (onGuardar) {
-            onGuardar({
+        if (!formData.idCliente) {
+            Swal.fire('Error', 'Por favor, selecciona un dueño (cliente) para esta mascota.', 'warning');
+            return;
+        }
+
+        if (onSave) {
+            onSave({
+                idCliente: formData.idCliente,
                 nombreMascota: formData.nombre,
                 especie: formData.especie,
                 raza: formData.raza,
@@ -59,13 +91,23 @@ const FormularioMascotaModal = ({ mascotaAEditar, onGuardar, onClose }) => {
                 fotoUrl: fotoPrevia
             });
         }
+        
+        Swal.fire({
+            title: '¡Mascota Creada (Admin)!',
+            text: 'El paciente ha sido registrado y asignado al cliente.',
+            icon: 'success',
+            confirmButtonColor: '#17c3b2',
+            timer: 2000
+        });
+
+        onClose();
     };
 
     return (
         <div className="modalOverlay" onClick={onClose}>
             <div className="modalContent" onClick={e => e.stopPropagation()}>
                 <div className="modalHeader">
-                    <h2>{esEdicion ? "Editar Mascota" : "Registrar Mascota"}</h2>
+                    <h2>Registrar Nuevo Paciente (Admin)</h2>
                     <button className="btnCerrarModal" onClick={onClose}>&times;</button>
                 </div>
 
@@ -74,7 +116,7 @@ const FormularioMascotaModal = ({ mascotaAEditar, onGuardar, onClose }) => {
                         <div className="gridFormularioMascota">
                             {/* Columna Foto */}
                             <div className="columnaFoto">
-                                <label>Foto</label>
+                                <label className="form-label-foto">Foto</label>
                                 <button
                                     type="button"
                                     className="btnSeleccionarArchivo"
@@ -100,13 +142,29 @@ const FormularioMascotaModal = ({ mascotaAEditar, onGuardar, onClose }) => {
 
                             {/* Columna Datos */}
                             <div className="columnaDatos">
+                                <div className="formGroup fullWidth form-group-dueno">
+                                    <label className="label-dueno">Dueño de la mascota (Cliente)*</label>
+                                    <select 
+                                        name="idCliente" 
+                                        value={formData.idCliente} 
+                                        onChange={handleInputChange} 
+                                        required
+                                        className="select-dueno"
+                                    >
+                                        <option value="">Selecciona un cliente</option>
+                                        {clientesDisponibles.map(c => (
+                                            <option key={c.idCliente} value={c.idCliente}>{c.nombre}</option>
+                                        ))}
+                                    </select>
+                                </div>
+
                                 <div className="formGroup">
-                                    <label>Nombre</label>
+                                    <label>Nombre*</label>
                                     <input type="text" name="nombre" value={formData.nombre} onChange={handleInputChange} required />
                                 </div>
 
                                 <div className="formGroup">
-                                    <label>Especies</label>
+                                    <label>Especies*</label>
                                     <select name="especie" value={formData.especie} onChange={handleInputChange} required>
                                         <option value="">Especies</option>
                                         <option value="Perro">Perro</option>
@@ -115,16 +173,16 @@ const FormularioMascotaModal = ({ mascotaAEditar, onGuardar, onClose }) => {
                                     </select>
                                 </div>
                                 <div className="formGroup">
-                                    <label>Raza</label>
+                                    <label>Raza*</label>
                                     <input type="text" name="raza" placeholder="Ej. Labrador, Mestizo" value={formData.raza} onChange={handleInputChange} required />
                                 </div>
 
                                 <div className="formGroup">
-                                    <label>Fecha de Nacimiento</label>
+                                    <label>Fecha de Nacimiento*</label>
                                     <input type="date" name="fechaNacimiento" value={formData.fechaNacimiento} onChange={handleInputChange} required />
                                 </div>
                                 <div className="formGroup">
-                                    <label>Sexo</label>
+                                    <label>Sexo*</label>
                                     <select name="sexo" value={formData.sexo} onChange={handleInputChange} required>
                                         <option value="">Sexo</option>
                                         <option value="Macho">Macho</option>
@@ -133,16 +191,16 @@ const FormularioMascotaModal = ({ mascotaAEditar, onGuardar, onClose }) => {
                                 </div>
 
                                 <div className="formGroup">
-                                    <label>Color</label>
+                                    <label>Color*</label>
                                     <input type="text" name="color" value={formData.color} onChange={handleInputChange} required />
                                 </div>
                                 <div className="formGroup">
-                                    <label>Peso (kg)</label>
+                                    <label>Peso (kg)*</label>
                                     <input type="number" step="0.1" name="peso" value={formData.peso} onChange={handleInputChange} required />
                                 </div>
 
                                 <div className="formGroup fullWidth">
-                                    <label>Alergias</label>
+                                    <label>Alergias*</label>
                                     <input type="text" name="alergias" placeholder="Especifique alergias o 'Ninguna'" value={formData.alergias} onChange={handleInputChange} required />
                                 </div>
 
@@ -163,8 +221,8 @@ const FormularioMascotaModal = ({ mascotaAEditar, onGuardar, onClose }) => {
                         <button type="button" className="btnCancelarMascota" onClick={onClose}>
                             Cancelar
                         </button>
-                        <button type="submit" className="btnGuardarMascota">
-                            {esEdicion ? "Actualizar Datos" : "Guardar"}
+                        <button type="submit" className="btnGuardarMascota btn-guardar-admin">
+                            Guardar Expediente
                         </button>
                     </div>
                 </form>
@@ -173,4 +231,4 @@ const FormularioMascotaModal = ({ mascotaAEditar, onGuardar, onClose }) => {
     );
 };
 
-export default FormularioMascotaModal;
+export default FormularioMascotaAdminModal;

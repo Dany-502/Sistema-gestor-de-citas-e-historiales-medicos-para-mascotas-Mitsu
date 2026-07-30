@@ -98,13 +98,25 @@ const CarnetMascotaModal = ({ mascotaDto, onEditar, onClose, esVeterinario = fal
                         )}
                     </div>
                     
-                    <div className="carnetFotoContainer">
-                        {(fotoUrl || mascotaDto?.imagen) ? (
-                            <img src={fotoUrl || mascotaDto?.imagen} alt={nombreMascota} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />
-                        ) : (
-                            // Placeholder si no hay foto real
-                            <img src={iconPata} alt="Pata placeholder" style={{opacity: 0.1, padding: '30px'}} />
+                    <div className="flex-start-gap-20">
+                        {esAdmin && (
+                            <button onClick={() => {
+                                import('sweetalert2').then(Swal => {
+                                    Swal.default.fire('Eliminado', 'Expediente borrado de la BD (Admin)', 'success');
+                                    onClose();
+                                });
+                            }} className="btn-eliminar-expediente">
+                                Eliminar Expediente
+                            </button>
                         )}
+                        <div className="carnetFotoContainer">
+                            {(fotoUrl || mascotaDto?.imagen) ? (
+                                <img src={fotoUrl || mascotaDto?.imagen} alt={nombreMascota} className="foto-mascota-cover" />
+                            ) : (
+                                // Placeholder si no hay foto real
+                                <img src={iconPata} alt="Pata placeholder" className="foto-placeholder" />
+                            )}
+                        </div>
                     </div>
                 </div>
 
@@ -150,16 +162,6 @@ const CarnetMascotaModal = ({ mascotaDto, onEditar, onClose, esVeterinario = fal
                         {esVeterinario && pestanaActiva === 'citas' && !mostrarFormDiagnostico && (
                             <button className="btnVeterinario" onClick={() => setMostrarFormDiagnostico(true)}>
                                 + Redactar Diagnóstico
-                            </button>
-                        )}
-                        {esAdmin && (
-                            <button className="btnVeterinario" onClick={() => {
-                                import('sweetalert2').then(Swal => {
-                                    Swal.default.fire('Eliminado', 'Expediente borrado de la BD (Admin)', 'success');
-                                    onClose();
-                                });
-                            }} style={{ backgroundColor: '#dc2626', borderColor: '#dc2626' }}>
-                                Eliminar Expediente
                             </button>
                         )}
                     </div>

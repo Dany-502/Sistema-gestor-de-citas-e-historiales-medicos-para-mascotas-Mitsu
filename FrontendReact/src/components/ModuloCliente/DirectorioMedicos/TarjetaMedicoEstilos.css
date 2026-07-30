@@ -130,3 +130,28 @@
 .botonAgendar:hover {
   background-color: #ff7650;
 }
+
+.pieTarjetaMedico.admin-view {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-baja-medico {
+  background-color: #ef4444 !important;
+  flex: 1 !important;
+  border-radius: 30px !important;
+}
+
+.btn-baja-medico:hover {
+  background-color: #dc2626 !important;
+}
+
+.btn-editar-medico {
+  background-color: #64748b !important;
+  flex: 1 !important;
+  border-radius: 30px !important;
+}
+
+.btn-editar-medico:hover {
+  background-color: #475569 !important;
+}

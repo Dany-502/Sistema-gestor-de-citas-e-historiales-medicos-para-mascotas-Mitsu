@@ -33,7 +33,7 @@ const DetalleClienteModal = ({ isOpen, onClose, cliente }) => {
                                 <span className="labelInfoModal">Correo Electrónico</span>
                                 <span className="valorInfoModal">{cliente.correoElectronico || 'No especificado'}</span>
                             </div>
-                            <div className="itemInfoModal" style={{ gridColumn: '1 / -1' }}>
+                            <div className="itemInfoModal item-full-width">
                                 <span className="labelInfoModal">Dirección</span>
                                 <span className="valorInfoModal">{cliente.direccion || 'No especificada'}</span>
                             </div>

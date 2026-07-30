@@ -159,27 +159,27 @@ const ResumenCitaModal = ({ isOpen, onClose, cita, onCancel, esVeterinario = fal
 
                 </div>
 
-                <div className="pieResumenCita" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
+                <div className="pieResumenCita flex-wrap-center">
                     
                     {/* Botones exclusivos para el veterinario */}
                     {esVeterinario && cita.estado === 'Pendiente' && (
-                        <button className="btnAccionPrimario" onClick={handleConfirmarClick} style={{ backgroundColor: '#f59e0b', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', flex: 1 }}>
+                        <button className="btnAccionPrimario btn-confirmar-cita" onClick={handleConfirmarClick}>
                             Confirmar Cita
                         </button>
                     )}
                     {esVeterinario && cita.estado === 'Confirmada' && (
-                        <button className="btnAccionPrimario" onClick={handleCompletarClick} style={{ backgroundColor: '#0077cc', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', flex: 1 }}>
+                        <button className="btnAccionPrimario btn-completar-cita" onClick={handleCompletarClick}>
                             Marcar como Realizada
                         </button>
                     )}
                     {(esVeterinario || esAdmin) && (
-                        <button className="btnAccionPrimario" onClick={() => { if(onIrExpediente) onIrExpediente(cita) }} style={{ backgroundColor: '#4a5568', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', flex: 1 }}>
+                        <button className="btnAccionPrimario btn-ir-expediente" onClick={() => { if(onIrExpediente) onIrExpediente(cita) }}>
                             Ir al Expediente
                         </button>
                     )}
 
                     {(cita.estado === 'Pendiente' || cita.estado === 'Confirmada') && (
-                        <button className="btnCancelarSecundario" onClick={handleCancelarClick} style={{ flex: 1 }}>
+                        <button className="btnCancelarSecundario flex-1" onClick={handleCancelarClick}>
                             Cancelar Cita
                         </button>
                     )}
@@ -187,7 +187,7 @@ const ResumenCitaModal = ({ isOpen, onClose, cita, onCancel, esVeterinario = fal
                         <button className="btnCancelarSecundario" onClick={() => {
                             Swal.fire('Eliminada', 'Cita borrada permanentemente de la BD (Admin)', 'success');
                             onClose();
-                        }} style={{ flex: 1, backgroundColor: '#dc2626', color: 'white', borderColor: '#dc2626' }}>
+                        }} className="btnCancelarSecundario btn-eliminar-bd">
                             Eliminar BD
                         </button>
                     )}

@@ -1,0 +1,23 @@
+.form-label-foto {
+    font-size: 13px;
+    font-weight: 700;
+    color: #333;
+}
+
+.form-group-dueno {
+    margin-bottom: 15px;
+}
+
+.label-dueno {
+    color: #0f172a;
+    font-weight: bold;
+}
+
+.select-dueno {
+    border: 2px solid #26b5b7 !important;
+    background-color: #f0fdfa !important;
+}
+
+.btn-guardar-admin {
+    background-color: #26b5b7 !important;
+}

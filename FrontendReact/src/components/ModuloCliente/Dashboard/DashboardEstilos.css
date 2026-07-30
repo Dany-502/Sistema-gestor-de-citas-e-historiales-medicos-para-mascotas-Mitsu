@@ -107,3 +107,40 @@
 .botonAnchoCompleto {
   width: 100%;
 }
+
+.p-20 {
+  padding: 20px !important;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.avatar-mascota-img-container {
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: #eef2f5 !important;
+}
+
+.avatar-mascota-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.avatar-mascota-placeholder {
+  width: 50% !important;
+  height: 50% !important;
+  opacity: 0.3 !important;
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
+.icono-whatsapp {
+  width: 20px !important;
+  height: 20px !important;
+}

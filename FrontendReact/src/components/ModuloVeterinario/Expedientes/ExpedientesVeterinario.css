@@ -1,0 +1,14 @@
+.btn-nueva-mascota-admin {
+    background-color: #ff8b6a !important;
+    color: white !important;
+    border: none !important;
+    padding: 12px 24px !important;
+    border-radius: 30px !important;
+    font-weight: bold !important;
+    font-size: 15px !important;
+    cursor: pointer !important;
+}
+
+.btn-nueva-mascota-admin:hover {
+    background-color: #ff7550 !important;
+}

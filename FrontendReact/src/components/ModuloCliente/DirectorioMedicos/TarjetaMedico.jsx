@@ -3,7 +3,7 @@ import './TarjetaMedicoEstilos.css';
 import iconoMedico from '../../../assets/iconos/medico.png';
 import Swal from 'sweetalert2';
 
-const TarjetaMedico = ({ medico, esAdmin = false }) => {
+const TarjetaMedico = ({ medico, esAdmin = false, onEditar }) => {
 
     const handleAgendar = () => {
         Swal.fire({
@@ -55,10 +55,9 @@ const TarjetaMedico = ({ medico, esAdmin = false }) => {
             </div>
 
             {esAdmin ? (
-                <div className="pieTarjetaMedico" style={{ display: 'flex', gap: '8px' }}>
+                <div className="pieTarjetaMedico admin-view">
                     <button 
-                        className="btnAgendar" 
-                        style={{ backgroundColor: '#ef4444', borderColor: '#ef4444', flex: 1 }}
+                        className="botonAgendar btn-baja-medico"
                         onClick={() => {
                             Swal.fire({
                                 title: '¿Eliminar a ' + medico.nombre + '?',
@@ -71,7 +70,10 @@ const TarjetaMedico = ({ medico, esAdmin = false }) => {
                     >
                         Dar de baja
                     </button>
-                    <button className="btnAgendar" style={{ flex: 1 }}>
+                    <button 
+                        className="botonAgendar btn-editar-medico"
+                        onClick={onEditar}
+                    >
                         Editar Perfil
                     </button>
                 </div>

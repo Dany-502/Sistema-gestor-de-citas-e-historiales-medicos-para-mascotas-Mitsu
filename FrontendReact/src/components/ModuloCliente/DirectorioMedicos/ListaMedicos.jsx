@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './ListaMedicosEstilos.css';
 import TarjetaMedico from './TarjetaMedico';
 import { veterinarioService } from '../../../services/api';
+import FormularioMedicoAdminModal from './FormularioMedicoAdminModal';
 
 const ListaMedicos = ({ esAdmin = false }) => {
     const [cargando, setCargando] = useState(true);
@@ -10,6 +11,10 @@ const ListaMedicos = ({ esAdmin = false }) => {
     const [tamanoPagina, setTamanoPagina] = useState(5);
     const [medicos, setMedicos] = useState([]);
     const [error, setError] = useState('');
+    
+    // Estados para el Modal del Administrador
+    const [modalAbierto, setModalAbierto] = useState(false);
+    const [medicoAEditar, setMedicoAEditar] = useState(null);
 
     useEffect(() => {
         const cargarMedicos = async () => {
@@ -18,8 +23,12 @@ const ListaMedicos = ({ esAdmin = false }) => {
                 const datos = await veterinarioService.obtenerVeterinarios();
                 setMedicos(datos);
             } catch (err) {
-                console.error("Error al cargar veterinarios:", err);
-                setError(err.message || "No se pudo cargar la lista de médicos");
+                console.error("Error al cargar veterinarios, usando mocks:", err);
+                // Mock data para ver el diseño
+                setMedicos([
+                    { idVeterinario: 1, nombre: 'Miguel', apPaterno: 'Alonso', especialidad: 'Cirujano', telefono: '555-1234', correo: 'miguel@veterinaria.com', horarioApertura: '09:00', horarioCierre: '18:00', fotoUrl: null },
+                    { idVeterinario: 2, nombre: 'Ana', apPaterno: 'Gomez', especialidad: 'Medicina General', telefono: '555-5678', correo: 'ana@veterinaria.com', horarioApertura: '10:00', horarioCierre: '20:00', fotoUrl: null }
+                ]);
             } finally {
                 setCargando(false);
             }
@@ -49,7 +58,13 @@ const ListaMedicos = ({ esAdmin = false }) => {
                     </p>
                 </div>
                 {esAdmin && (
-                    <button className="btnAccionPrimario" style={{ backgroundColor: '#10b981', alignSelf: 'center' }}>
+                    <button 
+                        className="btn-agregar-medico"
+                        onClick={() => {
+                            setMedicoAEditar(null);
+                            setModalAbierto(true);
+                        }}
+                    >
                         + Agregar Médico
                     </button>
                 )}
@@ -123,9 +138,26 @@ const ListaMedicos = ({ esAdmin = false }) => {
                             key={medico.idVeterinario} 
                             medico={medico} 
                             esAdmin={esAdmin}
+                            onEditar={() => {
+                                setMedicoAEditar(medico);
+                                setModalAbierto(true);
+                            }}
                         />
                     ))}
                 </div>
+            )}
+
+            {/* Modal para Registrar/Editar Médico (Solo Admin) */}
+            {modalAbierto && esAdmin && (
+                <FormularioMedicoAdminModal 
+                    medicoAEditar={medicoAEditar}
+                    onClose={() => setModalAbierto(false)}
+                    onGuardar={(datosMedico) => {
+                        console.log('Médico guardado:', datosMedico);
+                        // Aquí en el futuro se enviará la petición POST/PUT al backend
+                        setModalAbierto(false);
+                    }}
+                />
             )}
         </div>
     );

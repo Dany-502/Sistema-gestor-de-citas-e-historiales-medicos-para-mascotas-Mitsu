@@ -204,3 +204,7 @@
   text-align: center;
   padding: 10px 0;
 }
+
+.item-full-width {
+  grid-column: 1 / -1;
+}

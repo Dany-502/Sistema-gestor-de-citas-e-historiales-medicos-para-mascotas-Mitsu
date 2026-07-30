@@ -155,20 +155,18 @@ const GestionUsuarios = () => {
                                         {usuario.rol !== 'Admin' && (
                                             <div className="accionesUsuario">
                                                 <button 
-                                                    className="btnAccionUsuario ver" 
+                                                    className="btnAccionUsuario ver btn-accion-admin" 
                                                     title="Ver Detalles"
                                                     onClick={() => verDetalles(usuario)}
-                                                    style={{ backgroundColor: '#ff8b6a', color: 'white', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                                                 >
-                                                    <img src={iconOjo} alt="Ver" style={{ width: '16px', height: '16px', filter: 'brightness(0) invert(1)' }} />
+                                                    <img src={iconOjo} alt="Ver" className="icono-accion-admin" />
                                                 </button>
                                                 <button 
-                                                    className="btnAccionUsuario eliminar" 
+                                                    className="btnAccionUsuario eliminar btn-accion-admin" 
                                                     title="Eliminar Usuario"
                                                     onClick={() => eliminarUsuario(usuario.id)}
-                                                    style={{ backgroundColor: '#ff8b6a', color: 'white', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                                                 >
-                                                    <img src={iconBasura} alt="Eliminar" style={{ width: '16px', height: '16px', filter: 'brightness(0) invert(1)' }} />
+                                                    <img src={iconBasura} alt="Eliminar" className="icono-accion-admin" />
                                                 </button>
                                             </div>
                                         )}
@@ -177,7 +175,7 @@ const GestionUsuarios = () => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="6" style={{ textAlign: 'center', padding: '30px' }}>
+                                <td colSpan="6" className="td-vacio-admin">
                                     No se encontraron usuarios que coincidan con la búsqueda.
                                 </td>
                             </tr>

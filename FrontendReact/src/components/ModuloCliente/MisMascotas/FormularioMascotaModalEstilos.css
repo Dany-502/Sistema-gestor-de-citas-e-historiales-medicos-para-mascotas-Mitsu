@@ -202,3 +202,9 @@
 .btnGuardarMascota:hover {
   background-color: #00acc1;
 }
+
+.columnaFoto label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #333333;
+}

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import '../../ModuloCliente/MisMascotas/ListaMascotasEstilos.css';
+import './ExpedientesVeterinario.css';
 import TarjetaMascota from '../../ModuloCliente/MisMascotas/TarjetaMascota';
 import CarnetMascotaModal from '../../ModuloCliente/MisMascotas/CarnetMascotaModal';
+import FormularioMascotaAdminModal from './FormularioMascotaAdminModal';
 import { mascotaService } from '../../../services/api';
 
 const ExpedientesVeterinario = ({ esAdmin = false }) => {
@@ -16,6 +18,7 @@ const ExpedientesVeterinario = ({ esAdmin = false }) => {
     // Estados para el Carnet
     const [modalCarnetAbierto, setModalCarnetAbierto] = useState(false);
     const [mascotaSeleccionada, setMascotaSeleccionada] = useState(null);
+    const [modalNuevaMascotaAbierto, setModalNuevaMascotaAbierto] = useState(false);
 
     useEffect(() => {
         const cargarPacientes = async () => {
@@ -133,9 +136,16 @@ const ExpedientesVeterinario = ({ esAdmin = false }) => {
             <div className="cabeceraMascotas">
                 <div className="textosCabecera">
                     <h2 className="tituloMascotas">Expedientes Médicos</h2>
-                    <p className="subtituloMascotas">Consulta el historial clínico de tus pacientes asignados.</p>
+                    <p className="subtituloMascotas">Consulta el historial clínico de {esAdmin ? 'todos los pacientes de la clínica' : 'tus pacientes asignados'}.</p>
                 </div>
-                {/* No agregamos botón "Nueva Mascota" porque el veterinario solo lee expedientes */}
+                {esAdmin && (
+                    <button 
+                        className="btnNuevaMascota btn-nueva-mascota-admin" 
+                        onClick={() => setModalNuevaMascotaAbierto(true)}
+                    >
+                        Nueva Mascota
+                    </button>
+                )}
             </div>
 
             <div className="barraFiltros">
@@ -213,10 +223,19 @@ const ExpedientesVeterinario = ({ esAdmin = false }) => {
                     isOpen={modalCarnetAbierto} 
                     onClose={() => setModalCarnetAbierto(false)} 
                     mascotaDto={mascotaSeleccionada}
-                    esVeterinario={true}
+                    esVeterinario={!esAdmin}
                     esAdmin={esAdmin}
                 />
             )}
+
+            {/* Modal para Crear Nueva Mascota (Admin) */}
+            <FormularioMascotaAdminModal
+                isOpen={modalNuevaMascotaAbierto}
+                onClose={() => setModalNuevaMascotaAbierto(false)}
+                onSave={(datosMascota) => {
+                    console.log('Mascota guardada:', datosMascota);
+                }}
+            />
         </div>
     );
 };

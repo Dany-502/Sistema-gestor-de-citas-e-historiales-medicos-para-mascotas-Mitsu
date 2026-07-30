@@ -11,8 +11,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1100; 
+  z-index: 1100;
 }
+
 .carnetContent {
   background-color: #ffffff;
   border-radius: 12px;
@@ -25,6 +26,7 @@
   overflow: hidden;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
 }
+
 .btnCerrarCarnetX {
   position: absolute;
   top: 20px;
@@ -37,20 +39,24 @@
   transition: color 0.2s;
   z-index: 10;
 }
+
 .btnCerrarCarnetX:hover {
   color: #e74c3c;
 }
+
 .carnetHeader {
   display: flex;
   justify-content: space-between;
   padding: 40px 40px 20px 40px;
 }
+
 .carnetHeaderLeft {
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 8px;
 }
+
 .carnetIdBadge {
   background-color: #e6f0ff;
   color: #1a73e8;
@@ -61,18 +67,20 @@
   display: inline-block;
   align-self: flex-start;
 }
+
 .carnetNombre {
   font-size: 42px;
   font-weight: 700;
-  color: #001f3f; 
+  color: #001f3f;
   margin: 0;
   text-transform: uppercase;
   line-height: 1.1;
 }
+
 .btnEditarPerfil {
-  background-color: #ff8b6a; 
+  background-color: #ff8b6a;
   border: none;
-  color: #000000; 
+  color: #000000;
   padding: 8px 16px;
   border-radius: 20px;
   font-size: 13px;
@@ -84,27 +92,32 @@
   align-items: center;
   gap: 8px;
 }
+
 .btnEditarPerfil:hover {
   background-color: #ff7650;
   transform: translateY(-1px);
 }
+
 .iconoEditarBtn {
   width: 14px;
   height: 14px;
 }
+
 .carnetFotoContainer {
   width: 130px;
   height: 130px;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   background-color: #f4f6f8;
 }
+
 .carnetFotoContainer img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
 .carnetTabsArea {
   display: flex;
   justify-content: space-between;
@@ -112,13 +125,16 @@
   border-bottom: 1px solid #e0e6ed;
   padding: 0 40px;
 }
+
 .carnetTabsContainer {
   display: flex;
   gap: 20px;
 }
+
 .carnetAccionesPestana {
   margin-bottom: 10px;
 }
+
 .carnetTab {
   background: none;
   border: none;
@@ -131,23 +147,28 @@
   transition: all 0.2s;
   margin-bottom: -1px;
 }
+
 .carnetTab.active {
   background-color: #4a5568;
   color: #ffffff;
 }
+
 .carnetTab:hover:not(.active) {
   color: #4a5568;
 }
+
 .carnetBody {
   padding: 40px;
   overflow-y: auto;
   flex: 1;
   min-height: 380px;
 }
+
 .infoGeneralGrid {
   display: flex;
   gap: 40px;
 }
+
 .datosMascotaGrid {
   flex: 2;
   display: grid;
@@ -155,11 +176,13 @@
   row-gap: 20px;
   column-gap: 20px;
 }
+
 .datoItem {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
+
 .datoLabel {
   font-size: 11px;
   font-weight: 700;
@@ -167,12 +190,14 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+
 .datoValor {
   font-size: 15px;
   font-weight: 600;
   color: #1a202c;
   text-transform: uppercase;
 }
+
 .tarjetaResponsable {
   flex: 1;
   border: 1px solid #e2e8f0;
@@ -182,13 +207,15 @@
   flex-direction: column;
   gap: 25px;
   background-color: #ffffff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
 }
+
 .responsableItem {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
+
 .tablaCarnetContenedor {
   width: 100%;
   max-height: 350px;
@@ -196,23 +223,28 @@
   overflow-x: auto;
   border-bottom: 1px solid #edf2f7;
 }
+
 .tablaCarnetContenedor::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
+
 .tablaCarnetContenedor::-webkit-scrollbar-track {
   background: #ffffff;
 }
+
 .tablaCarnetContenedor::-webkit-scrollbar-thumb {
   background-color: #e2e8f0;
   border-radius: 4px;
 }
+
 .tablaCarnet {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
   font-size: 14px;
 }
+
 .tablaCarnet th {
   background-color: #f7fafc;
   color: #1a73e8;
@@ -226,15 +258,18 @@
   top: 0;
   z-index: 10;
 }
+
 .tablaCarnet td {
   padding: 15px;
   border-bottom: 1px solid #edf2f7;
   color: #2d3748;
   font-weight: 500;
 }
+
 .tablaCarnet tbody tr:hover {
   background-color: #f8fafc;
 }
+
 .estadoBadge {
   padding: 5px 10px;
   border-radius: 20px;
@@ -242,23 +277,28 @@
   font-weight: 700;
   text-transform: uppercase;
 }
+
 .estadoBadge.completada {
   background-color: #def7ec;
   color: #03543f;
 }
+
 .estadoBadge.pendiente {
   background-color: #fef3c7;
   color: #92400e;
 }
+
 .estadoBadge.cancelada {
   background-color: #fde8e8;
   color: #9b1c1c;
 }
+
 .accionesVeterinario {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 20px;
 }
+
 .btnVeterinario {
   background-color: #17c3b2;
   color: white;
@@ -269,9 +309,11 @@
   cursor: pointer;
   transition: background-color 0.2s;
 }
+
 .btnVeterinario:hover {
   background-color: #139d8f;
 }
+
 .formularioVeterinario {
   background-color: #f8fafc;
   border: 1px solid #e2e8f0;
@@ -279,6 +321,7 @@
   padding: 25px;
   margin-bottom: 20px;
 }
+
 .formularioVeterinario h3 {
   color: #0f172a;
   margin-top: 0;
@@ -287,24 +330,29 @@
   border-bottom: 2px solid #e2e8f0;
   padding-bottom: 10px;
 }
+
 .formGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
+
 .formGroup {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
+
 .formGroup.full-width {
   grid-column: 1 / -1;
 }
+
 .formGroup label {
   font-size: 14px;
   font-weight: 600;
   color: #475569;
 }
+
 .formGroup input,
 .formGroup select,
 .formGroup textarea {
@@ -316,20 +364,24 @@
   transition: border-color 0.2s;
   font-family: inherit;
 }
+
 .formGroup input:focus,
 .formGroup select:focus,
 .formGroup textarea:focus {
   border-color: #17c3b2;
 }
+
 .formGroup textarea {
   resize: vertical;
 }
+
 .formAcciones {
   display: flex;
   justify-content: flex-end;
   gap: 15px;
   margin-top: 25px;
 }
+
 .btnCancelarForm {
   background-color: transparent;
   color: #64748b;
@@ -340,10 +392,12 @@
   cursor: pointer;
   transition: all 0.2s;
 }
+
 .btnCancelarForm:hover {
   background-color: #f1f5f9;
   color: #0f172a;
 }
+
 .btnGuardarForm {
   background-color: #17c3b2;
   color: white;
@@ -354,35 +408,73 @@
   cursor: pointer;
   transition: background-color 0.2s;
 }
+
 .btnGuardarForm:hover {
   background-color: #139d8f;
 }
+
 .bandaInferiorColor {
   height: 25px;
-  background-color: #17c3b2; 
+  background-color: #17c3b2;
   width: 100%;
 }
+
 .carnetBody::-webkit-scrollbar {
   width: 8px;
 }
+
 .carnetBody::-webkit-scrollbar-track {
   background: #ffffff;
 }
+
 .carnetBody::-webkit-scrollbar-thumb {
   background-color: #e2e8f0;
   border-radius: 4px;
 }
+
 @media (max-width: 768px) {
   .infoGeneralGrid {
     flex-direction: column;
   }
+
   .carnetHeader {
     flex-direction: column-reverse;
     gap: 20px;
     align-items: center;
     text-align: center;
   }
+
   .carnetIdBadge {
     align-self: center;
+  }
+
+  .flex-start-gap-20 {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .btn-eliminar-expediente {
+    background-color: #dc2626 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 8px 16px !important;
+    font-size: 13px !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    margin-top: 10px !important;
+  }
+
+  .foto-mascota-cover {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 12px !important;
+  }
+
+  .foto-placeholder {
+    opacity: 0.1 !important;
+    padding: 30px !important;
   }
 }

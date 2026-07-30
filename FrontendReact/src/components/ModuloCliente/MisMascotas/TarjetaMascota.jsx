@@ -45,7 +45,7 @@ const TarjetaMascota = ({ mascota, onEliminar, onEditar, onVerCarnet }) => {
             <div className="cabeceraTarjeta">
                 <div className="avatarMascota">
                     {(mascota.fotoUrl || mascota.imagen) ? (
-                        <img src={mascota.fotoUrl || mascota.imagen} alt={nombre} className="iconoAvatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                        <img src={mascota.fotoUrl || mascota.imagen} alt={nombre} className="iconoAvatar iconoAvatar-circular" />
                     ) : (
                         <img src={iconPata} alt="Mascota" className="iconoAvatar" />
                     )}

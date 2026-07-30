@@ -127,7 +127,7 @@ const ContenedorPrincipal = () => {
 
                 <div className="listaMascotas">
                     {cargandoMascotas ? (
-                        <p style={{ padding: '20px' }}>Cargando información...</p>
+                        <p className="p-20">Cargando información...</p>
                     ) : mascotasCliente.length > 0 ? (
                         mascotasCliente.map((mascota, indice) => {
                             const nombre = mascota.NombreMascota || mascota.nombreMascota || 'Sin nombre';
@@ -141,16 +141,15 @@ const ContenedorPrincipal = () => {
                             return (
                                 <div
                                     key={id || indice}
-                                    className="tarjetaMascotaIndividual"
+                                    className="tarjetaMascotaIndividual cursor-pointer"
                                     onClick={() => navigate('/cliente/mascotas')}
-                                    style={{ cursor: 'pointer' }}
                                 >
                                     <div className="infoPrincipalMascota">
-                                        <div className="avatarMascotaTemporal avatarGrande" style={{ overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#eef2f5' }}>
+                                        <div className="avatarMascotaTemporal avatarGrande avatar-mascota-img-container">
                                             {foto ? (
-                                                <img src={foto} alt={nombre} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                <img src={foto} alt={nombre} className="avatar-mascota-img" />
                                             ) : (
-                                                <img src={iconPata} alt="Pata" style={{ width: '50%', height: '50%', opacity: 0.3 }} />
+                                                <img src={iconPata} alt="Pata" className="avatar-mascota-placeholder" />
                                             )}
                                         </div>
                                         <div className="datosMascota">
@@ -170,7 +169,7 @@ const ContenedorPrincipal = () => {
                             );
                         })
                     ) : (
-                        <div className="estadoVacio" style={{ width: '100%' }}>
+                        <div className="estadoVacio w-100">
                             <p>Aún no tienes mascotas registradas en tu cuenta.</p>
                             <button
                                 className="botonPrimario"
@@ -204,7 +203,7 @@ const ContenedorPrincipal = () => {
                         </div>
                     </div>
                     <button className="botonContacto">
-                        <img src={iconWhatsapp} alt="WhatsApp" className="iconoContacto" style={{ width: '20px', height: '20px' }} />
+                        <img src={iconWhatsapp} alt="WhatsApp" className="iconoContacto icono-whatsapp" />
                         ¡Contáctanos!
                     </button>
                 </div>

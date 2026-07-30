@@ -246,7 +246,7 @@ const AgendaVeterinario = ({ esAdmin = false }) => {
         <div className="contenedorMisCitas">
             <div className="cabeceraCitas">
                 <div className="textosCabecera">
-                    <h2 className="tituloCitas" style={{ color: '#0f172a' }}>
+                    <h2 className="tituloCitas text-slate-900">
                         Agenda {esAdmin ? 'Administrador' : 'del Veterinario'}
                     </h2>
                     <p className="subtituloCitas">
@@ -271,17 +271,17 @@ const AgendaVeterinario = ({ esAdmin = false }) => {
                 </div>
                 <div className="kpiCardCitas">
                     <span className="kpiLabel">{esAdmin ? 'Solicitudes Pendientes' : 'Por confirmar'}</span>
-                    <span className="kpiValue" style={{ color: '#ffb84d' }}>{citas.filter(c => c.estado === 'Pendiente').length}</span>
+                    <span className="kpiValue text-orange-warning">{citas.filter(c => c.estado === 'Pendiente').length}</span>
                 </div>
                 {esAdmin ? (
                     <div className="kpiCardCitas">
-                        <span className="kpiLabel" style={{ color: '#dc2626' }}>Citas Canceladas</span>
-                        <span className="kpiValue" style={{ color: '#dc2626' }}>{citas.filter(c => c.estado === 'Cancelada').length}</span>
+                        <span className="kpiLabel text-red-danger">Citas Canceladas</span>
+                        <span className="kpiValue text-red-danger">{citas.filter(c => c.estado === 'Cancelada').length}</span>
                     </div>
                 ) : (
                     <div className="kpiCardCitas">
                         <span className="kpiLabel">Pacientes atendidos</span>
-                        <span className="kpiValue" style={{ color: '#007aff' }}>{citas.filter(c => c.estado === 'Realizada').length}</span>
+                        <span className="kpiValue text-blue-primary">{citas.filter(c => c.estado === 'Realizada').length}</span>
                     </div>
                 )}
                 <div className="kpiCardCitas">
@@ -300,11 +300,11 @@ const AgendaVeterinario = ({ esAdmin = false }) => {
                     className="buscadorCitas"
                 />
 
-                <div className="filtrosCitas" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <div className="filtrosCitas flex-center-gap-10">
                     {esAdmin && (
                         <button
                             onClick={handleConfigurarHorario}
-                            style={{ backgroundColor: '#0f172a', color: 'white', border: 'none', padding: '10px 15px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+                            className="btn-configurar-horario"
                         >
                             ⚙️ Configurar Horario
                         </button>

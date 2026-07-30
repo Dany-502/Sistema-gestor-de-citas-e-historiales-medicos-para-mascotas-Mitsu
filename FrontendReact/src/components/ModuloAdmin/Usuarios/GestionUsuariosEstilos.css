@@ -153,3 +153,22 @@
 .btnAccionUsuario.eliminar:hover {
     background-color: #ffe5e5;
 }
+
+.btn-accion-admin {
+  background-color: #ff8b6a !important;
+  color: white !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.icono-accion-admin {
+  width: 16px !important;
+  height: 16px !important;
+  filter: brightness(0) invert(1) !important;
+}
+
+.td-vacio-admin {
+  text-align: center !important;
+  padding: 30px !important;
+}

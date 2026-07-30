@@ -4,28 +4,33 @@
 .contenedorListaMedicos {
   width: 100%;
 }
+
 .cabeceraMedicos {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 20px;
 }
+
 .textosCabecera {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
+
 .tituloMedicos {
   color: #0f172a;
   font-size: 28px;
   font-weight: 700;
   margin: 0;
 }
+
 .subtituloMedicos {
   font-size: 15px;
   color: #5c6c75;
   margin: 0;
 }
+
 .barraFiltros {
   display: flex;
   justify-content: space-between;
@@ -34,10 +39,12 @@
   gap: 20px;
   flex-wrap: wrap;
 }
+
 .contenedorBuscador {
   flex: 1;
   min-width: 300px;
 }
+
 .inputBuscadorMedicos {
   width: 100%;
   max-width: 450px;
@@ -50,17 +57,21 @@
   outline: none;
   transition: border-color 0.2s ease;
 }
+
 .inputBuscadorMedicos::placeholder {
   color: #c9d3db;
 }
+
 .inputBuscadorMedicos:focus {
   border-color: #ff8b6a;
 }
+
 .gridMedicos {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 25px;
 }
+
 .estadoVacioMedicos {
   display: flex;
   flex-direction: column;
@@ -73,15 +84,18 @@
   text-align: center;
   color: #5c6c75;
 }
+
 .estadoVacioMedicos p {
   font-size: 16px;
   margin-bottom: 20px;
 }
+
 .contenedorPaginacionSuperior {
   display: flex;
   align-items: center;
   gap: 20px;
 }
+
 .opcionesTamanoPagina {
   display: flex;
   align-items: center;
@@ -89,6 +103,7 @@
   font-size: 14px;
   color: #5c6c75;
 }
+
 .opcionesTamanoPagina select {
   padding: 8px 12px;
   border: 1px solid #c9d3db;
@@ -98,16 +113,19 @@
   color: #333333;
   cursor: pointer;
 }
+
 .controlesPaginacion {
   display: flex;
   align-items: center;
   gap: 15px;
 }
+
 .infoPaginacion {
   font-size: 14px;
   font-weight: 600;
   color: #1a2b3c;
 }
+
 .botonPaginacion {
   background-color: #f0f4f8;
   color: #1a2b3c;
@@ -118,15 +136,18 @@
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
 .botonPaginacion:hover:not(:disabled) {
   background-color: #e0e6ed;
 }
+
 .botonPaginacion:disabled {
   background-color: #f9f9f9;
   color: #a0aec0;
   cursor: not-allowed;
   border-color: #e2e8f0;
 }
+
 .estadoCargandoMedicos {
   display: flex;
   flex-direction: column;
@@ -137,6 +158,7 @@
   font-weight: 600;
   gap: 20px;
 }
+
 .spinnerMedicos {
   width: 40px;
   height: 40px;
@@ -145,7 +167,29 @@
   border-radius: 50%;
   animation: girarSpinner 1s linear infinite;
 }
+
 @keyframes girarSpinner {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.btn-agregar-medico {
+  background-color: #ff8b6a !important;
+  color: white !important;
+  border: none !important;
+  padding: 12px 24px !important;
+  border-radius: 30px !important;
+  font-weight: bold !important;
+  font-size: 15px !important;
+  cursor: pointer !important;
+  align-self: center !important;
+}
+
+.btn-agregar-medico:hover {
+  background-color: #ff7650 !important;
 }
