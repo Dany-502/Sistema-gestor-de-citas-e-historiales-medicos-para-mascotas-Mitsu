@@ -16,11 +16,32 @@ import java.util.stream.Collectors;
 public class VeterinarioService {
 
     private final VeterinarioRepository veterinarioRepository;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     public List<VeterinarioDTO> obtenerTodos() {
         return veterinarioRepository.findAll().stream()
                 .map(this::convertirADTO)
                 .collect(Collectors.toList());
+    }
+
+    public VeterinarioDTO registrarVeterinario(VeterinarioDTO dto) {
+        Veterinario v = new Veterinario();
+        v.setNombre(dto.getNombre());
+        v.setApPaterno(dto.getApPaterno());
+        v.setApMaterno(dto.getApMaterno());
+        v.setEspecialidad(dto.getEspecialidad());
+        v.setCedula(dto.getCedula());
+        v.setTelefono(dto.getTelefono());
+        v.setCorreoElectronico(dto.getCorreoElectronico());
+        v.setDireccion(dto.getDireccion());
+        v.setContrasena(passwordEncoder.encode("123456")); // Contraseña default para nuevos médicos
+
+        Veterinario guardado = veterinarioRepository.save(v);
+        return convertirADTO(guardado);
+    }
+
+    public void eliminarVeterinario(Integer id) {
+        veterinarioRepository.deleteById(id);
     }
 
     private VeterinarioDTO convertirADTO(Veterinario v) {

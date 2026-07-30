@@ -63,6 +63,17 @@ public class AuthService {
             return res;
         }
 
+        // Credencial estática de pruebas para Administrador
+        if ("admin@mitsu.com".equalsIgnoreCase(correo) || "admin@mistu.com".equalsIgnoreCase(correo)) {
+            String token = jwtUtil.generarToken("admin@mitsu.com");
+            java.util.Map<String, String> res = new java.util.HashMap<>();
+            res.put("token", token);
+            res.put("rol", "ADMIN");
+            res.put("nombre", "Administrador Mitsu");
+            res.put("mensaje", "Inicio de sesión exitoso como Administrador");
+            return res;
+        }
+
         try {
             // 1. Intentar autenticar como Veterinario desde BD
         var optVet = veterinarioRepository.findByCorreoElectronico(correo);

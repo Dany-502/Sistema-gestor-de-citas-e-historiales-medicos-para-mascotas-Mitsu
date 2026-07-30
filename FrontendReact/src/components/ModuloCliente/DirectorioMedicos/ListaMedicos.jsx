@@ -152,9 +152,16 @@ const ListaMedicos = ({ esAdmin = false }) => {
                 <FormularioMedicoAdminModal 
                     medicoAEditar={medicoAEditar}
                     onClose={() => setModalAbierto(false)}
-                    onGuardar={(datosMedico) => {
-                        console.log('Médico guardado:', datosMedico);
-                        // Aquí en el futuro se enviará la petición POST/PUT al backend
+                    onGuardar={async (datosMedico) => {
+                        try {
+                            const nuevoVet = await veterinarioService.crearVeterinario(datosMedico);
+                            setMedicos(prev => [nuevoVet, ...prev]);
+                        } catch (err) {
+                            console.error("Error al guardar médico en backend:", err);
+                            // Fallback local
+                            const idSimulado = Date.now();
+                            setMedicos(prev => [{ ...datosMedico, idVeterinario: idSimulado }, ...prev]);
+                        }
                         setModalAbierto(false);
                     }}
                 />

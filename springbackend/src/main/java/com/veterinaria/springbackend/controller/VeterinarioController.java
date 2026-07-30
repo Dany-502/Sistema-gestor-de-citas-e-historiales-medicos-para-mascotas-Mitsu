@@ -20,4 +20,15 @@ public class VeterinarioController {
     public ResponseEntity<List<VeterinarioDTO>> obtenerTodos() {
         return ResponseEntity.ok(veterinarioService.obtenerTodos());
     }
+
+    @PostMapping
+    public ResponseEntity<VeterinarioDTO> registrarVeterinario(@RequestBody VeterinarioDTO dto) {
+        return ResponseEntity.ok(veterinarioService.registrarVeterinario(dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarVeterinario(@PathVariable("id") Integer id) {
+        veterinarioService.eliminarVeterinario(id);
+        return ResponseEntity.ok().body("{\"mensaje\": \"Veterinario eliminado correctamente\"}");
+    }
 }

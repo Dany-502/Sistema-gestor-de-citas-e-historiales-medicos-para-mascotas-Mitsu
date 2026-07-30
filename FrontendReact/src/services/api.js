@@ -69,6 +69,13 @@ export const mascotaService = {
 // Servicios de Veterinarios
 export const veterinarioService = {
     obtenerVeterinarios: () => fetchConAuth('/veterinarios'),
+    crearVeterinario: (datosVet) => fetchConAuth('/veterinarios', {
+        method: 'POST',
+        body: JSON.stringify(datosVet),
+    }),
+    eliminarVeterinario: (idVet) => fetchConAuth(`/veterinarios/${idVet}`, {
+        method: 'DELETE',
+    }),
 };
 
 // Servicios de Tipo de Servicio / Servicios Médicos

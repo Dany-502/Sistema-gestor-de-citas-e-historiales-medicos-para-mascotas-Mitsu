@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import DetallesUsuarioModal from './DetallesUsuarioModal';
+import { clienteService, veterinarioService } from '../../../services/api';
 import iconOjo from '../../../assets/iconos/ojo.svg';
 import iconBasura from '../../../assets/iconos/barra-de-basura.svg';
 import './GestionUsuariosEstilos.css';
 
 const GestionUsuarios = () => {
     // Datos simulados iniciales
-    const [usuarios, setUsuarios] = useState([
+    const mockIniciales = [
         { 
             id: 1, nombre: 'Miguel', apellido: 'Alonso', correo: 'vet@mistu.com', rol: 'Veterinario', fechaRegistro: '2026-01-15',
             especialidad: 'Medicina General', cedula: '12345678', 
@@ -49,14 +50,57 @@ const GestionUsuarios = () => {
         { id: 13, nombre: 'Valentina', apellido: 'Flores', correo: 'valentina.f@mistu.com', rol: 'Veterinario', fechaRegistro: '2026-07-18', especialidad: 'Dermatología', cedula: '99887766' },
         { id: 14, nombre: 'Andrés', apellido: 'Castro', correo: 'andres.c@gmail.com', rol: 'Cliente', fechaRegistro: '2026-07-22' },
         { id: 15, nombre: 'Isabella', apellido: 'Ortiz', correo: 'isabella.o@gmail.com', rol: 'Cliente', fechaRegistro: '2026-07-25' },
-    ]);
+    ];
 
+    const [usuarios, setUsuarios] = useState(mockIniciales);
     const [busqueda, setBusqueda] = useState('');
     const [filtroRol, setFiltroRol] = useState('');
     
     // Estados para el Modal de Detalles
     const [modalAbierto, setModalAbierto] = useState(false);
     const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
+
+    useEffect(() => {
+        const cargarUsuariosAPI = async () => {
+            try {
+                const [clientes, veterinarios] = await Promise.all([
+                    clienteService.obtenerTodos().catch(() => []),
+                    veterinarioService.obtenerVeterinarios().catch(() => [])
+                ]);
+
+                const listaClientesMapeados = (clientes || []).map(c => ({
+                    id: c.idCliente || c.id,
+                    nombre: c.nombre,
+                    apellido: c.apPaterno || '',
+                    correo: c.correoElectronico || c.correo,
+                    rol: 'Cliente',
+                    fechaRegistro: '2026-07-01',
+                    mascotas: c.mascotas || []
+                }));
+
+                const listaVetsMapeados = (veterinarios || []).map(v => ({
+                    id: v.idVeterinario || v.id,
+                    nombre: v.nombre,
+                    apellido: v.apPaterno || '',
+                    correo: v.correoElectronico || v.correo,
+                    rol: 'Veterinario',
+                    fechaRegistro: '2026-06-01',
+                    especialidad: v.especialidad,
+                    cedula: v.cedula,
+                    horarios: v.horarios || []
+                }));
+
+                const listaCombinada = [...listaVetsMapeados, ...listaClientesMapeados];
+                if (listaCombinada.length > 0) {
+                    setUsuarios(listaCombinada);
+                }
+            } catch (err) {
+                console.error("Error al obtener usuarios backend:", err);
+            }
+        };
+
+        cargarUsuariosAPI();
+    }, []);
 
     const eliminarUsuario = (id) => {
         Swal.fire({

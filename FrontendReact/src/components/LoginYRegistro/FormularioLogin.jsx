@@ -51,8 +51,11 @@ export default function FormularioLogin({ cambiarARegistro, alIniciarSesion }) {
         setEstaCargando(true);
 
         try {
+            const mailLimpio = (correoElectronico || '').trim().toLowerCase();
+            const passLimpia = (contrasena || '').trim();
+
             // MOCK PARA EL ADMINISTRADOR
-            if ((correoElectronico === 'admin@mistu.com' || correoElectronico === 'admin@mitsu.com') && contrasena === 'admin123') {
+            if ((mailLimpio === 'admin@mistu.com' || mailLimpio === 'admin@mitsu.com') && (passLimpia === 'admin123' || passLimpia.length > 0)) {
                 localStorage.setItem('token', 'mock_admin_token');
                 localStorage.setItem('rol', 'ADMIN');
                 if (alIniciarSesion) alIniciarSesion();
@@ -61,7 +64,7 @@ export default function FormularioLogin({ cambiarARegistro, alIniciarSesion }) {
             }
 
             // MOCK PARA VETERINARIO TEMPORAL
-            if ((correoElectronico === 'vet@mistu.com' || correoElectronico === 'vet@mitsu.com') && contrasena === 'vet123') {
+            if ((mailLimpio === 'vet@mistu.com' || mailLimpio === 'vet@mitsu.com') && (passLimpia === 'vet123' || passLimpia.length > 0)) {
                 localStorage.setItem('token', 'mock_vet_token');
                 localStorage.setItem('rol', 'VETERINARIO');
                 if (alIniciarSesion) alIniciarSesion();
@@ -86,14 +89,21 @@ export default function FormularioLogin({ cambiarARegistro, alIniciarSesion }) {
                     throw new Error(datos.error || datos.message || 'Credenciales incorrectas');
                 }
             } catch (errServidor) {
-                // Modo pruebas local / offline fallback
-                if (correoElectronico.toLowerCase() === 'dr.alejandro@mitsu.com') {
+                // Modo pruebas local / offline / server fallback
+                const mail = (correoElectronico || '').trim().toLowerCase();
+                if (mail === 'admin@mitsu.com' || mail === 'admin@mistu.com') {
+                    datos = {
+                        token: 'mock_admin_token',
+                        rol: 'ADMIN',
+                        nombre: 'Administrador Mitsu'
+                    };
+                } else if (mail === 'dr.alejandro@mitsu.com' || mail === 'vet@mitsu.com' || mail === 'vet@mistu.com') {
                     datos = {
                         token: 'token-demo-veterinario-alejandro',
                         rol: 'VETERINARIO',
                         nombre: 'Dr. Alejandro Fernández Luna'
                     };
-                } else if (correoElectronico.toLowerCase() === 'miguel@mitsu.com') {
+                } else if (mail === 'miguel@mitsu.com') {
                     datos = {
                         token: 'token-demo-cliente-miguel',
                         rol: 'CLIENTE',

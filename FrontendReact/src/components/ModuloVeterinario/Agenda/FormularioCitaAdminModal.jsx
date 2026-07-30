@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../../ModuloCliente/MisCitas/FormularioNuevaCitaModalEstilos.css'; // Reusing exact styles
 import Swal from 'sweetalert2';
 import iconoPortapapeles from '../../../assets/iconos/portapapeles.png';
-import { mascotaService, veterinarioService, servicioService, citaService } from '../../../services/api';
+import { clienteService, mascotaService, veterinarioService, servicioService, citaService } from '../../../services/api';
 import DatePicker from 'react-datepicker';
 import { setHours, setMinutes } from 'date-fns';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -34,13 +34,11 @@ const FormularioCitaAdminModal = ({ isOpen, onClose, onSave }) => {
         if (isOpen) {
             const cargarOpciones = async () => {
                 try {
-                    // Mocks for clients since we don't have a clienteService yet
-                    setClientesDisponibles([
-                        { idCliente: 1, nombre: 'María Fernández', correo: 'maria@gmail.com' },
-                        { idCliente: 2, nombre: 'Carlos Romero', correo: 'carlos@gmail.com' }
-                    ]);
-
-                    const [vetsData, servsData] = await Promise.all([
+                    const [clsData, vetsData, servsData] = await Promise.all([
+                        clienteService.obtenerTodos().catch(() => [
+                            { idCliente: 1, nombre: 'María Fernández', correo: 'maria@gmail.com' },
+                            { idCliente: 2, nombre: 'Carlos Romero', correo: 'carlos@gmail.com' }
+                        ]),
                         veterinarioService.obtenerVeterinarios().catch(() => [
                             { idVeterinario: 1, nombre: 'Miguel', apPaterno: 'Alonso', especialidad: 'Cirujano' },
                             { idVeterinario: 2, nombre: 'Ana', apPaterno: 'Gomez', especialidad: 'Medicina General' }
@@ -48,10 +46,11 @@ const FormularioCitaAdminModal = ({ isOpen, onClose, onSave }) => {
                         servicioService.obtenerServicios().catch(() => [
                             { idServicio: 1, nombreServicio: 'Consulta General', duracionTiempo: 30 },
                             { idServicio: 2, nombreServicio: 'Vacunación', duracionTiempo: 15 },
-                            { idServicio: 3, nombreServicio: 'Cirugía', duracionTiempo: 120 }
+                            { idServicio: 3, nombreServicio: 'Desparasitación', duracionTiempo: 15 }
                         ])
                     ]);
-                    
+
+                    setClientesDisponibles(clsData || []);
                     setVeterinariosDisponibles(vetsData.map(v => ({
                         idVeterinario: v.idVeterinario,
                         nombre: `${v.nombre} ${v.apPaterno}`,

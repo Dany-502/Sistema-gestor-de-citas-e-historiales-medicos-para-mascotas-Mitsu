@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import '../../ModuloCliente/MisMascotas/FormularioMascotaModalEstilos.css';
 import './FormularioMascotaAdminModal.css';
 import Swal from 'sweetalert2';
+import { clienteService } from '../../../services/api';
 
 const FormularioMascotaAdminModal = ({ isOpen, onClose, onSave }) => {
     const [fotoPrevia, setFotoPrevia] = useState(null);
@@ -27,8 +28,24 @@ const FormularioMascotaAdminModal = ({ isOpen, onClose, onSave }) => {
 
     useEffect(() => {
         if (isOpen) {
-            // Mocks for clients (already initialized in state)
-            
+            // Cargar lista real de clientes
+            const fetchClientes = async () => {
+                try {
+                    const data = await clienteService.obtenerTodos();
+                    if (data && data.length > 0) {
+                        const clientesMapeados = data.map(c => ({
+                            idCliente: c.idCliente || c.id,
+                            nombre: `${c.nombre} ${c.apPaterno || ''}`.trim(),
+                            correo: c.correoElectronico || c.correo
+                        }));
+                        setClientesDisponibles(clientesMapeados);
+                    }
+                } catch (e) {
+                    console.error("Error al cargar clientes para modal mascota admin:", e);
+                }
+            };
+            fetchClientes();
+
             // Reset form
             setFormData({
                 idCliente: '',
