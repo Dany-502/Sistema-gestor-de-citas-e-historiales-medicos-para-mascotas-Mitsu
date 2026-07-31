@@ -8,7 +8,7 @@ const TarjetaMedico = ({ medico, esAdmin = false, onEditar }) => {
     const navigate = useNavigate();
 
     const handleAgendar = () => {
-        navigate('/cliente/mis-citas', { 
+        navigate('/cliente/citas', { 
             state: { preselectedVeterinario: medico.idVeterinario } 
         });
     };

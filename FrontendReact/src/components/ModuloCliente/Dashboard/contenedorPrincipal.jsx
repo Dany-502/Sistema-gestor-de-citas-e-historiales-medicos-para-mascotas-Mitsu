@@ -128,14 +128,14 @@ const ContenedorPrincipal = () => {
                                 </h4>
                                 <p><strong>Servicio:</strong> {proximaCita.servicio} <span style={{marginLeft: '10px', color: proximaCita.estado === 'Confirmada' ? 'green' : 'orange'}}>({proximaCita.estado})</span></p>
                                 <div className="accionesCita">
-                                    <button className="botonPrimario" onClick={() => navigate('/cliente/mis-citas')}>Ver Detalles</button>
+                                    <button className="botonPrimario" onClick={() => navigate('/cliente/citas')}>Ver Detalles</button>
                                 </div>
                             </div>
                         </div>
                     ) : (
                         <div className="contenidoCita estadoVacio">
                             <p>No tienes ninguna cita programada próximamente.</p>
-                            <button className="botonPrimario" onClick={() => navigate('/cliente/mis-citas')}>Agendar una cita</button>
+                            <button className="botonPrimario" onClick={() => navigate('/cliente/citas')}>Agendar una cita</button>
                         </div>
                     )}
                 </div>
@@ -144,7 +144,12 @@ const ContenedorPrincipal = () => {
                 <div className="tarjeta tarjetaAccionesRapidas">
                     <h3 className="tituloTarjeta">Acciones rápidas</h3>
                     <div className="listaAcciones">
-                        <button className="botonPrimario botonAnchoCompleto">+ Agendar cita</button>
+                        <button 
+                            className="botonPrimario botonAnchoCompleto"
+                            onClick={() => navigate('/cliente/citas', { state: { openModal: true } })}
+                        >
+                            + Agendar cita
+                        </button>
                         <button
                             className="botonPrimario botonAnchoCompleto"
                             onClick={() => navigate('/cliente/mascotas')}

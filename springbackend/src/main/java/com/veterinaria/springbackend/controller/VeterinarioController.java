@@ -26,6 +26,11 @@ public class VeterinarioController {
         return ResponseEntity.ok(veterinarioService.registrarVeterinario(dto));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<VeterinarioDTO> actualizarVeterinario(@PathVariable("id") Integer id, @RequestBody VeterinarioDTO dto) {
+        return ResponseEntity.ok(veterinarioService.actualizarVeterinario(id, dto));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarVeterinario(@PathVariable("id") Integer id) {
         veterinarioService.eliminarVeterinario(id);

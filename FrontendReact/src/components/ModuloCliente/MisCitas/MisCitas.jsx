@@ -30,12 +30,18 @@ const MisCitas = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (location.state && location.state.preselectedVeterinario) {
-            setVeterinarioInicial(location.state.preselectedVeterinario);
-            setModalAbierto(true);
+        if (location.state) {
+            if (location.state.preselectedVeterinario) {
+                setVeterinarioInicial(location.state.preselectedVeterinario);
+                setModalAbierto(true);
+            } else if (location.state.openModal) {
+                setModalAbierto(true);
+            }
             
             // Clean up state so a refresh doesn't reopen it
-            navigate('.', { replace: true, state: {} });
+            if (location.state.preselectedVeterinario || location.state.openModal) {
+                navigate('.', { replace: true, state: {} });
+            }
         }
     }, [location.state, navigate]);
 

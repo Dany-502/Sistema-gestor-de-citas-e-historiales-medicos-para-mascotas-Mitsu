@@ -65,7 +65,7 @@ const FormularioMedicoAdminModal = ({ medicoAEditar, onGuardar, onClose }) => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         
         // Validación de contraseña
@@ -84,22 +84,31 @@ const FormularioMedicoAdminModal = ({ medicoAEditar, onGuardar, onClose }) => {
             }
         }
         
-        if (onGuardar) {
-            onGuardar({
-                ...formData,
-                fotoUrl: fotoPrevia
+        try {
+            if (onGuardar) {
+                await onGuardar({
+                    ...formData,
+                    fotoUrl: fotoPrevia
+                });
+            }
+
+            Swal.fire({
+                title: esEdicion ? '¡Médico Actualizado!' : '¡Médico Registrado!',
+                text: esEdicion ? 'Los datos del veterinario se actualizaron con éxito.' : 'El veterinario ha sido registrado en el directorio.',
+                icon: 'success',
+                confirmButtonColor: '#10b981',
+                timer: 2000
+            });
+
+            onClose();
+        } catch (error) {
+            Swal.fire({
+                title: 'Error',
+                text: error.message || 'Hubo un problema al procesar la solicitud. Verifica que el correo no esté repetido.',
+                icon: 'error',
+                confirmButtonColor: '#ef4444'
             });
         }
-
-        Swal.fire({
-            title: esEdicion ? '¡Médico Actualizado!' : '¡Médico Registrado!',
-            text: esEdicion ? 'Los datos del veterinario se actualizaron con éxito.' : 'El veterinario ha sido registrado en el directorio.',
-            icon: 'success',
-            confirmButtonColor: '#10b981',
-            timer: 2000
-        });
-
-        onClose();
     };
 
     return (

@@ -150,12 +150,17 @@ const ListaMedicos = ({ esAdmin = false }) => {
                     onClose={() => setModalAbierto(false)}
                     onGuardar={async (datosMedico) => {
                         try {
-                            const nuevoVet = await veterinarioService.crearVeterinario(datosMedico);
-                            setMedicos(prev => [nuevoVet, ...prev]);
+                            if (medicoAEditar) {
+                                const vetActualizado = await veterinarioService.actualizarVeterinario(medicoAEditar.idVeterinario, datosMedico);
+                                setMedicos(prev => prev.map(m => m.idVeterinario === medicoAEditar.idVeterinario ? vetActualizado : m));
+                            } else {
+                                const nuevoVet = await veterinarioService.crearVeterinario(datosMedico);
+                                setMedicos(prev => [nuevoVet, ...prev]);
+                            }
                         } catch (err) {
                             console.error("Error al guardar médico en backend:", err);
+                            throw err; // Relanzamos para que el modal sepa del error
                         }
-                        setModalAbierto(false);
                     }}
                 />
             )}

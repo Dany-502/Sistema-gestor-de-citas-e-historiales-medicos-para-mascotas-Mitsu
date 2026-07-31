@@ -25,6 +25,10 @@ public class VeterinarioService {
     }
 
     public VeterinarioDTO registrarVeterinario(VeterinarioDTO dto) {
+        if (veterinarioRepository.existsByCorreoElectronico(dto.getCorreoElectronico())) {
+            throw new RuntimeException("Ya existe un veterinario registrado con este correo: " + dto.getCorreoElectronico());
+        }
+
         Veterinario v = new Veterinario();
         v.setNombre(dto.getNombre());
         v.setApPaterno(dto.getApPaterno());
@@ -40,6 +44,28 @@ public class VeterinarioService {
                 : "123456";
         v.setContrasena(passwordEncoder.encode(passwordToUse));
 
+        Veterinario guardado = veterinarioRepository.save(v);
+        return convertirADTO(guardado);
+    }
+
+    public VeterinarioDTO actualizarVeterinario(Integer id, VeterinarioDTO dto) {
+        Veterinario v = veterinarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Veterinario no encontrado"));
+        
+        v.setNombre(dto.getNombre());
+        v.setApPaterno(dto.getApPaterno());
+        v.setApMaterno(dto.getApMaterno());
+        v.setEspecialidad(dto.getEspecialidad());
+        v.setCedula(dto.getCedula());
+        v.setTelefono(dto.getTelefono());
+        v.setCorreoElectronico(dto.getCorreoElectronico());
+        v.setDireccion(dto.getDireccion());
+        
+        if (dto.getContrasena() != null && !dto.getContrasena().trim().isEmpty()) {
+            v.setContrasena(passwordEncoder.encode(dto.getContrasena()));
+        }
+
+        // We can also update horarios here if needed, but for now we update basic profile
         Veterinario guardado = veterinarioRepository.save(v);
         return convertirADTO(guardado);
     }

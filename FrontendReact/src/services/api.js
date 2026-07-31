@@ -81,6 +81,10 @@ export const veterinarioService = {
         method: 'POST',
         body: JSON.stringify(datosVet),
     }),
+    actualizarVeterinario: (idVet, datosVet) => fetchConAuth(`/veterinarios/${idVet}`, {
+        method: 'PUT',
+        body: JSON.stringify(datosVet),
+    }),
     eliminarVeterinario: (idVet) => fetchConAuth(`/veterinarios/${idVet}`, {
         method: 'DELETE',
     }),

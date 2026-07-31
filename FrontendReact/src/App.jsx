@@ -42,31 +42,29 @@ function App() {
         {/* Ruta pública / Login */}
         <Route 
           path="/" 
-          element={<ContenedorPadre alIniciarSesion={manejarLoginExitoso} />}
-          /* --- SISTEMA PROTEGIDO (Comentado temporalmente para pruebas) ---
           element={
             !sesionIniciada ? (
               <ContenedorPadre alIniciarSesion={manejarLoginExitoso} />
             ) : (
-              <Navigate to="/cliente/dashboard" replace />
+              <Navigate to={
+                localStorage.getItem('rol') === 'ADMIN' ? '/admin/usuarios' :
+                localStorage.getItem('rol') === 'VETERINARIO' ? '/veterinario/dashboard' :
+                '/cliente/dashboard'
+              } replace />
             )
           } 
-          --------------------------------------------------------------- */
         />
 
         {/* Rutas del Módulo Cliente */}
         <Route 
           path="/cliente" 
-          element={<ClienteLayout alCerrarSesion={manejarCerrarSesion} />}
-          /* --- SISTEMA PROTEGIDO (Comentado temporalmente para pruebas) ---
           element={
-            sesionIniciada ? (
+            sesionIniciada && localStorage.getItem('rol') !== 'ADMIN' && localStorage.getItem('rol') !== 'VETERINARIO' ? (
               <ClienteLayout alCerrarSesion={manejarCerrarSesion} />
             ) : (
               <Navigate to="/" replace />
             )
           }
-          --------------------------------------------------------------- */
         >
           <Route path="dashboard" element={<ContenedorPrincipal />} />
           <Route path="mascotas" element={<ListaMascotas />} />
@@ -78,7 +76,13 @@ function App() {
         {/* Rutas del Módulo Veterinario */}
         <Route 
           path="/veterinario" 
-          element={<VeterinarioLayout alCerrarSesion={manejarCerrarSesion} />}
+          element={
+            sesionIniciada && localStorage.getItem('rol') === 'VETERINARIO' ? (
+              <VeterinarioLayout alCerrarSesion={manejarCerrarSesion} />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
         >
           <Route path="dashboard" element={<DashboardVeterinario />} />
           <Route path="expedientes" element={<ExpedientesVeterinario />} />
@@ -90,7 +94,13 @@ function App() {
         {/* Rutas del Módulo Administrador */}
         <Route 
           path="/admin" 
-          element={<AdminLayout alCerrarSesion={manejarCerrarSesion} />}
+          element={
+            sesionIniciada && localStorage.getItem('rol') === 'ADMIN' ? (
+              <AdminLayout alCerrarSesion={manejarCerrarSesion} />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
         >
           <Route path="usuarios" element={<GestionUsuarios />} />
           <Route path="agenda" element={<AgendaVeterinario esAdmin={true} />} />
