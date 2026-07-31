@@ -91,7 +91,8 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
                 title: 'Campos incompletos',
                 text: 'Por favor, llena todos los campos obligatorios (*).',
                 icon: 'warning',
-                confirmButtonColor: '#ff8b6a'
+                confirmButtonColor: '#ff8b6a',
+                customClass: { container: 'swal-encima' }
             });
             return;
         }
@@ -119,7 +120,8 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
                 text: 'Tu cita ha sido agendada con éxito.',
                 icon: 'success',
                 confirmButtonColor: '#17c3b2',
-                timer: 2500
+                timer: 2500,
+                customClass: { container: 'swal-encima' }
             });
 
             setFechaHoraInicio(null);
@@ -135,9 +137,20 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
                 title: 'Error al agendar',
                 text: error.message || 'No se pudo reservar la cita.',
                 icon: 'error',
-                confirmButtonColor: '#ff8b6a'
+                confirmButtonColor: '#ff8b6a',
+                customClass: { container: 'swal-encima' }
             });
         }
+    };
+
+    const handleClose = () => {
+        setFechaHoraInicio(null);
+        setMascota('');
+        setServicio('');
+        setVeterinario('');
+        setTipoVacuna('');
+        setDescripcion('');
+        onClose();
     };
 
     return (
@@ -272,7 +285,7 @@ const FormularioNuevaCitaModal = ({ isOpen, onClose, onSave, citasProgramadas = 
                     </div>
 
                     <div className="pieModalCitaAncho">
-                        <button type="button" className="btnCancelarCitaColor" onClick={onClose}>Cancelar</button>
+                        <button type="button" className="btnCancelarCitaColor" onClick={handleClose}>Cancelar</button>
                         <button type="submit" className="btnGuardarCitaColor">Agregar</button>
                     </div>
                 </form>

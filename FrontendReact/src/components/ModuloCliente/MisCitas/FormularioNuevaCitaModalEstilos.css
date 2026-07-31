@@ -177,3 +177,8 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     gap: 15px;
   }
 }
+
+/* Fix para que SweetAlert aparezca encima del modal (z-index 1200) */
+.swal2-container {
+  z-index: 9999 !important;
+}

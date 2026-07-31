@@ -70,7 +70,8 @@ const GestionUsuarios = () => {
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                setUsuarios(usuarios.filter(u => u.id !== id));
+                // Usar prevUsuarios para asegurar el estado más reciente y forzar a String ambos IDs para evitar bugs de tipos
+                setUsuarios(prevUsuarios => prevUsuarios.filter(u => String(u.id) !== String(id)));
                 Swal.fire(
                     '¡Eliminado!',
                     'El usuario ha sido dado de baja del sistema.',

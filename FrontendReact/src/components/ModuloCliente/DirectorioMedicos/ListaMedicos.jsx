@@ -138,6 +138,15 @@ const ListaMedicos = ({ esAdmin = false }) => {
                                 setMedicoAEditar(medico);
                                 setModalAbierto(true);
                             }}
+                            onEliminar={async (idVeterinario) => {
+                                try {
+                                    await veterinarioService.eliminarVeterinario(idVeterinario);
+                                    setMedicos(prev => prev.filter(m => m.idVeterinario !== idVeterinario));
+                                    Swal.fire('¡Eliminado!', 'El médico ha sido dado de baja del directorio.', 'success');
+                                } catch (err) {
+                                    Swal.fire('Error', err.message || 'No se pudo eliminar al médico.', 'error');
+                                }
+                            }}
                         />
                     ))}
                 </div>

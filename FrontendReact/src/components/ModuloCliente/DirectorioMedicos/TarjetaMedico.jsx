@@ -4,7 +4,7 @@ import './TarjetaMedicoEstilos.css';
 import iconoMedico from '../../../assets/iconos/medico.png';
 import Swal from 'sweetalert2';
 
-const TarjetaMedico = ({ medico, esAdmin = false, onEditar }) => {
+const TarjetaMedico = ({ medico, esAdmin = false, onEditar, onEliminar }) => {
     const navigate = useNavigate();
 
     const handleAgendar = () => {
@@ -63,7 +63,11 @@ const TarjetaMedico = ({ medico, esAdmin = false, onEditar }) => {
                                 icon: 'warning',
                                 showCancelButton: true,
                                 confirmButtonColor: '#ef4444'
-                            })
+                            }).then((result) => {
+                                if (result.isConfirmed && onEliminar) {
+                                    onEliminar(medico.idVeterinario);
+                                }
+                            });
                         }}
                     >
                         Dar de baja

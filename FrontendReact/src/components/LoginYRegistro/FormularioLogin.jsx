@@ -14,46 +14,57 @@ export default function FormularioLogin({ cambiarARegistro, alIniciarSesion }) {
     const [estaCargando, setEstaCargando] = useState(false);
     const [errorRed, setErrorRed] = useState('');
 
+    const validarCorreo = (valor) => {
+        if (!valor) return 'Este campo no puede estar vacío';
+        if (!/\S+@\S+\.\S+/.test(valor)) return 'Ingresa un correo electrónico válido';
+        return '';
+    };
+
+    const validarContrasena = (valor) => {
+        if (!valor) return 'Este campo no puede estar vacío';
+        return '';
+    };
+
+    const handleChangeCorreo = (e) => {
+        const valor = e.target.value;
+        setCorreoElectronico(valor);
+        const error = validarCorreo(valor);
+        setErrores(prev => ({ ...prev, correoElectronico: error }));
+    };
+
+    const handleChangeContrasena = (e) => {
+        const valor = e.target.value;
+        setContrasena(valor);
+        const error = validarContrasena(valor);
+        setErrores(prev => ({ ...prev, contrasena: error }));
+    };
+
     const validarFormulario = () => {
+        const errorCorreo = validarCorreo(correoElectronico);
+        const errorContrasena = validarContrasena(contrasena);
+
         const nuevosErrores = {};
-
-        // Validación básica de correo
-        if (!correoElectronico) {
-            nuevosErrores.correoElectronico = 'El correo es obligatorio';
-        } else if (!/\S+@\S+\.\S+/.test(correoElectronico)) {
-            nuevosErrores.correoElectronico = 'Ingresa un correo electrónico válido';
-        }
-
-        // Validación básica de contraseña
-        if (!contrasena) {
-            nuevosErrores.contrasena = 'La contraseña es obligatoria';
-        } else if (contrasena.length < 6) {
-            nuevosErrores.contrasena = 'La contraseña debe tener al menos 6 caracteres';
-        }
+        if (errorCorreo) nuevosErrores.correoElectronico = errorCorreo;
+        if (errorContrasena) nuevosErrores.contrasena = errorContrasena;
 
         setErrores(nuevosErrores);
-        // Retorna true si no hay errores
         return Object.keys(nuevosErrores).length === 0;
     };
 
     const manejarEnvio = async (e) => {
         e.preventDefault();
 
-        // Limpiamos errores de red previos
         setErrorRed('');
 
-        // Ejecutar validaciones locales primero
         if (!validarFormulario()) {
             return;
         }
 
-        // Activamos estado de carga
         setEstaCargando(true);
 
         try {
             const mailLimpio = (correoElectronico || '').trim().toLowerCase();
             const passLimpia = (contrasena || '').trim();
-
 
             let datos;
             try {
@@ -63,8 +74,8 @@ export default function FormularioLogin({ cambiarARegistro, alIniciarSesion }) {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        correoElectronico,
-                        contrasena
+                        correoElectronico: mailLimpio,
+                        contrasena: passLimpia
                     })
                 });
                 datos = await respuesta.json();
@@ -75,7 +86,6 @@ export default function FormularioLogin({ cambiarARegistro, alIniciarSesion }) {
                 throw errServidor;
             }
 
-            // Guardar el token JWT y el rol en localStorage
             if (datos.token) {
                 localStorage.setItem('token', datos.token);
             }
@@ -83,7 +93,6 @@ export default function FormularioLogin({ cambiarARegistro, alIniciarSesion }) {
                 localStorage.setItem('rol', datos.rol);
             }
 
-            // Redirección e inicio de sesión
             if (alIniciarSesion) {
                 alIniciarSesion();
             }
@@ -106,7 +115,6 @@ export default function FormularioLogin({ cambiarARegistro, alIniciarSesion }) {
     return (
         <form onSubmit={manejarEnvio}>
 
-            {/* Mensaje de error de red o de API (reemplazo del alert) */}
             {errorRed && (
                 <div className="mensajeErrorGlobal">
                     {errorRed}
@@ -120,10 +128,10 @@ export default function FormularioLogin({ cambiarARegistro, alIniciarSesion }) {
                     className={`campoTexto ${errores.correoElectronico ? 'campoConError' : ''}`}
                     placeholder="Ingresa tu correo"
                     value={correoElectronico}
-                    onChange={(e) => setCorreoElectronico(e.target.value)}
+                    onChange={handleChangeCorreo}
+                    onBlur={(e) => setErrores(prev => ({ ...prev, correoElectronico: validarCorreo(e.target.value) }))}
                     disabled={estaCargando}
                 />
-                {/* Mensaje de validación en tiempo real */}
                 {errores.correoElectronico && <span className="textoError">{errores.correoElectronico}</span>}
             </div>
 
@@ -138,14 +146,14 @@ export default function FormularioLogin({ cambiarARegistro, alIniciarSesion }) {
                         className={`campoTexto ${errores.contrasena ? 'campoConError' : ''}`}
                         placeholder="Ingresa tu contraseña"
                         value={contrasena}
-                        onChange={(e) => setContrasena(e.target.value)}
+                        onChange={handleChangeContrasena}
+                        onBlur={(e) => setErrores(prev => ({ ...prev, contrasena: validarContrasena(e.target.value) }))}
                         disabled={estaCargando}
                     />
                     <span className="iconoOjo" onClick={() => !estaCargando && setMostrarContrasena(!mostrarContrasena)}>
                         {mostrarContrasena ? <img src={ojo} alt="Ojo" /> : <img src={ojoCruzado} alt="Ojo Cruzado" />}
                     </span>
                 </div>
-                {/* Mensaje de validación en tiempo real */}
                 {errores.contrasena && <span className="textoError">{errores.contrasena}</span>}
             </div>
 

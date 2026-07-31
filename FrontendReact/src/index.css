@@ -17,3 +17,8 @@ html, body, #root {
     font-family: 'Inter', 'Roboto', sans-serif;
     background-color: #f8fafc;
 }
+
+/* Forzar SweetAlert encima de cualquier modal */
+.swal-encima {
+    z-index: 99999 !important;
+}

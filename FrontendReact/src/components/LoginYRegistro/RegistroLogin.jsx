@@ -17,26 +17,74 @@ export default function RegistroLogin({ cambiarALogin }) {
     const [estaCargando, setEstaCargando] = useState(false);
     const [errorRed, setErrorRed] = useState('');
 
+    const validarNombre = (valor) => {
+        if (!valor) return 'El nombre es obligatorio';
+        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(valor)) return 'El nombre solo debe contener letras';
+        return '';
+    };
+
+    const validarApPaterno = (valor) => {
+        if (!valor) return 'El apellido paterno es obligatorio';
+        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(valor)) return 'Solo se permiten letras';
+        return '';
+    };
+
+    const validarApMaterno = (valor) => {
+        if (!valor) return 'El apellido materno es obligatorio';
+        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(valor)) return 'Solo se permiten letras';
+        return '';
+    };
+
+    const validarDireccion = (valor) => {
+        if (!valor) return 'La dirección no puede estar vacía';
+        return '';
+    };
+
+    const validarTelefono = (valor) => {
+        if (!valor) return 'El teléfono es obligatorio';
+        if (!/^\+52\d{10}$/.test(valor)) return 'Debe ser un número válido iniciando con +52, ej. +521234567890';
+        return '';
+    };
+
+    const validarCorreo = (valor) => {
+        if (!valor) return 'El correo es obligatorio';
+        if (!/\S+@\S+\.\S+/.test(valor)) return 'Formato de correo no válido';
+        return '';
+    };
+
+    const validarContrasena = (valor) => {
+        if (!valor) return 'La contraseña es obligatoria';
+        if (!/(?=.*[A-Z])(?=.*\d)/.test(valor)) return 'La contraseña debe contener al menos una mayúscula y un número';
+        return '';
+    };
+
+    const handleChange = (setter, validator, key) => (e) => {
+        const val = e.target.value;
+        setter(val);
+        setErrores(prev => ({ ...prev, [key]: validator(val) }));
+    };
+
+    const handleBlur = (validator, key, valor) => () => {
+        setErrores(prev => ({ ...prev, [key]: validator(valor) }));
+    };
+
     const validarFormulario = () => {
+        const errorNombre = validarNombre(nombre);
+        const errorApPaterno = validarApPaterno(apPaterno);
+        const errorApMaterno = validarApMaterno(apMaterno);
+        const errorDireccion = validarDireccion(direccion);
+        const errorTelefono = validarTelefono(telefono);
+        const errorCorreo = validarCorreo(correoElectronico);
+        const errorContrasena = validarContrasena(contrasena);
+
         const nuevosErrores = {};
-        
-        if (!nombre) nuevosErrores.nombre = 'Obligatorio';
-        if (!apPaterno) nuevosErrores.apPaterno = 'Obligatorio';
-        if (!apMaterno) nuevosErrores.apMaterno = 'Obligatorio';
-        if (!direccion) nuevosErrores.direccion = 'La dirección es obligatoria';
-        if (!telefono) nuevosErrores.telefono = 'El teléfono es obligatorio';
-        
-        if (!correoElectronico) {
-            nuevosErrores.correoElectronico = 'El correo es obligatorio';
-        } else if (!/\S+@\S+\.\S+/.test(correoElectronico)) {
-            nuevosErrores.correoElectronico = 'Correo inválido';
-        }
-        
-        if (!contrasena) {
-            nuevosErrores.contrasena = 'La contraseña es obligatoria';
-        } else if (contrasena.length < 6) {
-            nuevosErrores.contrasena = 'Mínimo 6 caracteres';
-        }
+        if (errorNombre) nuevosErrores.nombre = errorNombre;
+        if (errorApPaterno) nuevosErrores.apPaterno = errorApPaterno;
+        if (errorApMaterno) nuevosErrores.apMaterno = errorApMaterno;
+        if (errorDireccion) nuevosErrores.direccion = errorDireccion;
+        if (errorTelefono) nuevosErrores.telefono = errorTelefono;
+        if (errorCorreo) nuevosErrores.correoElectronico = errorCorreo;
+        if (errorContrasena) nuevosErrores.contrasena = errorContrasena;
         
         setErrores(nuevosErrores);
         return Object.keys(nuevosErrores).length === 0;
@@ -93,7 +141,6 @@ export default function RegistroLogin({ cambiarALogin }) {
     return (
         <form onSubmit={manejarRegistro}>
             
-            {/* Mensaje de error global */}
             {errorRed && (
                 <div className="mensajeErrorGlobal">
                     {errorRed}
@@ -107,7 +154,8 @@ export default function RegistroLogin({ cambiarALogin }) {
                     className={`campoTexto ${errores.nombre ? 'campoConError' : ''}`} 
                     placeholder="Ingresa tu nombre" 
                     value={nombre} 
-                    onChange={(e) => setNombre(e.target.value)} 
+                    onChange={handleChange(setNombre, validarNombre, 'nombre')} 
+                    onBlur={handleBlur(validarNombre, 'nombre', nombre)}
                     disabled={estaCargando}
                 />
                 {errores.nombre && <span className="textoError">{errores.nombre}</span>}
@@ -121,7 +169,8 @@ export default function RegistroLogin({ cambiarALogin }) {
                         className={`campoTexto ${errores.apPaterno ? 'campoConError' : ''}`} 
                         placeholder="Apellido paterno" 
                         value={apPaterno} 
-                        onChange={(e) => setApPaterno(e.target.value)} 
+                        onChange={handleChange(setApPaterno, validarApPaterno, 'apPaterno')} 
+                        onBlur={handleBlur(validarApPaterno, 'apPaterno', apPaterno)}
                         disabled={estaCargando}
                     />
                     {errores.apPaterno && <span className="textoError">{errores.apPaterno}</span>}
@@ -133,7 +182,8 @@ export default function RegistroLogin({ cambiarALogin }) {
                         className={`campoTexto ${errores.apMaterno ? 'campoConError' : ''}`} 
                         placeholder="Apellido materno" 
                         value={apMaterno} 
-                        onChange={(e) => setApMaterno(e.target.value)} 
+                        onChange={handleChange(setApMaterno, validarApMaterno, 'apMaterno')} 
+                        onBlur={handleBlur(validarApMaterno, 'apMaterno', apMaterno)}
                         disabled={estaCargando}
                     />
                     {errores.apMaterno && <span className="textoError">{errores.apMaterno}</span>}
@@ -147,7 +197,8 @@ export default function RegistroLogin({ cambiarALogin }) {
                     className={`campoTexto ${errores.direccion ? 'campoConError' : ''}`} 
                     placeholder="Ingresa tu dirección completa" 
                     value={direccion} 
-                    onChange={(e) => setDireccion(e.target.value)} 
+                    onChange={handleChange(setDireccion, validarDireccion, 'direccion')} 
+                    onBlur={handleBlur(validarDireccion, 'direccion', direccion)}
                     disabled={estaCargando}
                 />
                 {errores.direccion && <span className="textoError">{errores.direccion}</span>}
@@ -158,9 +209,10 @@ export default function RegistroLogin({ cambiarALogin }) {
                 <input 
                     type="tel" 
                     className={`campoTexto ${errores.telefono ? 'campoConError' : ''}`} 
-                    placeholder="Ingresa tu teléfono" 
+                    placeholder="Ej. +521234567890" 
                     value={telefono} 
-                    onChange={(e) => setTelefono(e.target.value)} 
+                    onChange={handleChange(setTelefono, validarTelefono, 'telefono')} 
+                    onBlur={handleBlur(validarTelefono, 'telefono', telefono)}
                     disabled={estaCargando}
                 />
                 {errores.telefono && <span className="textoError">{errores.telefono}</span>}
@@ -173,7 +225,8 @@ export default function RegistroLogin({ cambiarALogin }) {
                     className={`campoTexto ${errores.correoElectronico ? 'campoConError' : ''}`} 
                     placeholder="Ingresa tu correo" 
                     value={correoElectronico} 
-                    onChange={(e) => setCorreoElectronico(e.target.value)} 
+                    onChange={handleChange(setCorreoElectronico, validarCorreo, 'correoElectronico')} 
+                    onBlur={handleBlur(validarCorreo, 'correoElectronico', correoElectronico)}
                     disabled={estaCargando}
                 />
                 {errores.correoElectronico && <span className="textoError">{errores.correoElectronico}</span>}
@@ -187,7 +240,8 @@ export default function RegistroLogin({ cambiarALogin }) {
                         className={`campoTexto ${errores.contrasena ? 'campoConError' : ''}`} 
                         placeholder="Crea una Contraseña" 
                         value={contrasena} 
-                        onChange={(e) => setContrasena(e.target.value)} 
+                        onChange={handleChange(setContrasena, validarContrasena, 'contrasena')} 
+                        onBlur={handleBlur(validarContrasena, 'contrasena', contrasena)}
                         disabled={estaCargando}
                     />
                     <span className="iconoOjo" onClick={() => !estaCargando && setMostrarContrasena(!mostrarContrasena)}>

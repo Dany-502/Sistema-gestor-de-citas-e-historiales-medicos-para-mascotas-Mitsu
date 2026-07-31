@@ -75,6 +75,28 @@ public class CitaService {
         int duracion = servicio.getDuracionTiempo() != null ? servicio.getDuracionTiempo() : 30;
         LocalDateTime fechaFin = dto.getFechaHoraInicio().plusMinutes(duracion);
 
+        // Validar que el horario está dentro de las horas de trabajo del veterinario
+        java.time.DayOfWeek diaSemana = dto.getFechaHoraInicio().getDayOfWeek();
+        int diaSemanaInt = diaSemana.getValue();
+        java.time.LocalTime horaInicioSolicitada = dto.getFechaHoraInicio().toLocalTime();
+        java.time.LocalTime horaFinSolicitada = fechaFin.toLocalTime();
+
+        boolean horarioValido = veterinario.getHorarios().stream()
+                .filter(HorarioVeterinario::getActivo)
+                .filter(h -> h.getDiaSemana() == diaSemanaInt)
+                .anyMatch(h -> !horaInicioSolicitada.isBefore(h.getHoraInicio()) &&
+                               !horaFinSolicitada.isAfter(h.getHoraFin()));
+
+        if (!horarioValido) {
+            throw new RuntimeException("El veterinario no atiende en el horario seleccionado (fuera de horas de trabajo).");
+        }
+
+        // Validar que no haya citas superpuestas
+        long superpuestas = citaRepository.countCitasSuperpuestas(veterinario.getIdVeterinario(), dto.getFechaHoraInicio(), fechaFin);
+        if (superpuestas > 0) {
+            throw new RuntimeException("El veterinario ya tiene otra cita programada en ese horario exacto.");
+        }
+
         Cita cita = new Cita();
         cita.setMascota(mascota);
         cita.setVeterinario(veterinario);
